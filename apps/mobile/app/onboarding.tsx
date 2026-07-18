@@ -2,6 +2,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import LottieView from 'lottie-react-native';
 import { useEffect, useRef, useState } from 'react';
 import {
   Image,
@@ -23,6 +24,10 @@ import {
   usePreferencesStore,
   type InterestOption,
 } from '@/src/store/preferences-store';
+
+/* eslint-disable @typescript-eslint/no-require-imports -- Metro charge les assets Lottie via require() */
+const locationPinAnimation = require('../assets/lotties/Location Pin.json');
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 const HERO_SLIDES = [
   {
@@ -271,26 +276,40 @@ export default function OnboardingScreen() {
 
       {step === 3 ? (
         <View className="flex-1">
-          <ScrollView className="flex-1" contentContainerClassName="items-center px-7 pb-7 pt-10">
-            <View className="mb-6 mt-[60px] h-16 w-16 items-center justify-center rounded-2xl bg-garonne-100">
-              <FontAwesome name="map-marker" size={26} color="#26525C" />
-            </View>
-            <Text className="mb-3 text-center font-display text-[22px] text-ink-800">
+          <View className="flex-1 items-center justify-center px-7">
+            <Animated.View entering={FadeIn.duration(500)} className="mb-2 h-52 w-52">
+              <LottieView
+                source={locationPinAnimation}
+                autoPlay
+                loop
+                style={{ width: '100%', height: '100%' }}
+              />
+            </Animated.View>
+            <Animated.Text
+              entering={FadeInUp.duration(500).delay(200)}
+              className="mb-3 text-center font-display text-[22px] text-ink-800"
+            >
               On te propose des idées près de toi
-            </Text>
-            <Text className="text-center text-[15px] leading-[1.6] font-body text-ink-500">
+            </Animated.Text>
+            <Animated.Text
+              entering={FadeInUp.duration(500).delay(400)}
+              className="text-center text-[15px] leading-[1.6] font-body text-ink-500"
+            >
               iOS va te demander l'autorisation dans un instant. Sans elle, tu peux toujours
               chercher un quartier ou une adresse à la main.
-            </Text>
-          </ScrollView>
-          <View className="gap-2.5 px-7 pb-7 pt-4">
+            </Animated.Text>
+          </View>
+          <Animated.View
+            entering={FadeInUp.duration(500).delay(600)}
+            className="gap-2.5 px-7 pb-7 pt-4"
+          >
             <PrimaryButton label="D'accord" onPress={finish} />
             <Pressable accessibilityRole="button" onPress={finish} className="items-center py-2">
               <Text className="text-[14px] font-body text-ink-300">
                 Saisir une adresse à la place
               </Text>
             </Pressable>
-          </View>
+          </Animated.View>
         </View>
       ) : null}
     </SafeAreaView>
