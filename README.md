@@ -126,9 +126,10 @@ scripts/         dev-up / dev-down / test-supabase
 
 - Specs produit : `docs/01-*.md` … `docs/09-*.md`
 - Agents : `docs/AGENTS.md`
-- Guides : `docs/LOCAL-SETUP.md`, `docs/SUPABASE-LOCAL.md`, `docs/ENV-VARS.md`, `docs/TESTING.md`, `docs/CONTRIBUTING.md`
-- Versions : `docs/TECH-VERSIONS.md`
-- ADR : `docs/decisions/`
+- Guides : `LOCAL-SETUP.md`, `SUPABASE-LOCAL.md`, `ENV-VARS.md`, `TESTING.md`, `CONTRIBUTING.md`
+- Design : `DESIGN-BRIEF.md` — brief complet pour Claude Design / designer
+- Versions : `TECH-VERSIONS.md`
+- ADR : `decisions/`
 
 ## Sécurité
 

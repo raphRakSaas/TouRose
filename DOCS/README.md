@@ -12,6 +12,11 @@ Ce dossier constitue la source de vérité initiale pour le développement de To
 - `TECH-VERSIONS.md` — versions installées
 - `decisions/` — Architecture Decision Records
 
+- Guides opérationnels (LOCAL-SETUP, SUPABASE-LOCAL, ENV-VARS, TESTING, CONTRIBUTING)
+- `DESIGN-BRIEF.md` — brief design pour Claude Design / designer
+- `TECH-VERSIONS.md`
+- `decisions/` — ADR
+
 ## Ordre de lecture
 
 1. `01-PRODUCT-VISION.md` — vision, cible et périmètre.
