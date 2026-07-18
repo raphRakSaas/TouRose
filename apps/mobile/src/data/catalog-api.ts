@@ -1,8 +1,10 @@
 import {
   catalogSearchHitSchema,
+  publicCollectionRowSchema,
   publicEventRowSchema,
   publicPlaceRowSchema,
   type CatalogSearchHit,
+  type PublicCollectionRow,
   type PublicEventRow,
   type PublicPlaceRow,
 } from '@tourose/contracts';
@@ -42,6 +44,23 @@ export async function fetchPublicPlaces(limitCount = 50): Promise<PublicPlaceRow
   }
 
   return z.array(publicPlaceRowSchema).parse(data ?? []);
+}
+
+export async function fetchPublicCollections(limitCount = 10): Promise<PublicCollectionRow[]> {
+  const client = getSupabaseClient();
+  if (!client) {
+    throw new Error('Supabase non configuré — lance `pnpm dev:up`.');
+  }
+
+  const { data, error } = await client.rpc('list_public_collections', {
+    limit_count: limitCount,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return z.array(publicCollectionRowSchema).parse(data ?? []);
 }
 
 export async function searchPublicCatalog(

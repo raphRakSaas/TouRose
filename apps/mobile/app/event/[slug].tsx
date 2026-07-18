@@ -1,14 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { fetchPublicEventBySlug } from '@/src/data/catalog-api';
@@ -44,6 +37,7 @@ export default function EventDetailScreen() {
       >
         <ImagePlaceholder
           label={eventRow?.title ?? 'Événement'}
+          source={eventRow?.image_url ? { uri: eventRow.image_url } : undefined}
           className="w-full"
           height={220}
         />
@@ -56,7 +50,9 @@ export default function EventDetailScreen() {
 
         {eventQuery.error ? (
           <View className="gap-2 px-5 pt-5">
-            <Text className="text-base font-body-semibold text-brick-700">Impossible de charger</Text>
+            <Text className="text-base font-body-semibold text-brick-700">
+              Impossible de charger
+            </Text>
             <Text className="text-sm font-body text-ink-500">{eventQuery.error.message}</Text>
           </View>
         ) : null}
@@ -70,6 +66,11 @@ export default function EventDetailScreen() {
         {eventRow ? (
           <View className="px-[22px] pt-[22px]">
             <Text className="mb-2.5 font-display text-[22px] text-ink-800">{eventRow.title}</Text>
+            {eventRow.image_attribution ? (
+              <Text className="mb-3 text-[11px] font-body text-ink-300">
+                {eventRow.image_attribution}
+              </Text>
+            ) : null}
             <View className="mb-[18px] gap-1.5">
               {eventRow.next_starts_at ? (
                 <Text className="text-[14px] font-body text-ink-800">

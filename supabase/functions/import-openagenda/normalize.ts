@@ -14,6 +14,17 @@ export type OpenAgendaLocation = {
   longitude?: number;
 };
 
+export type OpenAgendaImage = {
+  base?: string;
+  filename?: string;
+  size?: { width?: number; height?: number };
+  variants?: Array<{
+    type?: string;
+    filename?: string;
+    size?: { width?: number; height?: number };
+  }>;
+};
+
 export type OpenAgendaEvent = {
   uid?: number | string;
   title?: string | Record<string, string>;
@@ -27,7 +38,8 @@ export type OpenAgendaEvent = {
   firstTiming?: OpenAgendaTiming;
   lastTiming?: OpenAgendaTiming;
   registration?: Array<{ type?: string; value?: string }>;
-  image?: unknown;
+  image?: OpenAgendaImage | null;
+  imageCredits?: string;
   updatedAt?: string;
   createdAt?: string;
 };
@@ -64,6 +76,15 @@ export type NormalizedImportPayload = {
     status: 'published';
   } | null;
   occurrences: Array<{ starts_at: string; ends_at: string | null }>;
+  image: {
+    remote_url: string;
+    width_px?: number;
+    height_px?: number;
+    alt_text: string;
+    author?: string;
+    source_url: string;
+    attribution_text: string;
+  } | null;
 };
 
 export const OPENAGENDA_SOURCE_ID = '22222222-2222-2222-2222-222222222201';
@@ -129,6 +150,45 @@ export function isOpenAgendaEventPublic(eventRow: OpenAgendaEvent): boolean {
   return normalized === '2' || normalized === 'published' || normalized === 'confirmed';
 }
 
+export function normalizeOpenAgendaImage(
+  image: OpenAgendaImage | null | undefined,
+  options: { title: string; sourceUrl?: string; credits?: string },
+): NormalizedImportPayload['image'] {
+  if (!image?.base || !options.sourceUrl) {
+    return null;
+  }
+
+  const preferredVariant =
+    image.variants?.find((variant) => variant.type === 'full' && variant.filename) ??
+    image.variants?.find((variant) => variant.filename);
+  const filename = preferredVariant?.filename ?? image.filename;
+  if (!filename) {
+    return null;
+  }
+
+  let remoteUrl: string;
+  try {
+    remoteUrl = new URL(filename, image.base).toString();
+  } catch {
+    return null;
+  }
+
+  if (!remoteUrl.startsWith('https://cdn.openagenda.com/')) {
+    return null;
+  }
+
+  const credits = options.credits?.trim();
+  return {
+    remote_url: remoteUrl,
+    width_px: preferredVariant?.size?.width ?? image.size?.width,
+    height_px: preferredVariant?.size?.height ?? image.size?.height,
+    alt_text: options.title,
+    author: credits || undefined,
+    source_url: options.sourceUrl,
+    attribution_text: credits ? `Photo : ${credits} · OpenAgenda` : 'Photo : OpenAgenda',
+  };
+}
+
 export async function normalizeOpenAgendaEvent(
   eventRow: OpenAgendaEvent,
   options?: { agendaUid?: string; sourceId?: string; territoryId?: string },
@@ -146,7 +206,8 @@ export async function normalizeOpenAgendaEvent(
   const slugBase = slugify(eventRow.slug ?? title) || `event-${externalId}`;
   const slug = `oa-${externalId}-${slugBase}`.slice(0, 120);
 
-  const timings = (eventRow.timings?.length ? eventRow.timings : null) ??
+  const timings =
+    (eventRow.timings?.length ? eventRow.timings : null) ??
     [eventRow.firstTiming, eventRow.lastTiming].filter(Boolean);
   const occurrences = timings
     .filter((timing): timing is OpenAgendaTiming => Boolean(timing?.begin))
@@ -181,6 +242,11 @@ export async function normalizeOpenAgendaEvent(
   const externalUrl = agendaUid
     ? `https://openagenda.com/agendas/${agendaUid}/events/${externalId}`
     : undefined;
+  const image = normalizeOpenAgendaImage(eventRow.image, {
+    title,
+    sourceUrl: externalUrl,
+    credits: eventRow.imageCredits,
+  });
 
   const payloadHash = await hashPayload({
     uid: eventRow.uid,
@@ -191,10 +257,9 @@ export async function normalizeOpenAgendaEvent(
     location: eventRow.location,
     status: eventRow.status,
     updatedAt: eventRow.updatedAt,
+    image: eventRow.image,
+    imageCredits: eventRow.imageCredits,
   });
-
-  // Images are never published automatically (media rights).
-  void eventRow.image;
 
   return {
     source_id: sourceId,
@@ -216,5 +281,6 @@ export async function normalizeOpenAgendaEvent(
     longitude: location?.longitude,
     place,
     occurrences,
+    image,
   };
 }

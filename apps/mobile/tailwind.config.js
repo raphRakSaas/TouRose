@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const touroseTheme = require('../../packages/design-tokens/src/nativewind-theme.js');
+const touroseTheme = require('../../packages/design-tokens/src/nativewind-theme.cjs');
 
 module.exports = {
   content: [

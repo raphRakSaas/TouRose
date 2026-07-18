@@ -14,6 +14,7 @@ export default defineConfig([
       '**/.astro/**',
       '**/coverage/**',
       'supabase/functions/**/.deno/**',
+      '**/jest.setup.js',
     ],
   },
   js.configs.recommended,
@@ -37,7 +38,7 @@ export default defineConfig([
   {
     files: [
       '**/*.cjs',
-      '**/nativewind-theme.js',
+      '**/nativewind-theme.cjs',
       '**/tailwind.config.js',
       '**/metro.config.js',
       '**/babel.config.js',

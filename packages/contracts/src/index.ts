@@ -69,6 +69,10 @@ export const publicEventRowSchema = z.object({
   next_ends_at: z.string().nullable(),
   official_url: z.string().nullable(),
   last_verified_at: z.string().nullable(),
+  image_url: z.string().url().nullable().optional(),
+  image_alt: z.string().nullable().optional(),
+  image_attribution: z.string().nullable().optional(),
+  image_source_url: z.string().url().nullable().optional(),
 });
 
 export const catalogSearchHitSchema = z.object({

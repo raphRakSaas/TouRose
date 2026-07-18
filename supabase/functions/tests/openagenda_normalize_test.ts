@@ -42,6 +42,18 @@ Deno.test('normalizeOpenAgendaEvent maps fixture shape', async () => {
       longitude: 1.44,
     },
     timings: [{ begin: '2026-08-01T20:00:00+02:00', end: '2026-08-01T22:00:00+02:00' }],
+    image: {
+      base: 'https://cdn.openagenda.com/main/',
+      filename: 'event.base.jpg',
+      variants: [
+        {
+          type: 'full',
+          filename: 'event.full.jpg',
+          size: { width: 500, height: 375 },
+        },
+      ],
+    },
+    imageCredits: 'Photographe test',
   };
 
   const normalized = await normalizeOpenAgendaEvent(eventRow, { agendaUid: '999' });
@@ -51,4 +63,10 @@ Deno.test('normalizeOpenAgendaEvent maps fixture shape', async () => {
   if (!normalized.place || normalized.place.external_id !== '7') throw new Error('place');
   if (normalized.occurrences.length !== 1) throw new Error('occurrences');
   if (!normalized.payload_hash) throw new Error('hash');
+  if (normalized.image?.remote_url !== 'https://cdn.openagenda.com/main/event.full.jpg') {
+    throw new Error('image url');
+  }
+  if (normalized.image.attribution_text !== 'Photo : Photographe test · OpenAgenda') {
+    throw new Error('image attribution');
+  }
 });

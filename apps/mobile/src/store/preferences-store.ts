@@ -20,13 +20,17 @@ type PreferencesState = {
   onboardingCompleted: boolean;
   setCompany: (company: CompanyPreference) => void;
   toggleInterest: (interest: InterestOption) => void;
+  resetPreferences: () => void;
   completeOnboarding: () => void;
   resetOnboarding: () => void;
 };
 
+const DEFAULT_COMPANY: CompanyPreference = 'couple';
+const DEFAULT_INTERESTS: InterestOption[] = ['Balades', 'Terrasses', 'Nature'];
+
 export const usePreferencesStore = create<PreferencesState>((set) => ({
-  company: 'couple',
-  interests: ['Balades', 'Terrasses', 'Nature'],
+  company: DEFAULT_COMPANY,
+  interests: DEFAULT_INTERESTS,
   onboardingCompleted: false,
   setCompany: (company) => set({ company }),
   toggleInterest: (interest) =>
@@ -35,6 +39,7 @@ export const usePreferencesStore = create<PreferencesState>((set) => ({
         ? state.interests.filter((item) => item !== interest)
         : [...state.interests, interest],
     })),
+  resetPreferences: () => set({ company: DEFAULT_COMPANY, interests: DEFAULT_INTERESTS }),
   completeOnboarding: () => set({ onboardingCompleted: true }),
   resetOnboarding: () => set({ onboardingCompleted: false }),
 }));

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'expo-router';
-import { useState } from 'react';
+import { Link, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -16,6 +16,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { CatalogListRow } from '@/components/ui/CatalogListRow';
 import { Chip } from '@/components/ui/Chip';
 import {
+  fetchPublicCollections,
   fetchPublicPlaces,
   fetchUpcomingEvents,
   searchPublicCatalog,
@@ -24,9 +25,20 @@ import {
 type CatalogSegment = 'events' | 'places' | 'collections';
 
 export default function ExploreScreen() {
+  const routeParams = useLocalSearchParams<{ segment?: string }>();
   const [segment, setSegment] = useState<CatalogSegment>('events');
   const [searchText, setSearchText] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  useEffect(() => {
+    if (
+      routeParams.segment === 'events' ||
+      routeParams.segment === 'places' ||
+      routeParams.segment === 'collections'
+    ) {
+      setSegment(routeParams.segment);
+    }
+  }, [routeParams.segment]);
 
   const eventsQuery = useQuery({
     queryKey: ['catalog', 'events'],
@@ -42,6 +54,12 @@ export default function ExploreScreen() {
     queryKey: ['catalog', 'search', searchText],
     queryFn: () => searchPublicCatalog(searchText),
     enabled: searchText.trim().length >= 2,
+  });
+
+  const collectionsQuery = useQuery({
+    queryKey: ['catalog', 'collections'],
+    queryFn: () => fetchPublicCollections(10),
+    enabled: segment === 'collections',
   });
 
   const isSearching = searchText.trim().length >= 2;
@@ -256,12 +274,28 @@ export default function ExploreScreen() {
       ) : null}
 
       {!isLoading && !errorMessage && !isSearching && segment === 'collections' ? (
-        <View className="px-5">
-          <Text className="text-sm font-body text-ink-500">
-            Les collections éditoriales arriveront ici — pour l'instant, explore événements et
-            lieux.
-          </Text>
-        </View>
+        <FlatList
+          data={collectionsQuery.data ?? []}
+          keyExtractor={(item) => item.id}
+          contentContainerClassName="px-5 pb-8"
+          ListEmptyComponent={
+            collectionsQuery.isLoading ? (
+              <ActivityIndicator color="#C45C3E" />
+            ) : (
+              <Text className="text-sm font-body text-ink-500">
+                Aucune collection publiée pour l'instant.
+              </Text>
+            )
+          }
+          renderItem={({ item, index }) => (
+            <CatalogListRow
+              title={item.title}
+              subtitle={item.summary ?? 'Collection'}
+              imageLabel={item.title}
+              showDivider={index < (collectionsQuery.data?.length ?? 0) - 1}
+            />
+          )}
+        />
       ) : null}
     </SafeAreaView>
   );

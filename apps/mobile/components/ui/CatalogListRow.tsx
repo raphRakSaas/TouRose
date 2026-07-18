@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View, type ImageSourcePropType } from 'react-native';
 
 import { ImagePlaceholder } from './ImagePlaceholder';
 
@@ -6,6 +6,8 @@ type CatalogListRowProps = {
   title: string;
   subtitle: string;
   imageLabel: string;
+  imageSource?: ImageSourcePropType;
+  imageAttribution?: string | null;
   onPress?: () => void;
   showDivider?: boolean;
   thumbSize?: number;
@@ -15,6 +17,8 @@ export function CatalogListRow({
   title,
   subtitle,
   imageLabel,
+  imageSource,
+  imageAttribution,
   onPress,
   showDivider = true,
   thumbSize = 64,
@@ -27,6 +31,7 @@ export function CatalogListRow({
     >
       <ImagePlaceholder
         label={imageLabel}
+        source={imageSource}
         className="shrink-0 rounded-xl"
         height={thumbSize}
         width={thumbSize}
@@ -34,6 +39,11 @@ export function CatalogListRow({
       <View className="flex-1 justify-center">
         <Text className="mb-0.5 text-[15px] font-body-semibold text-ink-800">{title}</Text>
         <Text className="text-[13px] font-body text-ink-500">{subtitle}</Text>
+        {imageAttribution ? (
+          <Text className="mt-0.5 text-[9px] font-body text-ink-300" numberOfLines={1}>
+            {imageAttribution}
+          </Text>
+        ) : null}
       </View>
     </Pressable>
   );

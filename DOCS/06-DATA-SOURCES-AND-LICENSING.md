@@ -60,6 +60,10 @@ Une image accessible publiquement n'est pas automatiquement réutilisable. Aucun
 
 En cas de doute : ne pas copier, utiliser un visuel de remplacement et placer l'élément en revue.
 
+Exception de prévisualisation OpenAgenda (ADR 0004) : une URL distante du CDN OpenAgenda peut
+être affichée sans copie locale avec son crédit et sa source, sous le statut `needs_review`.
+Cette exception ne s'applique à aucun autre domaine et ne vaut pas validation définitive des droits.
+
 ## Pipeline d'import
 
 1. récupérer avec curseur/pagination ;

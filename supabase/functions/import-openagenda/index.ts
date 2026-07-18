@@ -72,20 +72,27 @@ Deno.serve(async (request) => {
     for (const eventRow of events) {
       try {
         const normalized = await normalizeOpenAgendaEvent(eventRow, { agendaUid });
-        const { data: upsertResult, error: upsertError } = await client.rpc(
-          'import_upsert_event',
-          { payload: normalized },
-        );
+        const { data: upsertResult, error: upsertError } = await client.rpc('import_upsert_event', {
+          payload: normalized,
+        });
 
         if (upsertError) {
           errorCount += 1;
-          await logImportError(client, importRunId, normalized.external_id, 'upsert', upsertError.message, {
-            title: normalized.title,
-          });
+          await logImportError(
+            client,
+            importRunId,
+            normalized.external_id,
+            'upsert',
+            upsertError.message,
+            {
+              title: normalized.title,
+            },
+          );
           continue;
         }
 
         const action = (upsertResult as { action?: string } | null)?.action ?? 'updated';
+        const eventId = (upsertResult as { entity_id: string }).entity_id;
         if (action === 'created') createdCount += 1;
         else if (action === 'skipped') skippedCount += 1;
         else updatedCount += 1;
@@ -94,7 +101,7 @@ Deno.serve(async (request) => {
         const { data: similarRows } = await client
           .from('events')
           .select('id, title')
-          .neq('id', (upsertResult as { entity_id: string }).entity_id)
+          .neq('id', eventId)
           .ilike('title', normalized.title)
           .limit(1);
 
@@ -109,14 +116,64 @@ Deno.serve(async (request) => {
           );
         }
 
-        if (eventRow.image) {
-          await logImportError(
-            client,
-            importRunId,
-            normalized.external_id,
-            'media_rights',
-            'Image OpenAgenda ignored until rights review',
-            {},
+        if (normalized.image) {
+          const { data: existingMedia } = await client
+            .from('media_assets')
+            .select('id')
+            .eq('remote_url', normalized.image.remote_url)
+            .maybeSingle();
+
+          let mediaId = existingMedia?.id as string | undefined;
+          const mediaPayload = {
+            remote_url: normalized.image.remote_url,
+            width_px: normalized.image.width_px ?? null,
+            height_px: normalized.image.height_px ?? null,
+            alt_text: normalized.image.alt_text,
+            author: normalized.image.author ?? null,
+            source_url: normalized.image.source_url,
+            attribution_text: normalized.image.attribution_text,
+            cache_permission: false,
+            rights_status: 'needs_review',
+          };
+
+          if (mediaId) {
+            await client.from('media_assets').update(mediaPayload).eq('id', mediaId);
+          } else {
+            const { data: insertedMedia, error: mediaError } = await client
+              .from('media_assets')
+              .insert(mediaPayload)
+              .select('id')
+              .single();
+            if (mediaError || !insertedMedia) {
+              await logImportError(
+                client,
+                importRunId,
+                normalized.external_id,
+                'media_rights',
+                mediaError?.message ?? 'Cannot store OpenAgenda image',
+                { remote_url: normalized.image.remote_url },
+              );
+              continue;
+            }
+            mediaId = insertedMedia.id as string;
+          }
+
+          await client
+            .from('entity_media')
+            .update({ is_cover: false })
+            .eq('entity_type', 'event')
+            .eq('entity_id', eventId)
+            .eq('is_cover', true);
+
+          await client.from('entity_media').upsert(
+            {
+              entity_type: 'event',
+              entity_id: eventId,
+              media_id: mediaId,
+              position: 0,
+              is_cover: true,
+            },
+            { onConflict: 'entity_type,entity_id,media_id' },
           );
         }
       } catch (eventError) {

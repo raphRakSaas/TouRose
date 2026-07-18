@@ -19,6 +19,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
+import { requestLocationAccess } from '@/src/lib/location';
 import {
   INTEREST_OPTIONS,
   usePreferencesStore,
@@ -184,6 +185,7 @@ function HeroCarouselStep({ onSkip, onContinue }: { onSkip: () => void; onContin
 
 export default function OnboardingScreen() {
   const [step, setStep] = useState(1);
+  const [isRequestingLocation, setIsRequestingLocation] = useState(false);
   const interests = usePreferencesStore((state) => state.interests);
   const toggleInterest = usePreferencesStore((state) => state.toggleInterest);
   const completeOnboarding = usePreferencesStore((state) => state.completeOnboarding);
@@ -191,6 +193,17 @@ export default function OnboardingScreen() {
   function finish(): void {
     completeOnboarding();
     router.replace('/(tabs)');
+  }
+
+  async function acceptLocationAndFinish(): Promise<void> {
+    if (isRequestingLocation) {
+      return;
+    }
+    setIsRequestingLocation(true);
+    // La pop-up système iOS/Android s'affiche ici ; refusée ou non, on continue.
+    await requestLocationAccess();
+    setIsRequestingLocation(false);
+    finish();
   }
 
   if (step === 1) {
@@ -303,7 +316,11 @@ export default function OnboardingScreen() {
             entering={FadeInUp.duration(500).delay(600)}
             className="gap-2.5 px-7 pb-7 pt-4"
           >
-            <PrimaryButton label="D'accord" onPress={finish} />
+            <PrimaryButton
+              label={isRequestingLocation ? 'Autorisation en cours…' : "D'accord"}
+              disabled={isRequestingLocation}
+              onPress={() => void acceptLocationAndFinish()}
+            />
             <Pressable accessibilityRole="button" onPress={finish} className="items-center py-2">
               <Text className="text-[14px] font-body text-ink-300">
                 Saisir une adresse à la place

@@ -1,126 +1,246 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link } from 'expo-router';
-import { useEffect, useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { useQuery } from '@tanstack/react-query';
+import { Link, router } from 'expo-router';
+import { useEffect, useMemo, useState } from 'react';
+import { Platform, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CatalogListRow } from '@/components/ui/CatalogListRow';
 import { Chip } from '@/components/ui/Chip';
-import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { EventCompactCard } from '@/components/ui/EventCompactCard';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
-import { SuggestionCard } from '@/components/ui/SuggestionCard';
+import { StackedPicksModal } from '@/components/ui/StackedPicksModal';
 import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
+import { fetchUpcomingEvents } from '@/src/data/catalog-api';
+import { fetchToulouseWeather, formatWeatherLine } from '@/src/data/weather-api';
+import {
+  buildTodayFeed,
+  formatCustomDateLabel,
+  type CategorySectionKey,
+  type MomentKey,
+  type PriceFilterKey,
+} from '@/src/domain/today-feed';
+import {
+  hideStackedPicksForToday,
+  isStackedPicksHiddenForToday,
+} from '@/src/lib/stacked-picks-pref';
 import { usePreferencesStore } from '@/src/store/preferences-store';
 
-const MOMENT_CHIPS = ['Ce soir', "Aujourd'hui", 'Week-end', 'Choisir une date'] as const;
-const QUICK_FILTERS = ['Gratuit', 'Dehors', 'Ce week-end', 'Autour de moi'] as const;
+/** Une seule présentation du modal par lancement d'app. */
+let stackedPicksShownThisSession = false;
 
-const SUGGESTIONS = [
-  {
-    id: 'best',
-    title: 'Apéro-concert quai de Tounis',
-    reason: 'Adapté à la météo et à 18 min à pied',
-    badge: 'Meilleur choix',
-    badgeColor: '#A94A30',
-    imageLabel: 'Photo — Apéro-concert quai de Tounis',
-    imageSource: TOULOUSE_PHOTOS.quaisGaronne,
-    href: '/event/balade-fictive-quais' as const,
-  },
-  {
-    id: 'free',
-    title: 'Balade au Jardin des Plantes',
-    reason: 'Gratuit et accessible en métro',
-    badge: 'Gratuit',
-    badgeColor: '#26525C',
-    imageLabel: 'Photo — Balade au Jardin des Plantes',
-    imageSource: TOULOUSE_PHOTOS.jardinDesPlantes,
-    href: '/place/jardin-fictif-des-briques' as const,
-  },
-  {
-    id: 'surprise',
-    title: 'Atelier poterie à Saint-Cyprien',
-    reason: 'Idéal en couple, il reste 2 places ce soir',
-    badge: 'Surprise',
-    badgeColor: '#5D3B77',
-    imageLabel: 'Photo — Atelier poterie à Saint-Cyprien',
-    imageSource: TOULOUSE_PHOTOS.saintCyprien,
-    href: '/place/belvedere-imaginaire-garonne' as const,
-  },
+const MOMENT_CHIPS: { key: MomentKey; label: string }[] = [
+  { key: 'tonight', label: 'Ce soir' },
+  { key: 'today', label: "Aujourd'hui" },
+  { key: 'weekend', label: 'Week-end' },
+  { key: 'custom-date', label: 'Date…' },
 ];
+
+const PRICE_CHIPS: { key: PriceFilterKey; label: string }[] = [
+  { key: 'all', label: 'Tous prix' },
+  { key: 'free', label: 'Gratuit' },
+  { key: 'paid', label: 'Payant' },
+];
+
+const CATEGORY_CHIPS: { key: CategorySectionKey | 'all'; label: string }[] = [
+  { key: 'all', label: 'Toutes' },
+  { key: 'forYou', label: 'Pour toi' },
+  { key: 'nearby', label: 'Proximité' },
+  { key: 'free', label: 'Gratuit' },
+  { key: 'hike', label: 'Randonnée' },
+  { key: 'visit', label: 'Visite' },
+  { key: 'museum', label: 'Musée' },
+];
+
+const SECTION_PHOTOS = [
+  TOULOUSE_PHOTOS.quaisGaronne,
+  TOULOUSE_PHOTOS.jardinDesPlantes,
+  TOULOUSE_PHOTOS.saintCyprien,
+  TOULOUSE_PHOTOS.capitolePlace,
+  TOULOUSE_PHOTOS.toulouseAmoureux,
+  TOULOUSE_PHOTOS.baladeNocturne,
+] as const;
+
+type FilterModalKey = 'moment' | 'price' | 'category' | null;
 
 export default function TodayScreen() {
   const company = usePreferencesStore((state) => state.company);
-  const [selectedMoment, setSelectedMoment] = useState<(typeof MOMENT_CHIPS)[number]>('Ce soir');
-  const [isLoaded, setIsLoaded] = useState(false);
+  const setCompany = usePreferencesStore((state) => state.setCompany);
+  const resetPreferences = usePreferencesStore((state) => state.resetPreferences);
+
+  const [selectedMoment, setSelectedMoment] = useState<MomentKey>('today');
+  const [customDate, setCustomDate] = useState<Date | null>(null);
+  const [showNativeDatePicker, setShowNativeDatePicker] = useState(false);
+  const [priceFilter, setPriceFilter] = useState<PriceFilterKey>('all');
+  const [categoryFilter, setCategoryFilter] = useState<CategorySectionKey | 'all'>('all');
+  const [filterModal, setFilterModal] = useState<FilterModalKey>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [stackedModalOpen, setStackedModalOpen] = useState(false);
+
+  const weatherQuery = useQuery({
+    queryKey: ['weather', 'toulouse'],
+    queryFn: fetchToulouseWeather,
+    staleTime: 10 * 60_000,
+    retry: 1,
+  });
+
+  const eventsQuery = useQuery({
+    queryKey: ['catalog', 'events', 100],
+    queryFn: () => fetchUpcomingEvents(100),
+  });
+
+  const feed = useMemo(() => {
+    if (!eventsQuery.data) {
+      return { sections: [], allEvents: [], forYouPicks: [] };
+    }
+    return buildTodayFeed(eventsQuery.data, {
+      now: new Date(),
+      filters: {
+        moment: selectedMoment,
+        customDate: customDate ?? undefined,
+        price: priceFilter,
+        category: categoryFilter,
+      },
+    });
+  }, [eventsQuery.data, selectedMoment, customDate, priceFilter, categoryFilter]);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 900);
-    return () => clearTimeout(timer);
-  }, []);
+    if (stackedPicksShownThisSession || !eventsQuery.data || feed.forYouPicks.length === 0) {
+      return;
+    }
+
+    let cancelled = false;
+    void (async () => {
+      const hiddenToday = await isStackedPicksHiddenForToday();
+      if (cancelled || hiddenToday || stackedPicksShownThisSession) {
+        return;
+      }
+      stackedPicksShownThisSession = true;
+      setStackedModalOpen(true);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [eventsQuery.data, feed.forYouPicks.length]);
+
+  const isLoading = eventsQuery.isLoading;
+  const loadError = eventsQuery.error;
+
+  function onMomentPress(momentKey: MomentKey): void {
+    if (momentKey === 'custom-date') {
+      setShowNativeDatePicker(true);
+      return;
+    }
+    setCustomDate(null);
+    setSelectedMoment(momentKey);
+  }
+
+  function onNativeDateChange(event: DateTimePickerEvent, selected?: Date): void {
+    if (Platform.OS === 'android') {
+      setShowNativeDatePicker(false);
+    }
+    if (event.type === 'dismissed') {
+      setShowNativeDatePicker(false);
+      return;
+    }
+    if (selected) {
+      setCustomDate(selected);
+      setSelectedMoment('custom-date');
+      if (Platform.OS === 'android') {
+        setFilterModal(null);
+      }
+    }
+  }
+
+  async function onHideStackedForToday(): Promise<void> {
+    await hideStackedPicksForToday();
+    setStackedModalOpen(false);
+  }
+
+  const customDateLabel = customDate ? formatCustomDateLabel(customDate) : 'Date…';
+  const momentButtonLabel =
+    selectedMoment === 'custom-date'
+      ? customDateLabel
+      : (MOMENT_CHIPS.find((moment) => moment.key === selectedMoment)?.label ?? 'Quand');
+  const priceButtonLabel = PRICE_CHIPS.find((price) => price.key === priceFilter)?.label ?? 'Prix';
+  const categoryButtonLabel =
+    CATEGORY_CHIPS.find((category) => category.key === categoryFilter)?.label ?? 'Catégorie';
+
+  const weatherLine = weatherQuery.data
+    ? formatWeatherLine(weatherQuery.data)
+    : weatherQuery.isLoading
+      ? 'Météo en cours de chargement…'
+      : 'Météo indisponible pour le moment';
+
+  const companyLabels: Record<string, string> = {
+    seul: 'Seul',
+    couple: 'Couple',
+    amis: 'Amis',
+    famille: 'Famille',
+  };
+
+  const listEvents =
+    categoryFilter === 'all'
+      ? feed.allEvents
+      : (feed.sections.find((section) => section.key === categoryFilter)?.items ?? []);
 
   return (
     <SafeAreaView className="flex-1 bg-sand-50" edges={['top']}>
-      <ScrollView className="flex-1" contentContainerClassName="pb-8">
+      <ScrollView className="flex-1" contentContainerClassName="pb-10">
         <View className="flex-row items-baseline justify-between px-5 pb-2 pt-4">
           <Text className="font-display text-[22px] text-brick-900">TouRose</Text>
-          <View className="h-8 w-8 items-center justify-center rounded-full bg-sand-100">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Mon profil"
+            onPress={() => router.push('/(tabs)/for-me')}
+            className="h-8 w-8 items-center justify-center rounded-full bg-sand-100"
+          >
             <FontAwesome name="user-o" size={14} color="#A39B90" />
-          </View>
+          </Pressable>
         </View>
 
         <View className="px-5 pt-1.5">
           <Text className="mb-1 font-display-semibold text-[22px] text-ink-800">
             Salut, belle journée pour sortir
           </Text>
-          <Text className="text-[14px] font-body text-ink-500">18° · Ensoleillé à Toulouse</Text>
-          <Text className="mt-1 text-[12px] font-body text-ink-300">Compagnie : {company}</Text>
+          <Text className="text-[14px] font-body text-ink-500">{weatherLine}</Text>
+          <Text className="mt-1 text-[12px] font-body text-ink-300">
+            Compagnie : {companyLabels[company] ?? company}
+          </Text>
         </View>
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerClassName="gap-2 px-5 py-[18px]"
-        >
-          {MOMENT_CHIPS.map((moment) => (
-            <Chip
-              key={moment}
-              label={moment}
-              selected={selectedMoment === moment}
-              tone={selectedMoment === moment ? 'solid' : 'white'}
-              onPress={() => setSelectedMoment(moment)}
-            />
+        <View className="mt-4 flex-row gap-2 px-5 pb-3">
+          {[
+            { key: 'moment' as const, title: 'Quand', value: momentButtonLabel },
+            { key: 'price' as const, title: 'Prix', value: priceButtonLabel },
+            { key: 'category' as const, title: 'Catégorie', value: categoryButtonLabel },
+          ].map((filterButton) => (
+            <Pressable
+              key={filterButton.key}
+              accessibilityRole="button"
+              testID={`open-filter-${filterButton.key}`}
+              onPress={() => {
+                setShowNativeDatePicker(false);
+                setFilterModal(filterButton.key);
+              }}
+              className="min-w-0 flex-1 rounded-2xl border border-sand-200 bg-white px-3 py-2.5"
+            >
+              <Text className="text-[10px] font-body-bold uppercase tracking-wide text-ink-300">
+                {filterButton.title}
+              </Text>
+              <Text
+                className="mt-0.5 text-[12px] font-body-semibold text-ink-800"
+                numberOfLines={1}
+              >
+                {filterButton.value}
+              </Text>
+            </Pressable>
           ))}
-        </ScrollView>
+        </View>
 
-        {!isLoaded ? (
-          <View className="gap-3.5 px-5">
-            {[0, 1, 2].map((index) => (
-              <View key={index} className="h-[230px] rounded-3xl bg-sand-100" />
-            ))}
-          </View>
-        ) : (
-          <View className="gap-3.5 px-5">
-            {SUGGESTIONS.map((suggestion) => (
-              <Link key={suggestion.id} href={suggestion.href} asChild>
-                <SuggestionCard
-                  title={suggestion.title}
-                  reason={suggestion.reason}
-                  badge={suggestion.badge}
-                  badgeColor={suggestion.badgeColor}
-                  imageLabel={suggestion.imageLabel}
-                  imageSource={suggestion.imageSource}
-                />
-              </Link>
-            ))}
-          </View>
-        )}
-
-        <View className="px-5 pb-1.5 pt-5">
+        <View className="px-5 pb-3 pt-1">
           <PrimaryButton
             label="Affiner mes envies"
             variant="outline"
@@ -128,38 +248,199 @@ export default function TodayScreen() {
           />
         </View>
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerClassName="gap-2 px-5 py-3.5"
-        >
-          {QUICK_FILTERS.map((filter) => (
-            <Chip key={filter} label={filter} tone="cream" />
-          ))}
-        </ScrollView>
+        {isLoading ? (
+          <View className="gap-3 px-5">
+            {[0, 1].map((skeletonIndex) => (
+              <View key={skeletonIndex} className="h-[140px] rounded-2xl bg-sand-100" />
+            ))}
+          </View>
+        ) : null}
 
-        <View className="px-5 pb-6 pt-2">
-          <Text className="mb-2.5 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
-            Toulouse en amoureux
-          </Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2.5">
-            <ImagePlaceholder
-              label="Toulouse en amoureux"
-              source={TOULOUSE_PHOTOS.toulouseAmoureux}
-              className="rounded-2xl"
-              height={100}
-              width={150}
+        {loadError ? (
+          <View className="gap-2 px-5">
+            <Text className="text-base font-body-semibold text-brick-700">
+              Impossible de charger les idées
+            </Text>
+            <Text className="text-sm font-body text-ink-500">{loadError.message}</Text>
+            <PrimaryButton
+              label="Réessayer"
+              variant="outline"
+              onPress={() => void eventsQuery.refetch()}
             />
-            <ImagePlaceholder
-              label="Balade nocturne"
-              source={TOULOUSE_PHOTOS.baladeNocturne}
-              className="rounded-2xl"
-              height={100}
-              width={150}
-            />
-          </ScrollView>
-        </View>
+          </View>
+        ) : null}
+
+        {!isLoading && !loadError
+          ? feed.sections.map((section) => (
+              <View key={section.key} className="mb-4">
+                <Text className="mb-2.5 px-5 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
+                  {section.title}
+                </Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerClassName="gap-2.5 px-5"
+                >
+                  {section.items.map((item) => (
+                    <Link key={`${section.key}-${item.id}`} href={item.href as never} asChild>
+                      <EventCompactCard
+                        title={item.title}
+                        reason={item.reason}
+                        badge={item.badge}
+                        badgeColor={item.badgeColor}
+                        imageLabel={item.title}
+                        imageSource={
+                          item.imageUrl
+                            ? { uri: item.imageUrl }
+                            : SECTION_PHOTOS[item.photoIndex % SECTION_PHOTOS.length]
+                        }
+                        imageAttribution={item.imageAttribution}
+                      />
+                    </Link>
+                  ))}
+                </ScrollView>
+              </View>
+            ))
+          : null}
+
+        {!isLoading && !loadError ? (
+          <View className="px-5 pt-2">
+            <Text className="mb-2.5 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
+              Tous les événements
+            </Text>
+            {listEvents.length === 0 ? (
+              <Text className="text-sm font-body text-ink-500">
+                Aucun événement pour ces filtres — élargis la date ou la catégorie.
+              </Text>
+            ) : (
+              listEvents.map((item, index) => (
+                <Link key={`list-${item.id}`} href={item.href as never} asChild>
+                  <CatalogListRow
+                    title={item.title}
+                    subtitle={item.reason}
+                    imageLabel={item.title}
+                    imageSource={item.imageUrl ? { uri: item.imageUrl } : undefined}
+                    imageAttribution={item.imageAttribution}
+                    showDivider={index < listEvents.length - 1}
+                  />
+                </Link>
+              ))
+            )}
+          </View>
+        ) : null}
       </ScrollView>
+
+      <StackedPicksModal
+        picks={feed.forYouPicks}
+        visible={stackedModalOpen}
+        onClose={() => setStackedModalOpen(false)}
+        onHideForToday={() => void onHideStackedForToday()}
+      />
+
+      {filterModal ? (
+        <View className="absolute inset-0 z-40 items-center justify-center px-7">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Fermer les filtres"
+            className="absolute inset-0 bg-ink-800/45"
+            onPress={() => {
+              setShowNativeDatePicker(false);
+              setFilterModal(null);
+            }}
+          />
+          <View className="w-full max-w-[360px] rounded-[24px] bg-sand-50 p-5">
+            <Text className="mb-4 font-display text-[21px] text-ink-800">
+              {filterModal === 'moment'
+                ? 'Quand sortir ?'
+                : filterModal === 'price'
+                  ? 'Quel prix ?'
+                  : 'Quelle catégorie ?'}
+            </Text>
+
+            <View className="flex-row flex-wrap gap-2">
+              {filterModal === 'moment'
+                ? MOMENT_CHIPS.map((moment) => {
+                    const isSelected =
+                      moment.key === 'custom-date'
+                        ? selectedMoment === 'custom-date'
+                        : selectedMoment === moment.key && customDate === null;
+                    return (
+                      <Chip
+                        key={moment.key}
+                        testID={`moment-filter-${moment.key}`}
+                        label={moment.key === 'custom-date' ? customDateLabel : moment.label}
+                        selected={isSelected}
+                        tone={isSelected ? 'solid' : 'white'}
+                        onPress={() => {
+                          onMomentPress(moment.key);
+                          if (moment.key !== 'custom-date') {
+                            setFilterModal(null);
+                          }
+                        }}
+                      />
+                    );
+                  })
+                : null}
+              {filterModal === 'price'
+                ? PRICE_CHIPS.map((price) => (
+                    <Chip
+                      key={price.key}
+                      testID={`price-filter-${price.key}`}
+                      label={price.label}
+                      selected={priceFilter === price.key}
+                      tone={priceFilter === price.key ? 'solid' : 'white'}
+                      onPress={() => {
+                        setPriceFilter(price.key);
+                        setFilterModal(null);
+                      }}
+                    />
+                  ))
+                : null}
+              {filterModal === 'category'
+                ? CATEGORY_CHIPS.map((category) => (
+                    <Chip
+                      key={category.key}
+                      testID={`category-filter-${category.key}`}
+                      label={category.label}
+                      selected={categoryFilter === category.key}
+                      tone={categoryFilter === category.key ? 'solid' : 'white'}
+                      onPress={() => {
+                        setCategoryFilter(category.key);
+                        setFilterModal(null);
+                      }}
+                    />
+                  ))
+                : null}
+            </View>
+
+            {filterModal === 'moment' && showNativeDatePicker ? (
+              <View className="mt-4 overflow-hidden rounded-2xl bg-white px-2 py-1">
+                <DateTimePicker
+                  value={customDate ?? new Date()}
+                  mode="date"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  minimumDate={new Date()}
+                  onChange={onNativeDateChange}
+                  locale="fr-FR"
+                />
+                {Platform.OS === 'ios' ? (
+                  <PrimaryButton
+                    label="Valider la date"
+                    onPress={() => {
+                      if (!customDate) {
+                        setCustomDate(new Date());
+                        setSelectedMoment('custom-date');
+                      }
+                      setShowNativeDatePicker(false);
+                      setFilterModal(null);
+                    }}
+                  />
+                ) : null}
+              </View>
+            ) : null}
+          </View>
+        </View>
+      ) : null}
 
       {sheetOpen ? (
         <View className="absolute inset-0 z-40">
@@ -172,18 +453,62 @@ export default function TodayScreen() {
             <View className="mb-1.5 h-1.5 w-10 self-center rounded-full bg-sand-200" />
             <View className="mb-[18px] flex-row items-baseline justify-between">
               <Text className="font-display text-[22px] text-ink-800">Affiner mes envies</Text>
-              <Text className="text-[13px] font-body text-brick-900">Réinitialiser</Text>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => {
+                  resetPreferences();
+                  setPriceFilter('all');
+                  setCategoryFilter('all');
+                  setSelectedMoment('today');
+                  setCustomDate(null);
+                }}
+              >
+                <Text className="text-[13px] font-body text-brick-900">Réinitialiser</Text>
+              </Pressable>
             </View>
             <Text className="mb-2 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
               Compagnie
             </Text>
             <View className="mb-[18px] flex-row flex-wrap gap-2">
-              {(['Seul', 'Couple', 'Amis', 'Famille'] as const).map((label) => (
+              {(['Seul', 'Couple', 'Amis', 'Famille'] as const).map((label) => {
+                const companyValue = label.toLowerCase() as typeof company;
+                const isSelected = company === companyValue;
+                return (
+                  <Chip
+                    key={label}
+                    label={label}
+                    selected={isSelected}
+                    tone={isSelected ? 'solid' : 'white'}
+                    onPress={() => setCompany(companyValue)}
+                  />
+                );
+              })}
+            </View>
+            <Text className="mb-2 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
+              Prix
+            </Text>
+            <View className="mb-[18px] flex-row flex-wrap gap-2">
+              {PRICE_CHIPS.map((price) => (
                 <Chip
-                  key={label}
-                  label={label}
-                  selected={company === label.toLowerCase()}
-                  tone={company === label.toLowerCase() ? 'solid' : 'white'}
+                  key={price.key}
+                  label={price.label}
+                  selected={priceFilter === price.key}
+                  tone={priceFilter === price.key ? 'solid' : 'white'}
+                  onPress={() => setPriceFilter(price.key)}
+                />
+              ))}
+            </View>
+            <Text className="mb-2 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
+              Catégorie
+            </Text>
+            <View className="mb-[18px] flex-row flex-wrap gap-2">
+              {CATEGORY_CHIPS.map((category) => (
+                <Chip
+                  key={category.key}
+                  label={category.label}
+                  selected={categoryFilter === category.key}
+                  tone={categoryFilter === category.key ? 'solid' : 'white'}
+                  onPress={() => setCategoryFilter(category.key)}
                 />
               ))}
             </View>
@@ -193,4 +518,9 @@ export default function TodayScreen() {
       ) : null}
     </SafeAreaView>
   );
+}
+
+/** Réinitialise le flag session — réservé aux tests. */
+export function resetStackedPicksSessionFlagForTests(): void {
+  stackedPicksShownThisSession = false;
 }

@@ -175,10 +175,17 @@ function syncAppEnv(supabase) {
   const anonKey = supabase.ANON_KEY ?? supabase.PUBLISHABLE_KEY;
   if (!anonKey) fail('Clé anon Supabase introuvable dans le status.');
 
+  // Le téléphone (Expo Go) ne peut pas joindre 127.0.0.1 (= lui-même) :
+  // on écrit l'IP LAN du Mac dans l'env mobile.
+  const lanIpAddress = findLanIpAddress();
+  const mobileApiUrl = lanIpAddress
+    ? apiUrl.replace(/127\.0\.0\.1|localhost/, lanIpAddress)
+    : apiUrl;
+
   writeEnvFile(
     'apps/mobile/.env',
     `# Généré par pnpm dev:up — ne pas committer
-EXPO_PUBLIC_SUPABASE_URL=${apiUrl}
+EXPO_PUBLIC_SUPABASE_URL=${mobileApiUrl}
 EXPO_PUBLIC_SUPABASE_ANON_KEY=${anonKey}
 EXPO_PUBLIC_MAP_STYLE_URL=https://demotiles.maplibre.org/style.json
 EXPO_PUBLIC_NOTIFICATIONS_ENABLED=false

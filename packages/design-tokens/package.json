@@ -9,7 +9,7 @@
     ".": "./src/index.ts",
     "./css": "./src/tokens.css",
     "./tailwind": "./src/tailwind-theme.css",
-    "./nativewind": "./src/nativewind-theme.js"
+    "./nativewind": "./src/nativewind-theme.cjs"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

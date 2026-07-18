@@ -52,6 +52,10 @@ describe('contracts', () => {
       next_ends_at: null,
       official_url: null,
       last_verified_at: null,
+      image_url: 'https://cdn.openagenda.com/main/event.full.image.jpg',
+      image_alt: 'Balade',
+      image_attribution: 'Photo : OpenAgenda',
+      image_source_url: 'https://openagenda.com/agendas/1/events/2',
     });
     expect(eventRow.title).toBe('Balade');
   });
