@@ -127,6 +127,8 @@ scripts/         dev-up / dev-down / test-supabase
 - Specs produit : `docs/01-*.md` … `docs/09-*.md`
 - Agents : `docs/AGENTS.md`
 - Guides : `LOCAL-SETUP.md`, `SUPABASE-LOCAL.md`, `ENV-VARS.md`, `TESTING.md`, `CONTRIBUTING.md`
+- Backlog : `BACKLOG.md` — fait / reste / à enrichir
+- Auth admin & sécu : `ADMIN-AUTH-AND-SECURITY.md` — JWT rôle, promotion, injection SQL
 - Design : `DESIGN-BRIEF.md` — brief complet pour Claude Design / designer
 - Versions : `TECH-VERSIONS.md`
 - ADR : `decisions/`

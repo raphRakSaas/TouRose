@@ -13,6 +13,8 @@ Ce dossier constitue la source de vérité initiale pour le développement de To
 - `decisions/` — Architecture Decision Records
 
 - Guides opérationnels (LOCAL-SETUP, SUPABASE-LOCAL, ENV-VARS, TESTING, CONTRIBUTING)
+- `BACKLOG.md` — suivi fait / reste (à enrichir au fil de l’eau)
+- `ADMIN-AUTH-AND-SECURITY.md` — JWT admin, promotion d’accès, injection SQL
 - `DESIGN-BRIEF.md` — brief design pour Claude Design / designer
 - `TECH-VERSIONS.md`
 - `decisions/` — ADR

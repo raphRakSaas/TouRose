@@ -24,6 +24,7 @@
     "dev:admin": "pnpm --filter @tourose/admin start",
     "dev:up": "node ./scripts/dev-up.mjs",
     "dev:down": "node ./scripts/dev-down.mjs",
+    "grant:admin": "node ./scripts/grant-admin.mjs",
     "supabase:start": "pnpm exec supabase start",
     "supabase:stop": "pnpm exec supabase stop",
     "supabase:status": "pnpm exec supabase status",
