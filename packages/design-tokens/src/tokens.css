@@ -1,0 +1,21 @@
+:root {
+  --tourose-brand-name: 'TouRose';
+  --tourose-color-brick-500: #c45c3e;
+  --tourose-color-brick-700: #8b3c2a;
+  --tourose-color-garonne-500: #3a7a88;
+  --tourose-color-violet-500: #8b5ead;
+  --tourose-color-sand-50: #fbf8f4;
+  --tourose-color-sand-100: #f3ede4;
+  --tourose-color-ink-700: #2c2824;
+  --tourose-color-ink-800: #1f1c19;
+  --tourose-color-success: #2f7d4a;
+  --tourose-color-warning: #c47a1a;
+  --tourose-color-danger: #b33a2b;
+  --tourose-font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
+  --tourose-font-body: 'Source Sans 3', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --tourose-radius-md: 10px;
+  --tourose-radius-lg: 16px;
+  --tourose-space-4: 16px;
+  --tourose-space-6: 24px;
+  --tourose-shadow-soft: 0 8px 24px rgba(32, 24, 20, 0.08);
+}

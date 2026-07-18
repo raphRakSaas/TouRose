@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="TouRose — Toulouse à voir, à vivre, à aimer.">
+  <section class="grid gap-8 pt-10">
+    <p class="brand text-5xl leading-tight text-ink-800 md:text-6xl">TouRose</p>
+    <h1 class="max-w-2xl text-2xl font-medium text-ink-700 md:text-3xl">
+      Toulouse à voir, à vivre, à aimer.
+    </h1>
+    <p class="max-w-xl text-lg text-ink-600">
+      Trois idées adaptées à ta situation, puis tout Toulouse à portée de main. L’application mobile
+      arrive bientôt — ce site présente le projet, les sources et la confidentialité.
+    </p>
+    <div class="flex flex-wrap gap-3">
+      <a
+        class="rounded-lg bg-brick-500 px-5 py-3 text-white no-underline"
+        href="/credits"
+      >
+        Voir les sources
+      </a>
+      <a
+        class="rounded-lg bg-garonne-500 px-5 py-3 text-white no-underline"
+        href="/confidentialite"
+      >
+        Confidentialité
+      </a>
+    </div>
+  </section>
+</BaseLayout>

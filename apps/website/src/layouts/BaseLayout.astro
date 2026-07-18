@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'TouRose — Toulouse à voir, à vivre, à aimer. Trois idées adaptées, puis tout Toulouse à portée de main.',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <link rel="canonical" href={canonical} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="mx-auto flex max-w-5xl items-baseline justify-between gap-4 px-6 py-6">
+      <a href="/" class="brand text-3xl text-brick-700 no-underline">TouRose</a>
+      <nav class="flex gap-4 text-sm text-ink-700" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/credits">Crédits</a>
+        <a href="/confidentialite">Confidentialité</a>
+      </nav>
+    </header>
+    <main class="mx-auto max-w-5xl px-6 pb-16">
+      <slot />
+    </main>
+    <footer class="mx-auto max-w-5xl px-6 pb-10 text-sm text-ink-500">
+      Toulouse à voir, à vivre, à aimer.
+    </footer>
+  </body>
+</html>

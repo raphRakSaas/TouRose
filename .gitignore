@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+build/
+.expo/
+.expo-shared/
+web-build/
+.angular/
+.output/
+.astro/
+.next/
+out/
+*.tsbuildinfo
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Logs / coverage
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+coverage/
+.nyc_output/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Supabase
+supabase/.temp/
+supabase/.branches/
+
+# Testing / caches
+.turbo/
+.cache/
+*.local
+
+# Native
+apps/mobile/ios/
+apps/mobile/android/
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+*.pem
+
+# EAS
+eas-update-manifest.json

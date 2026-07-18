@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+.expo
+.angular
+.astro
+.output
+coverage
+pnpm-lock.yaml
+supabase/.temp
+*.min.js
+DOCS/BOOTSTRAP-PROMPT.md

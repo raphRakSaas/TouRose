@@ -1,0 +1,33 @@
+@import './tokens.css';
+
+@theme {
+  --color-brick-50: #fbf4f1;
+  --color-brick-100: #f5e4dc;
+  --color-brick-200: #ebc5b4;
+  --color-brick-300: #dfa189;
+  --color-brick-400: #d07a5e;
+  --color-brick-500: #c45c3e;
+  --color-brick-600: #a84a32;
+  --color-brick-700: #8b3c2a;
+  --color-brick-800: #6f3023;
+  --color-brick-900: #4a2018;
+  --color-garonne-50: #f0f7f8;
+  --color-garonne-100: #d9ebee;
+  --color-garonne-200: #b3d6dc;
+  --color-garonne-300: #84bbc5;
+  --color-garonne-400: #5598a6;
+  --color-garonne-500: #3a7a88;
+  --color-garonne-600: #2f6270;
+  --color-garonne-700: #284f5a;
+  --color-garonne-800: #23414a;
+  --color-garonne-900: #1c3239;
+  --color-violet-500: #8b5ead;
+  --color-sand-50: #fbf8f4;
+  --color-sand-100: #f3ede4;
+  --color-ink-700: #2c2824;
+  --color-ink-800: #1f1c19;
+  --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
+  --font-body: 'Source Sans 3', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}

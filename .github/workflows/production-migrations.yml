@@ -1,0 +1,25 @@
+name: Production Migrations
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type APPLY to acknowledge production migration risk'
+        required: true
+        type: string
+
+jobs:
+  migrate-disabled:
+    name: Production migrations disabled until secrets exist
+    runs-on: ubuntu-latest
+    steps:
+      - name: Guard
+        run: |
+          if [ "${{ inputs.confirm }}" != "APPLY" ]; then
+            echo "Confirmation token mismatch. Aborting."
+            exit 1
+          fi
+          echo "Production migrations remain disabled until SUPABASE_ACCESS_TOKEN,"
+          echo "SUPABASE_DB_PASSWORD and project ref secrets are configured."
+          echo "No migration was applied."
+          exit 1
