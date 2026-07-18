@@ -13,6 +13,7 @@ import { Chip } from '@/components/ui/Chip';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { SuggestionCard } from '@/components/ui/SuggestionCard';
+import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
 import { usePreferencesStore } from '@/src/store/preferences-store';
 
 const MOMENT_CHIPS = ['Ce soir', "Aujourd'hui", 'Week-end', 'Choisir une date'] as const;
@@ -26,6 +27,7 @@ const SUGGESTIONS = [
     badge: 'Meilleur choix',
     badgeColor: '#A94A30',
     imageLabel: 'Photo — Apéro-concert quai de Tounis',
+    imageSource: TOULOUSE_PHOTOS.quaisGaronne,
     href: '/event/balade-fictive-quais' as const,
   },
   {
@@ -35,6 +37,7 @@ const SUGGESTIONS = [
     badge: 'Gratuit',
     badgeColor: '#26525C',
     imageLabel: 'Photo — Balade au Jardin des Plantes',
+    imageSource: TOULOUSE_PHOTOS.jardinDesPlantes,
     href: '/place/jardin-fictif-des-briques' as const,
   },
   {
@@ -44,6 +47,7 @@ const SUGGESTIONS = [
     badge: 'Surprise',
     badgeColor: '#5D3B77',
     imageLabel: 'Photo — Atelier poterie à Saint-Cyprien',
+    imageSource: TOULOUSE_PHOTOS.saintCyprien,
     href: '/place/belvedere-imaginaire-garonne' as const,
   },
 ];
@@ -109,6 +113,7 @@ export default function TodayScreen() {
                   badge={suggestion.badge}
                   badgeColor={suggestion.badgeColor}
                   imageLabel={suggestion.imageLabel}
+                  imageSource={suggestion.imageSource}
                 />
               </Link>
             ))}
@@ -140,12 +145,14 @@ export default function TodayScreen() {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2.5">
             <ImagePlaceholder
               label="Toulouse en amoureux"
+              source={TOULOUSE_PHOTOS.toulouseAmoureux}
               className="rounded-2xl"
               height={100}
               width={150}
             />
             <ImagePlaceholder
               label="Balade nocturne"
+              source={TOULOUSE_PHOTOS.baladeNocturne}
               className="rounded-2xl"
               height={100}
               width={150}

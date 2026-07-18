@@ -1,7 +1,16 @@
-import { Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import {
+  Image,
+  Text,
+  View,
+  type ImageSourcePropType,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
 type ImagePlaceholderProps = {
   label: string;
+  /** Vraie photo : si fournie, remplace le dégradé placeholder. */
+  source?: ImageSourcePropType;
   className?: string;
   height?: number;
   width?: number | `${number}%`;
@@ -17,11 +26,25 @@ const GRADIENTS = [
 
 export function ImagePlaceholder({
   label,
+  source,
   className = '',
   height,
   width,
   style,
 }: ImagePlaceholderProps) {
+  if (source) {
+    return (
+      <View className={`overflow-hidden ${className}`} style={[{ height, width }, style]}>
+        <Image
+          source={source}
+          accessibilityLabel={label}
+          resizeMode="cover"
+          style={{ width: '100%', height: '100%' }}
+        />
+      </View>
+    );
+  }
+
   const hash = label.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
   const [fromColor, toColor] = GRADIENTS[hash % GRADIENTS.length];
 

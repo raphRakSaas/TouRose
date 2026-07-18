@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View, type ImageSourcePropType } from 'react-native';
 
 import { ImagePlaceholder } from './ImagePlaceholder';
 
@@ -8,6 +8,7 @@ type SuggestionCardProps = {
   badge: string;
   badgeColor: string;
   imageLabel: string;
+  imageSource?: ImageSourcePropType;
   onPress?: () => void;
 };
 
@@ -17,6 +18,7 @@ export function SuggestionCard({
   badge,
   badgeColor,
   imageLabel,
+  imageSource,
   onPress,
 }: SuggestionCardProps) {
   return (
@@ -33,7 +35,12 @@ export function SuggestionCard({
       }}
     >
       <View className="relative h-[150px]">
-        <ImagePlaceholder label={imageLabel} className="absolute inset-0" height={150} />
+        <ImagePlaceholder
+          label={imageLabel}
+          source={imageSource}
+          className="absolute inset-0"
+          height={150}
+        />
         <View className="absolute left-3 top-3 rounded-full bg-white px-2.5 py-1">
           <Text className="text-[11px] font-body-bold" style={{ color: badgeColor }}>
             {badge}

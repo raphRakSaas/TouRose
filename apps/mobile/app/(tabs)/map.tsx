@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Chip } from '@/components/ui/Chip';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
 
 export default function MapScreen() {
   return (
@@ -38,6 +39,7 @@ export default function MapScreen() {
             <View className="flex-row gap-3">
               <ImagePlaceholder
                 label="Place du Capitole"
+                source={TOULOUSE_PHOTOS.capitolePlace}
                 className="rounded-xl"
                 height={56}
                 width={56}
