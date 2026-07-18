@@ -205,6 +205,32 @@ describe('TodayScreen', () => {
     expect(screen.queryByText('Concert OpenAgenda')).toBeNull();
   });
 
+  it('bascule entre affichage cartes (par défaut) et liste', async () => {
+    renderTodayScreen();
+    await dismissStackedModal();
+    await screen.findByText('Tous les événements');
+
+    const cardsToggle = screen.getByTestId('display-mode-cards');
+    const listToggle = screen.getByTestId('display-mode-list');
+    expect(cardsToggle.props.accessibilityState?.selected).toBe(true);
+    expect(listToggle.props.accessibilityState?.selected).toBe(false);
+
+    fireEvent.press(listToggle);
+    await waitFor(() => {
+      expect(screen.getByTestId('display-mode-list').props.accessibilityState?.selected).toBe(
+        true,
+      );
+    });
+    expect(screen.getAllByText('Concert OpenAgenda').length).toBeGreaterThan(0);
+
+    fireEvent.press(screen.getByTestId('display-mode-cards'));
+    await waitFor(() => {
+      expect(screen.getByTestId('display-mode-cards').props.accessibilityState?.selected).toBe(
+        true,
+      );
+    });
+  });
+
   it('ouvre le date picker natif', async () => {
     renderTodayScreen();
     await dismissStackedModal();

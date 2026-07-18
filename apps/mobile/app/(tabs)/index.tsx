@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Platform, Pressable, ScrollView, Text, View } from 'react-native';
+import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CatalogListRow } from '@/components/ui/CatalogListRow';
@@ -11,6 +12,7 @@ import { Chip } from '@/components/ui/Chip';
 import { EventCompactCard } from '@/components/ui/EventCompactCard';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { StackedPicksModal } from '@/components/ui/StackedPicksModal';
+import { SuggestionCard } from '@/components/ui/SuggestionCard';
 import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
 import { fetchUpcomingEvents } from '@/src/data/catalog-api';
 import { fetchToulouseWeather, formatWeatherLine } from '@/src/data/weather-api';
@@ -77,6 +79,7 @@ export default function TodayScreen() {
   const [filterModal, setFilterModal] = useState<FilterModalKey>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [stackedModalOpen, setStackedModalOpen] = useState(false);
+  const [eventsDisplay, setEventsDisplay] = useState<'cards' | 'list'>('cards');
 
   const weatherQuery = useQuery({
     queryKey: ['weather', 'toulouse'],
@@ -271,8 +274,12 @@ export default function TodayScreen() {
         ) : null}
 
         {!isLoading && !loadError
-          ? feed.sections.map((section) => (
-              <View key={section.key} className="mb-4">
+          ? feed.sections.map((section, sectionIndex) => (
+              <Animated.View
+                key={section.key}
+                entering={FadeInUp.duration(400).delay(Math.min(sectionIndex, 4) * 90)}
+                className="mb-4"
+              >
                 <Text className="mb-2.5 px-5 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
                   {section.title}
                 </Text>
@@ -299,19 +306,76 @@ export default function TodayScreen() {
                     </Link>
                   ))}
                 </ScrollView>
-              </View>
+              </Animated.View>
             ))
           : null}
 
         {!isLoading && !loadError ? (
-          <View className="px-5 pt-2">
-            <Text className="mb-2.5 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
-              Tous les événements
-            </Text>
+          <Animated.View entering={FadeInUp.duration(400).delay(180)} className="px-5 pt-2">
+            <View className="mb-2.5 flex-row items-center justify-between">
+              <Text className="text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
+                Tous les événements
+              </Text>
+              <View className="flex-row overflow-hidden rounded-full bg-sand-200">
+                <Pressable
+                  testID="display-mode-cards"
+                  accessibilityRole="button"
+                  accessibilityLabel="Affichage en cartes"
+                  accessibilityState={{ selected: eventsDisplay === 'cards' }}
+                  onPress={() => setEventsDisplay('cards')}
+                  className={`px-3 py-1.5 ${eventsDisplay === 'cards' ? 'bg-ink-800' : ''}`}
+                >
+                  <FontAwesome
+                    name="th-large"
+                    size={13}
+                    color={eventsDisplay === 'cards' ? '#FFFFFF' : '#8A8177'}
+                  />
+                </Pressable>
+                <Pressable
+                  testID="display-mode-list"
+                  accessibilityRole="button"
+                  accessibilityLabel="Affichage en liste"
+                  accessibilityState={{ selected: eventsDisplay === 'list' }}
+                  onPress={() => setEventsDisplay('list')}
+                  className={`px-3 py-1.5 ${eventsDisplay === 'list' ? 'bg-ink-800' : ''}`}
+                >
+                  <FontAwesome
+                    name="list"
+                    size={13}
+                    color={eventsDisplay === 'list' ? '#FFFFFF' : '#8A8177'}
+                  />
+                </Pressable>
+              </View>
+            </View>
             {listEvents.length === 0 ? (
               <Text className="text-sm font-body text-ink-500">
                 Aucun événement pour ces filtres — élargis la date ou la catégorie.
               </Text>
+            ) : eventsDisplay === 'cards' ? (
+              <View className="gap-3.5">
+                {listEvents.map((item, index) => (
+                  <Animated.View
+                    key={`card-${item.id}`}
+                    entering={FadeIn.duration(300).delay(Math.min(index, 6) * 60)}
+                  >
+                    <Link href={item.href as never} asChild>
+                      <SuggestionCard
+                        title={item.title}
+                        reason={item.reason}
+                        badge={item.badge}
+                        badgeColor={item.badgeColor}
+                        imageLabel={item.title}
+                        imageSource={
+                          item.imageUrl
+                            ? { uri: item.imageUrl }
+                            : SECTION_PHOTOS[item.photoIndex % SECTION_PHOTOS.length]
+                        }
+                        imageAttribution={item.imageAttribution}
+                      />
+                    </Link>
+                  </Animated.View>
+                ))}
+              </View>
             ) : (
               listEvents.map((item, index) => (
                 <Link key={`list-${item.id}`} href={item.href as never} asChild>
@@ -326,7 +390,7 @@ export default function TodayScreen() {
                 </Link>
               ))
             )}
-          </View>
+          </Animated.View>
         ) : null}
       </ScrollView>
 
