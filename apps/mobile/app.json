@@ -19,7 +19,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png",
         "backgroundColor": "#FBF8F4"
       },
       "package": "app.tourose.mobile",
@@ -39,19 +41,17 @@
           "icon": "./assets/images/icon.png",
           "color": "#C45C3E"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
-      "eas": {
-        "projectId": "replace-with-eas-project-id"
-      },
       "mapStyleUrl": "${EXPO_PUBLIC_MAP_STYLE_URL}",
       "supabaseUrl": "${EXPO_PUBLIC_SUPABASE_URL}",
       "supabaseAnonKey": "${EXPO_PUBLIC_SUPABASE_ANON_KEY}"
-    },
-    "owner": "tourose"
+    }
   }
 }

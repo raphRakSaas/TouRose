@@ -10,22 +10,25 @@ pnpm dev:up           # Supabase + env + website + admin + mobile
 
 Détails et vérifications : voir le **README racine**.
 
-## Logs (séparés)
+## Logs (raccourcis clavier)
 
-Dans le terminal `dev:up`, chaque ligne a un préfixe couleur : `[website]`, `[admin]`, `[mobile]`.
+Dans le terminal `dev:up`, **une touche** filtre les logs (pas besoin d’Entrée) :
 
-Pour ne suivre **qu’une** app :
-
-```bash
-tail -f .logs/mobile.log
-tail -f .logs/website.log
-tail -f .logs/admin.log
-```
+| Touche | Effet |
+|--------|--------|
+| `m` | mobile |
+| `a` | admin |
+| `s` | site (website) |
+| `f` | functions (si démarrées avec `--functions`) |
+| `t` | tout (mélange coloré) |
+| `c` | clear |
+| `h` | aide |
+| `q` | quitter |
 
 ## Arrêt
 
 ```bash
-# Ctrl+C sur le terminal dev:up, puis :
+# q ou Ctrl+C dans le terminal dev:up, puis :
 pnpm dev:down
 ```
 

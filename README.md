@@ -33,19 +33,20 @@ Ce script :
 
 ### Lire les logs sans les mélanger
 
-Dans le terminal `dev:up`, chaque ligne est préfixée en couleur :
+Dans le terminal `dev:up`, appuie sur une touche (sans Entrée) :
 
-- `[website]` (cyan)
-- `[admin]` (magenta)
-- `[mobile]` (vert)
+| Touche | Effet |
+|--------|--------|
+| `m` | logs **mobile** seulement |
+| `a` | logs **admin** seulement |
+| `s` | logs **site** (website) seulement |
+| `f` | logs **functions** (si `--functions`) |
+| `t` | **tout** (mélange coloré) |
+| `c` | clear l’écran |
+| `h` | réaffiche l’aide |
+| `q` | quitter (comme Ctrl+C) |
 
-Pour suivre **une seule** app (recommandé) :
-
-```bash
-tail -f .logs/mobile.log
-tail -f .logs/website.log
-tail -f .logs/admin.log
-```
+Les fichiers `.logs/*.log` restent disponibles en parallèle si besoin (`tail -f .logs/mobile.log`).
 
 Options :
 

@@ -58,12 +58,13 @@ module.exports = {
       900: '#141210',
     },
   },
+  // React Native expects a single fontFamily string (not a CSS font stack array).
   fontFamily: {
-    display: ['Fraunces_700Bold', 'Fraunces', 'serif'],
-    'display-semibold': ['Fraunces_600SemiBold', 'Fraunces', 'serif'],
-    body: ['SourceSans3_400Regular', 'Source Sans 3', 'sans-serif'],
-    'body-semibold': ['SourceSans3_600SemiBold', 'Source Sans 3', 'sans-serif'],
-    'body-bold': ['SourceSans3_700Bold', 'Source Sans 3', 'sans-serif'],
+    display: 'Fraunces_700Bold',
+    'display-semibold': 'Fraunces_600SemiBold',
+    body: 'SourceSans3_400Regular',
+    'body-semibold': 'SourceSans3_600SemiBold',
+    'body-bold': 'SourceSans3_700Bold',
   },
   borderRadius: {
     none: 0,
