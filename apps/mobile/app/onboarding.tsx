@@ -16,12 +16,12 @@ import {
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Chip } from '@/components/ui/Chip';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
 import {
   INTEREST_OPTIONS,
   usePreferencesStore,
+  type InterestOption,
 } from '@/src/store/preferences-store';
 
 const HERO_SLIDES = [
@@ -43,6 +43,19 @@ const HERO_SLIDES = [
 ] as const;
 
 const AUTO_SCROLL_DELAY_MS = 4000;
+
+const INTEREST_CARDS: Record<
+  InterestOption,
+  { icon: keyof typeof FontAwesome.glyphMap; tint: string; background: string }
+> = {
+  Balades: { icon: 'map-signs', tint: '#C45C3E', background: '#F5E4DC' },
+  Musées: { icon: 'university', tint: '#5D3B77', background: '#EDE4F4' },
+  Terrasses: { icon: 'coffee', tint: '#A84A32', background: '#FBF4F1' },
+  Concerts: { icon: 'music', tint: '#8B5EAD', background: '#F7F3FA' },
+  Marchés: { icon: 'shopping-basket', tint: '#A88B63', background: '#F5EEE3' },
+  Nature: { icon: 'tree', tint: '#2F7D4A', background: '#EAF3ED' },
+  Histoire: { icon: 'book', tint: '#26525C', background: '#D3E6E9' },
+};
 
 function HeroCarouselStep({ onSkip, onContinue }: { onSkip: () => void; onContinue: () => void }) {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
@@ -183,23 +196,69 @@ export default function OnboardingScreen() {
     <SafeAreaView className="flex-1 bg-sand-50" edges={['top', 'bottom']}>
       {step === 2 ? (
         <View className="flex-1">
-          <ScrollView className="flex-1" contentContainerClassName="px-7 pb-7 pt-10">
-            <Text className="mb-2 font-display text-2xl text-ink-800">
+          <ScrollView className="flex-1" contentContainerClassName="grow px-7 pb-7 pt-10">
+            <Animated.Text
+              entering={FadeInUp.duration(500)}
+              className="mb-2 font-display text-[26px] text-ink-800"
+            >
               Qu'est-ce qui te fait sortir ?
-            </Text>
-            <Text className="mb-6 text-[14px] font-body text-ink-500">
+            </Animated.Text>
+            <Animated.Text
+              entering={FadeInUp.duration(500).delay(150)}
+              className="mb-7 text-[14px] font-body text-ink-500"
+            >
               Choisis-en quelques-uns, tu pourras changer plus tard.
-            </Text>
-            <View className="flex-row flex-wrap gap-2.5">
-              {INTEREST_OPTIONS.map((interest) => (
-                <Chip
-                  key={interest}
-                  label={interest}
-                  selected={interests.includes(interest)}
-                  onPress={() => toggleInterest(interest)}
-                />
-              ))}
+            </Animated.Text>
+            <View className="flex-1 flex-row flex-wrap content-start justify-between gap-y-3">
+              {INTEREST_OPTIONS.map((interest, interestIndex) => {
+                const card = INTEREST_CARDS[interest];
+                const isSelected = interests.includes(interest);
+                return (
+                  <Animated.View
+                    key={interest}
+                    entering={FadeInUp.duration(450).delay(250 + interestIndex * 80)}
+                    style={{ width: '48.5%' }}
+                  >
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: isSelected }}
+                      onPress={() => toggleInterest(interest)}
+                      className={`items-start rounded-2xl border-2 px-4 pb-4 pt-4 ${
+                        isSelected ? 'border-brick-500 bg-brick-500' : 'border-sand-200 bg-white'
+                      }`}
+                    >
+                      <View
+                        className="mb-3 h-11 w-11 items-center justify-center rounded-xl"
+                        style={{
+                          backgroundColor: isSelected ? 'rgba(255,255,255,0.22)' : card.background,
+                        }}
+                      >
+                        <FontAwesome
+                          name={card.icon}
+                          size={18}
+                          color={isSelected ? '#FFFFFF' : card.tint}
+                        />
+                      </View>
+                      <Text
+                        className={`text-[15px] font-body-semibold ${
+                          isSelected ? 'text-white' : 'text-ink-800'
+                        }`}
+                      >
+                        {interest}
+                      </Text>
+                    </Pressable>
+                  </Animated.View>
+                );
+              })}
             </View>
+            <Animated.Text
+              entering={FadeIn.duration(500).delay(900)}
+              className="pt-4 text-center text-[13px] font-body text-ink-300"
+            >
+              {interests.length === 0
+                ? 'Aucune sélection — on te proposera un peu de tout.'
+                : `${interests.length} ${interests.length > 1 ? 'envies sélectionnées' : 'envie sélectionnée'}`}
+            </Animated.Text>
           </ScrollView>
           <View className="flex-row items-center justify-between px-7 pb-7 pt-4">
             <Pressable accessibilityRole="button" onPress={finish}>
