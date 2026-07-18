@@ -28,23 +28,32 @@ Ce script :
 
 1. vérifie Docker ;
 2. démarre (ou réutilise) **Supabase local** ;
-3. écrit les fichiers d’env connectés :
-   - `apps/mobile/.env`
-   - `apps/website/.env.local`
-   - `apps/admin/.env.local`
-   - `apps/admin/src/environments/local.generated.ts`
-4. lance **website** (`http://localhost:4321`) et **admin** (`http://localhost:4200`).
+3. écrit les fichiers d’env connectés ;
+4. lance **website**, **admin** et **mobile** (Expo) ensemble.
 
-Avec le mobile Expo dans le même terminal :
+### Lire les logs sans les mélanger
+
+Dans le terminal `dev:up`, chaque ligne est préfixée en couleur :
+
+- `[website]` (cyan)
+- `[admin]` (magenta)
+- `[mobile]` (vert)
+
+Pour suivre **une seule** app (recommandé) :
 
 ```bash
-pnpm dev:up -- --mobile
+tail -f .logs/mobile.log
+tail -f .logs/website.log
+tail -f .logs/admin.log
 ```
 
-Sinon, mobile à part :
+Options :
 
 ```bash
-pnpm dev:mobile
+pnpm dev:up -- --no-mobile     # sans Expo
+pnpm dev:up -- --no-website    # sans Astro
+pnpm dev:up -- --no-admin      # sans Angular
+pnpm dev:up -- --functions     # + Edge Functions (import OpenAgenda)
 ```
 
 ### Admin local (après `pnpm supabase:reset` ou seed)
@@ -104,7 +113,7 @@ pnpm test:supabase  # skip si Docker/Supabase absents
 
 | Script                         | Rôle                                                 |
 | ------------------------------ | ---------------------------------------------------- |
-| `pnpm dev:up`                  | **Tout démarrer** (Supabase + env + website + admin) |
+| `pnpm dev:up`                  | **Tout démarrer** (Supabase + env + website + admin + mobile) |
 | `pnpm dev:down`                | Arrêter Supabase                                     |
 | `pnpm format` / `format:check` | Prettier                                             |
 | `pnpm lint`                    | ESLint                                               |
@@ -114,6 +123,7 @@ pnpm test:supabase  # skip si Docker/Supabase absents
 | `pnpm check`                   | Pipeline qualité complète                            |
 | `pnpm grant:admin`             | Promouvoir un user local en admin JWT                |
 | `pnpm import:openagenda`       | Lancer l’import OpenAgenda (fixture ou API)          |
+| `pnpm openagenda:find`         | Lister les agendas OpenAgenda + UID                  |
 
 ## Structure
 

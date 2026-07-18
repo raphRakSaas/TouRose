@@ -1,12 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link, Stack, useLocalSearchParams } from 'expo-router';
-import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { fetchPublicEventBySlug } from '@/src/data/catalog-api';
 
 export default function EventDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const eventSlug = typeof slug === 'string' ? slug : '';
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const eventQuery = useQuery({
     queryKey: ['catalog', 'event', eventSlug],
@@ -18,12 +28,10 @@ export default function EventDetailScreen() {
 
   return (
     <>
-      <Stack.Screen
-        options={{ title: eventRow?.title ?? 'Événement', headerBackTitle: 'Explorer' }}
-      />
+      <Stack.Screen options={{ title: '', headerTransparent: true, headerTintColor: '#1F1C19' }} />
       <ScrollView
         className="flex-1 bg-sand-50"
-        contentContainerClassName="gap-4 p-5"
+        contentContainerClassName="pb-10"
         refreshControl={
           <RefreshControl
             refreshing={eventQuery.isRefetching}
@@ -34,6 +42,12 @@ export default function EventDetailScreen() {
           />
         }
       >
+        <ImagePlaceholder
+          label={eventRow?.title ?? 'Événement'}
+          className="w-full"
+          height={220}
+        />
+
         {eventQuery.isLoading ? (
           <View className="items-center py-12">
             <ActivityIndicator color="#C45C3E" />
@@ -41,36 +55,58 @@ export default function EventDetailScreen() {
         ) : null}
 
         {eventQuery.error ? (
-          <View className="gap-2">
-            <Text className="text-base font-semibold text-brick-700">Impossible de charger</Text>
-            <Text className="text-sm text-ink-600">{eventQuery.error.message}</Text>
+          <View className="gap-2 px-5 pt-5">
+            <Text className="text-base font-body-semibold text-brick-700">Impossible de charger</Text>
+            <Text className="text-sm font-body text-ink-500">{eventQuery.error.message}</Text>
           </View>
         ) : null}
 
         {!eventQuery.isLoading && !eventQuery.error && !eventRow ? (
-          <Text className="text-sm text-ink-500">Événement introuvable ou non publié.</Text>
+          <Text className="px-5 pt-5 text-sm font-body text-ink-500">
+            Événement introuvable ou non publié.
+          </Text>
         ) : null}
 
         {eventRow ? (
-          <View className="gap-3">
-            <Text className="text-2xl font-semibold text-ink-800">{eventRow.title}</Text>
-            {eventRow.next_starts_at ? (
-              <Text className="text-sm text-garonne-700">
-                {new Date(eventRow.next_starts_at).toLocaleString('fr-FR')}
+          <View className="px-[22px] pt-[22px]">
+            <Text className="mb-2.5 font-display text-[22px] text-ink-800">{eventRow.title}</Text>
+            <View className="mb-[18px] gap-1.5">
+              {eventRow.next_starts_at ? (
+                <Text className="text-[14px] font-body text-ink-800">
+                  {new Date(eventRow.next_starts_at).toLocaleString('fr-FR')}
+                </Text>
+              ) : null}
+              <Text className="text-[14px] font-body text-ink-800">
+                {eventRow.price_type} · {eventRow.indoor_outdoor}
               </Text>
-            ) : null}
-            <Text className="text-sm text-ink-500">
-              {eventRow.price_type} · {eventRow.indoor_outdoor}
-            </Text>
-            <Text className="text-base text-ink-600">{eventRow.summary ?? 'Sans résumé'}</Text>
-            {eventRow.official_url ? (
-              <Text className="text-sm text-brick-600">{eventRow.official_url}</Text>
-            ) : null}
-            <Link href="/(tabs)/explore" asChild>
-              <Pressable className="mt-4 self-start rounded-md bg-brick-500 px-4 py-2">
-                <Text className="text-white">Retour Explorer</Text>
+            </View>
+            <View className="mb-5 flex-row gap-2.5">
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => setIsFavorite((previous) => !previous)}
+                className="flex-1 items-center rounded-[14px] border-[1.5px] border-brick-500 py-2.5"
+                style={{
+                  backgroundColor: isFavorite ? '#C45C3E' : 'transparent',
+                }}
+              >
+                <Text
+                  className={`text-[13px] font-body-semibold ${
+                    isFavorite ? 'text-white' : 'text-brick-700'
+                  }`}
+                >
+                  Favori
+                </Text>
               </Pressable>
-            </Link>
+              <View className="flex-1 items-center rounded-[14px] border-[1.5px] border-sand-200 py-2.5">
+                <Text className="text-[13px] font-body-semibold text-ink-800">Agenda</Text>
+              </View>
+              <View className="flex-1 items-center rounded-[14px] border-[1.5px] border-sand-200 py-2.5">
+                <Text className="text-[13px] font-body-semibold text-ink-800">Lien officiel</Text>
+              </View>
+            </View>
+            <Text className="text-[15px] leading-[1.7] font-body text-ink-800">
+              {eventRow.summary ?? 'Sans résumé'}
+            </Text>
           </View>
         ) : null}
       </ScrollView>

@@ -47,9 +47,9 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 | --- | --- | --- | --- |
 | **0 — Fondations** | Fait | Apps démarrent, CI, migration locale | ~100 % |
 | **1 — Catalogue admin** | Fait | Admin publie → visible mobile/web | ~100 % (doublons / MFA / médias upload / SSR reportés) |
-| **Design** | À démarrer | Brief prêt, maquettes à produire | Brief OK |
+| **Design** | En cours | Brief + maquette mobile intégrée | Mobile UI OK ; site/admin maquettes ouvertes |
 | **2 — Imports** | Partiel | OpenAgenda idempotent | ~70 % (OA + admin fraîcheur ; autres sources / cron prod ouverts) |
-| **3 — Cœur mobile** | À faire | Onboarding, fiches, favoris, carte | ~25 % (Explorer + fiches lecture) |
+| **3 — Cœur mobile** | En cours | Onboarding, fiches, favoris, carte | ~55 % (UI maquette + Explorer réel ; MapLibre/favoris SQLite ouverts) |
 | **4 — Recommandations** | À faire | 3 suggestions scorées | ~5 % (mock Aujourd’hui) |
 | **5 — Comptes / sync** | À faire | Magic link + fusion locale | 0 % |
 | **6 — Notifs / soutien** | À faire | Push + Stripe + IAP | 0 % |
@@ -178,17 +178,18 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 
 ## Design (parallèle)
 
-Source : `docs/DESIGN-BRIEF.md`
+Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 - [x] Brief design complet rédigé
-- [ ] Direction artistique / moodboard
-- [ ] Logo / wordmark TouRose
-- [ ] Design system (tokens affinés, composants)
-- [ ] Maquettes mobile (tous écrans MVP + états)
+- [x] Maquette mobile HTML livrée (onboarding + 4 tabs + fiches + soutien)
+- [x] Tokens mobile alignés maquette (Fraunces / Source Sans 3, couleurs exactes)
+- [x] Intégration pixel-perfect mobile (écrans MVP principaux)
+- [ ] Direction artistique / moodboard formalisé hors maquette
+- [ ] Logo / wordmark TouRose (assets export)
 - [ ] Maquettes site
 - [ ] Maquettes admin
-- [ ] Export assets / icônes / placeholders
-- [ ] Intégration des tokens validés dans `packages/design-tokens`
+- [ ] Export assets / icônes / placeholders photos
+- [ ] Polish états (skeleton shimmer animé, hors-ligne)
 
 ---
 
@@ -220,33 +221,33 @@ Source : `docs/DESIGN-BRIEF.md`
 
 ### Onboarding & Aujourd’hui
 
-- [ ] Onboarding skippable (histoire, intérêts, localisation expliquée)
-- [ ] Salutation + météo (Open-Meteo + cache)
-- [ ] Sélecteur de moment
-- [ ] Trois suggestions (relié Phase 4 ou placeholder scoré minimal)
-- [ ] Affiner mes envies (feuille filtres)
-- [ ] Raccourcis Gratuit / Dehors / Week-end / Autour de moi
+- [x] Onboarding skippable (histoire, intérêts, localisation expliquée) — UI maquette
+- [x] Salutation + météo (placeholder Open-Meteo)
+- [x] Sélecteur de moment
+- [x] Trois suggestions (UI maquette ; scoring Phase 4 encore mock)
+- [x] Affiner mes envies (feuille filtres)
+- [x] Raccourcis Gratuit / Dehors / Week-end / Autour de moi
 
 ### Explorer & fiches
 
-- [ ] Segments Événements / Lieux / Collections
-- [ ] Filtres complets
-- [ ] Fiche événement (actions favori, partage, calendrier, signaler, lien officiel)
-- [ ] Fiche lieu
-- [ ] États UX : skeleton, erreur, vide, hors-ligne, obsolète, image manquante
+- [x] Segments Événements / Lieux / Collections
+- [~] Filtres complets (chips UI ; logique avancée ouverte)
+- [x] Fiche événement (favori local UI, partage/agenda stubs)
+- [x] Fiche lieu
+- [~] États UX : skeleton basique ; erreur/vide OK ; hors-ligne/obsolète ouverts
 
 ### Carte
 
+- [x] UI carte maquette (placeholder stylé + panneau détail)
 - [ ] MapLibre (development build)
 - [ ] Marqueurs + clustering événement/lieu
-- [ ] Panneau détail
 - [ ] Attribution visible
 - [ ] [!] Fournisseur de tuiles prod (pas OSM community CDN)
 
 ### Favoris & local
 
-- [ ] Favoris invité (SQLite)
-- [ ] À découvrir / visité
+- [~] Favoris invité (UI locale ; SQLite ouvert)
+- [~] À découvrir / visité (onglets UI)
 - [ ] File d’ops à synchroniser (préparer Phase 5)
 - [ ] Cache TanStack Query + SQLite
 - [ ] Partage natif

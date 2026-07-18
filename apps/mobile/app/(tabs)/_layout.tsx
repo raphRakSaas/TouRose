@@ -1,32 +1,46 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
+import { Platform } from 'react-native';
 
 const brickTint = '#C45C3E';
-const mutedTint = '#7A7369';
+const mutedTint = '#A39B90';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        headerShown: false,
         tabBarActiveTintColor: brickTint,
         tabBarInactiveTintColor: mutedTint,
-        headerStyle: { backgroundColor: '#FBF8F4' },
-        headerTitleStyle: { color: '#1F1C19', fontWeight: '600' },
-        tabBarStyle: { backgroundColor: '#FBF8F4' },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontFamily: 'SourceSans3_600SemiBold',
+          marginTop: 2,
+        },
+        tabBarStyle: {
+          backgroundColor: '#FFFFFF',
+          borderTopColor: '#EDE0CB',
+          borderTopWidth: 1,
+          height: Platform.OS === 'ios' ? 84 : 64,
+          paddingTop: 10,
+          paddingBottom: Platform.OS === 'ios' ? 26 : 10,
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Aujourd'hui",
-          tabBarIcon: ({ color }) => <FontAwesome name="sun-o" size={22} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome name={focused ? 'home' : 'home'} size={22} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Explorer',
-          tabBarIcon: ({ color }) => <FontAwesome name="search" size={22} color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="search" size={20} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -40,7 +54,7 @@ export default function TabLayout() {
         name="for-me"
         options={{
           title: 'Pour moi',
-          tabBarIcon: ({ color }) => <FontAwesome name="heart-o" size={22} color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="user-o" size={20} color={color} />,
         }}
       />
     </Tabs>

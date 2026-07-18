@@ -5,10 +5,22 @@
 ```bash
 # Docker Desktop doit être démarré
 pnpm install          # une fois
-pnpm dev:up           # Supabase + env + website + admin
+pnpm dev:up           # Supabase + env + website + admin + mobile
 ```
 
 Détails et vérifications : voir le **README racine**.
+
+## Logs (séparés)
+
+Dans le terminal `dev:up`, chaque ligne a un préfixe couleur : `[website]`, `[admin]`, `[mobile]`.
+
+Pour ne suivre **qu’une** app :
+
+```bash
+tail -f .logs/mobile.log
+tail -f .logs/website.log
+tail -f .logs/admin.log
+```
 
 ## Arrêt
 
@@ -29,12 +41,12 @@ Remplir la clé anon via `pnpm supabase:status`.
 
 L’admin lit aussi `apps/admin/src/environments/local.generated.ts` (régénéré par `dev:up`).
 
-## Mobile
+## Options `dev:up`
 
 ```bash
-pnpm dev:mobile
-# ou
-pnpm dev:up -- --mobile
+pnpm dev:up -- --no-mobile     # sans Expo
+pnpm dev:up -- --functions     # + Edge Functions
+pnpm dev:mobile                # mobile seul (si besoin)
 ```
 
 Le mobile est prévu en **development build** (`expo-dev-client`). MapLibre et notifications nécessiteront une build native EAS.
