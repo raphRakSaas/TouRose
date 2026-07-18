@@ -223,7 +223,7 @@ export default function OnboardingScreen() {
                       accessibilityRole="button"
                       accessibilityState={{ selected: isSelected }}
                       onPress={() => toggleInterest(interest)}
-                      className={`items-start rounded-2xl border-2 px-4 pb-4 pt-4 ${
+                      className={`items-center rounded-2xl border-2 px-4 pb-4 pt-4 ${
                         isSelected ? 'border-brick-500 bg-brick-500' : 'border-sand-200 bg-white'
                       }`}
                     >
