@@ -1,37 +1,45 @@
 # Configuration locale
 
-## 1. Outils
+## Chemin recommandé
 
-1. Installer Node 22+
-2. Activer pnpm via Corepack
-3. Installer et démarrer Docker Desktop
-4. `pnpm install` à la racine
+```bash
+# Docker Desktop doit être démarré
+pnpm install          # une fois
+pnpm dev:up           # Supabase + env + website + admin
+```
 
-## 2. Variables d’environnement
+Détails et vérifications : voir le **README racine**.
 
-Copier pour chaque app :
+## Arrêt
+
+```bash
+# Ctrl+C sur le terminal dev:up, puis :
+pnpm dev:down
+```
+
+## Variables d’environnement
+
+`pnpm dev:up` les écrit automatiquement. Sinon, à la main :
 
 - `apps/mobile/.env.example` → `apps/mobile/.env`
-- `apps/website/.env.example` → `apps/website/.env`
-- `apps/admin/.env.example` → `apps/admin/.env`
+- `apps/website/.env.example` → `apps/website/.env.local`
+- `apps/admin/.env.example` → `apps/admin/.env.local`
 
-Remplir les clés anon Supabase depuis `pnpm supabase:status` après démarrage.
+Remplir la clé anon via `pnpm supabase:status`.
 
-## 3. Supabase
+L’admin lit aussi `apps/admin/src/environments/local.generated.ts` (régénéré par `dev:up`).
 
-Voir `SUPABASE-LOCAL.md`.
-
-## 4. Applications
+## Mobile
 
 ```bash
 pnpm dev:mobile
-pnpm dev:website
-pnpm dev:admin
+# ou
+pnpm dev:up -- --mobile
 ```
 
-Le mobile est prévu en **development build** (`expo-dev-client`), pas uniquement Expo Go. MapLibre et notifications nécessiteront une build native EAS.
+Le mobile est prévu en **development build** (`expo-dev-client`). MapLibre et notifications nécessiteront une build native EAS.
 
-## 5. Qualité
+## Qualité
 
 ```bash
 pnpm check

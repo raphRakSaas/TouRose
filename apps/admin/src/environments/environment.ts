@@ -1,5 +1,7 @@
+import { generatedLocalConfig } from './local.generated';
+
 export const environment = {
   production: false,
-  supabaseUrl: 'http://127.0.0.1:54321',
-  supabaseAnonKey: '',
+  supabaseUrl: generatedLocalConfig.supabaseUrl,
+  supabaseAnonKey: generatedLocalConfig.supabaseAnonKey,
 };

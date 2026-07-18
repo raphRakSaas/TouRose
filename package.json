@@ -22,6 +22,8 @@
     "dev:mobile": "pnpm --filter @tourose/mobile start",
     "dev:website": "pnpm --filter @tourose/website dev",
     "dev:admin": "pnpm --filter @tourose/admin start",
+    "dev:up": "node ./scripts/dev-up.mjs",
+    "dev:down": "node ./scripts/dev-down.mjs",
     "supabase:start": "pnpm exec supabase start",
     "supabase:stop": "pnpm exec supabase stop",
     "supabase:status": "pnpm exec supabase status",

@@ -5,6 +5,8 @@
 ```bash
 pnpm supabase:start
 pnpm supabase:status
+# ou tout le stack local :
+pnpm dev:up
 ```
 
 Docker doit être en cours d’exécution. La CLI est fournie en dépendance de développement du monorepo (`pnpm exec supabase`).
