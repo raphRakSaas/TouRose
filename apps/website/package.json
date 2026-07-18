@@ -16,9 +16,12 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.7",
+    "@tourose/contracts": "workspace:*",
     "@tourose/design-tokens": "workspace:*",
     "@tourose/shared": "workspace:*",
-    "astro": "^7.1.1"
+    "astro": "^7.1.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",

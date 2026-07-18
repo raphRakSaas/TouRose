@@ -4,13 +4,15 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthSessionService } from './auth-session.service';
 
 /**
- * UX-only shell guard. Real authorization is enforced by Supabase RLS and server roles.
+ * UX-only shell guard. Real authorization is enforced by Supabase RLS (`is_admin()`).
  */
-export const adminShellGuard: CanActivateFn = () => {
+export const adminShellGuard: CanActivateFn = async () => {
   const authSession = inject(AuthSessionService);
   const router = inject(Router);
 
-  if (authSession.hasLocalDemoSession()) {
+  await authSession.initialize();
+
+  if (authSession.hasAuthenticatedSession()) {
     return true;
   }
 

@@ -1,0 +1,83 @@
+---
+import type { PublicEventRow, PublicPlaceRow } from '@tourose/contracts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadPublicPlaces, loadUpcomingEvents } from '../lib/catalog';
+
+let events: PublicEventRow[] = [];
+let places: PublicPlaceRow[] = [];
+let loadError: string | null = null;
+
+try {
+  [events, places] = await Promise.all([loadUpcomingEvents(20), loadPublicPlaces(50)]);
+} catch (error) {
+  loadError = error instanceof Error ? error.message : 'Chargement impossible';
+}
+---
+
+<BaseLayout
+  title="Catalogue — TouRose"
+  description="Événements et lieux publiés à Toulouse, issus du catalogue TouRose."
+>
+  <section class="grid gap-8 pt-8">
+    <div>
+      <h1 class="brand text-4xl text-ink-800">Catalogue</h1>
+      <p class="mt-2 max-w-2xl text-ink-600">
+        Lecture publique des contenus publiés via les vues et RPC Supabase. Les brouillons admin
+        n’apparaissent pas ici.
+      </p>
+    </div>
+
+    {
+      loadError ? (
+        <p class="rounded-lg bg-sand-100 px-4 py-3 text-sm text-brick-700">
+          {loadError} — vérifie <code>pnpm dev:up</code> et <code>.env.local</code>.
+        </p>
+      ) : null
+    }
+
+    {
+      !loadError && events.length === 0 && places.length === 0 ? (
+        <p class="text-sm text-ink-500">
+          Catalogue vide ou clés Supabase manquantes. Lance le stack local puis republie depuis
+          l’admin.
+        </p>
+      ) : null
+    }
+
+    <div class="grid gap-4">
+      <h2 class="text-2xl font-semibold text-brick-700">Événements à venir</h2>
+      <ul class="grid gap-3">
+        {
+          events.map((eventRow) => (
+            <li class="rounded-lg bg-white/70 p-4">
+              <p class="font-semibold text-ink-800">{eventRow.title}</p>
+              <p class="mt-1 text-sm text-ink-600">{eventRow.summary ?? 'Sans résumé'}</p>
+              {eventRow.next_starts_at ? (
+                <p class="mt-2 text-xs text-garonne-700">
+                  {new Date(eventRow.next_starts_at).toLocaleString('fr-FR')}
+                </p>
+              ) : null}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="grid gap-4">
+      <h2 class="text-2xl font-semibold text-brick-700">Lieux</h2>
+      <ul class="grid gap-3">
+        {
+          places.map((placeRow) => (
+            <li class="rounded-lg bg-white/70 p-4">
+              <p class="font-semibold text-ink-800">{placeRow.name}</p>
+              <p class="mt-1 text-sm text-ink-600">{placeRow.summary ?? 'Sans résumé'}</p>
+              <p class="mt-2 text-xs text-garonne-700">
+                {placeRow.place_type} · {placeRow.city ?? 'Toulouse'}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

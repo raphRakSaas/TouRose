@@ -117,6 +117,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.1
         version: 5.4.0(react-hook-form@7.82.0(react@19.2.3))
+      '@supabase/supabase-js':
+        specifier: ^2.110.7
+        version: 2.110.7
       '@tanstack/react-query':
         specifier: ^5.84.1
         version: 5.101.2(react@19.2.3)
@@ -229,6 +232,12 @@ importers:
 
   apps/website:
     dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.110.7
+        version: 2.110.7
+      '@tourose/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@tourose/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
@@ -238,6 +247,9 @@ importers:
       astro:
         specifier: ^7.1.1
         version: 7.1.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.1)(jiti@2.7.0)(rollup@4.60.2)(sass@1.99.0)(terser@5.49.0)(yaml@2.9.0)
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.4
@@ -11468,9 +11480,7 @@ snapshots:
       metro-runtime: 0.84.4
     transitivePeerDependencies:
       - '@babel/core'
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@react-native/normalize-colors@0.74.89': {}
 

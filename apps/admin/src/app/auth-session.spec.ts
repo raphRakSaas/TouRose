@@ -2,14 +2,15 @@ import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
 import { AuthSessionService } from './core/auth-session.service';
+import { SupabaseClientService } from './core/supabase-client.service';
 
 describe('AuthSessionService', () => {
-  it('tracks a local demo session', () => {
-    TestBed.configureTestingModule({});
+  it('reports no admin session by default', async () => {
+    TestBed.configureTestingModule({
+      providers: [AuthSessionService, SupabaseClientService],
+    });
     const authSession = TestBed.inject(AuthSessionService);
-    authSession.clearLocalDemoSession();
-    expect(authSession.hasLocalDemoSession()).toBe(false);
-    authSession.markLocalDemoSession('admin@tourose.local');
-    expect(authSession.hasLocalDemoSession()).toBe(true);
+    await authSession.initialize();
+    expect(authSession.hasAuthenticatedSession()).toBe(false);
   });
 });

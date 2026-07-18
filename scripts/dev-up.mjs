@@ -200,8 +200,18 @@ printSummary(config);
 
 const withMobile = process.argv.includes('--mobile');
 
-spawnDev('website', 'pnpm', ['--filter', '@tourose/website', 'dev', '--', '--host', '127.0.0.1', '--port', '4321'], 'website');
-spawnDev('admin', 'pnpm', ['--filter', '@tourose/admin', 'start', '--', '--host', '127.0.0.1', '--port', '4200'], 'admin');
+spawnDev(
+  'website',
+  'pnpm',
+  ['--filter', '@tourose/website', 'dev', '--', '--host', '127.0.0.1', '--port', '4321'],
+  'website',
+);
+spawnDev(
+  'admin',
+  'pnpm',
+  ['--filter', '@tourose/admin', 'start', '--', '--host', '127.0.0.1', '--port', '4200'],
+  'admin',
+);
 
 if (withMobile) {
   spawnDev('mobile', 'pnpm', ['--filter', '@tourose/mobile', 'start'], 'mobile');

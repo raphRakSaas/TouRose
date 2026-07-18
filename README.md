@@ -47,13 +47,13 @@ Sinon, mobile à part :
 pnpm dev:mobile
 ```
 
-### Arrêt
+### Admin local (après `pnpm supabase:reset` ou seed)
 
-- `Ctrl+C` dans le terminal `dev:up` → stoppe website/admin (et mobile si lancé)
-- Puis pour éteindre Supabase :
-  ```bash
-  pnpm dev:down
-  ```
+- URL : http://localhost:4200/login
+- Email : `admin@tourose.local`
+- Mot de passe : `tourose-admin-local` (**local Docker uniquement**)
+
+Parcours Phase 1 : publier un lieu/événement dans l’admin → visible sur `/catalogue` et l’onglet Explorer mobile.
 
 ## Vérifier que Supabase tourne
 
@@ -78,16 +78,16 @@ Réponse santé attendue : `{"status":"ok","service":"tourose-health",...}`
 
 ## Commandes manuelles (si tu préfères tout contrôler)
 
-| Étape | Commande |
-| --- | --- |
-| Install | `pnpm install` |
-| Start Supabase | `pnpm supabase:start` |
-| Status / clés | `pnpm supabase:status` |
-| Reset DB + seed | `pnpm supabase:reset` |
-| Website | `pnpm dev:website` |
-| Admin | `pnpm dev:admin` |
-| Mobile | `pnpm dev:mobile` |
-| Stop Supabase | `pnpm supabase:stop` |
+| Étape           | Commande               |
+| --------------- | ---------------------- |
+| Install         | `pnpm install`         |
+| Start Supabase  | `pnpm supabase:start`  |
+| Status / clés   | `pnpm supabase:status` |
+| Reset DB + seed | `pnpm supabase:reset`  |
+| Website         | `pnpm dev:website`     |
+| Admin           | `pnpm dev:admin`       |
+| Mobile          | `pnpm dev:mobile`      |
+| Stop Supabase   | `pnpm supabase:stop`   |
 
 ## Qualité
 
@@ -99,16 +99,16 @@ pnpm test:supabase  # skip si Docker/Supabase absents
 
 ## Scripts racine
 
-| Script | Rôle |
-| --- | --- |
-| `pnpm dev:up` | **Tout démarrer** (Supabase + env + website + admin) |
-| `pnpm dev:down` | Arrêter Supabase |
-| `pnpm format` / `format:check` | Prettier |
-| `pnpm lint` | ESLint |
-| `pnpm typecheck` | TypeScript / Astro |
-| `pnpm test` | Tests unitaires |
-| `pnpm build` | Builds |
-| `pnpm check` | Pipeline qualité complète |
+| Script                         | Rôle                                                 |
+| ------------------------------ | ---------------------------------------------------- |
+| `pnpm dev:up`                  | **Tout démarrer** (Supabase + env + website + admin) |
+| `pnpm dev:down`                | Arrêter Supabase                                     |
+| `pnpm format` / `format:check` | Prettier                                             |
+| `pnpm lint`                    | ESLint                                               |
+| `pnpm typecheck`               | TypeScript / Astro                                   |
+| `pnpm test`                    | Tests unitaires                                      |
+| `pnpm build`                   | Builds                                               |
+| `pnpm check`                   | Pipeline qualité complète                            |
 
 ## Structure
 
