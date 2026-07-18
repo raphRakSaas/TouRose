@@ -200,16 +200,27 @@ printSummary(config);
 
 const withMobile = process.argv.includes('--mobile');
 
+// Call CLIs via `exec` (no extra `--`) — Astro/Angular reject `script -- --flags`.
 spawnDev(
   'website',
   'pnpm',
-  ['--filter', '@tourose/website', 'dev', '--', '--host', '127.0.0.1', '--port', '4321'],
+  ['--filter', '@tourose/website', 'exec', 'astro', 'dev', '--host', '127.0.0.1', '--port', '4321'],
   'website',
 );
 spawnDev(
   'admin',
   'pnpm',
-  ['--filter', '@tourose/admin', 'start', '--', '--host', '127.0.0.1', '--port', '4200'],
+  [
+    '--filter',
+    '@tourose/admin',
+    'exec',
+    'ng',
+    'serve',
+    '--host',
+    '127.0.0.1',
+    '--port',
+    '4200',
+  ],
   'admin',
 );
 
