@@ -48,3 +48,14 @@ Configurer `apps/admin/src/environments/environment.ts` (ou mécanisme d’env A
 
 Fichier d’exemple : `supabase/functions/.env.example`.  
 Script local : `pnpm import:openagenda`.
+
+### Trouver l’UID d’un agenda
+
+L’UID n’apparaît pas clairement dans l’interface OpenAgenda ; il se récupère via l’API :
+
+```bash
+# après avoir mis OPENAGENDA_PUBLIC_KEY dans supabase/functions/.env
+pnpm openagenda:find -- --search "Toulouse"
+```
+
+Le script liste les agendas correspondants avec leur UID à copier dans `OPENAGENDA_AGENDA_UID`.
