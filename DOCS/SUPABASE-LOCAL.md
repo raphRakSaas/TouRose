@@ -28,11 +28,20 @@ pnpm exec supabase test db
 ## Edge Functions
 
 ```bash
-pnpm exec supabase functions serve health
-pnpm exec supabase functions serve validate-report
+pnpm exec supabase functions serve
+# ou une fonction :
+pnpm exec supabase functions serve import-openagenda
 ```
 
-La fonction `health` ne nécessite pas de JWT. `validate-report` valide l’entrée avec Zod et ne contient aucun secret.
+- `health` — pas de JWT
+- `validate-report` — validation Zod, pas de secret
+- `import-openagenda` — secret `IMPORT_CRON_SECRET` (voir `supabase/functions/.env.example`)
+
+Import local (mode fixture si pas de clé OpenAgenda) :
+
+```bash
+pnpm import:openagenda
+```
 
 ## Arrêt
 

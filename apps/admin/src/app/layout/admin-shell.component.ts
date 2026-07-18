@@ -34,6 +34,30 @@ import { AuthSessionService } from '../core/auth-session.service';
             class="text-[var(--tourose-color-ink-700)]"
             >Événements</a
           >
+          <a
+            routerLink="/categories"
+            routerLinkActive="font-semibold"
+            class="text-[var(--tourose-color-ink-700)]"
+            >Catégories</a
+          >
+          <a
+            routerLink="/sources"
+            routerLinkActive="font-semibold"
+            class="text-[var(--tourose-color-ink-700)]"
+            >Sources</a
+          >
+          <a
+            routerLink="/audit"
+            routerLinkActive="font-semibold"
+            class="text-[var(--tourose-color-ink-700)]"
+            >Audit</a
+          >
+          <a
+            routerLink="/imports"
+            routerLinkActive="font-semibold"
+            class="text-[var(--tourose-color-ink-700)]"
+            >Imports</a
+          >
           <button
             type="button"
             class="text-[var(--tourose-color-garonne-500)]"

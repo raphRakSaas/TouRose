@@ -60,3 +60,6 @@ verify_jwt = false
 
 [functions.validate-report]
 verify_jwt = false
+
+[functions.import-openagenda]
+verify_jwt = false

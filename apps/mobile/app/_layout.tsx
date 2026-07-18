@@ -36,6 +36,8 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="place/[slug]" options={{ headerShown: true }} />
+        <Stack.Screen name="event/[slug]" options={{ headerShown: true }} />
       </Stack>
     </QueryClientProvider>
   );

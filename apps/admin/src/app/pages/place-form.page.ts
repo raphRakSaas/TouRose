@@ -86,6 +86,15 @@ import { CatalogAdminService, TOULOUSE_TERRITORY_ID } from '../core/catalog-admi
         >
           {{ isSubmitting() ? 'Enregistrement…' : 'Enregistrer' }}
         </button>
+        @if (isEdit() && editingId()) {
+          <a
+            class="text-center text-sm text-[var(--tourose-color-garonne-500)]"
+            [href]="'http://localhost:4321/catalogue/lieux/' + placeForm.controls.slug.value"
+            target="_blank"
+            rel="noopener"
+            >Prévisualiser public</a
+          >
+        }
       </form>
     </section>
   `,
@@ -100,6 +109,7 @@ export class PlaceFormPage {
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
+  readonly editingId = signal<string | null>(null);
 
   readonly placeTypeOptions: PlaceType[] = [
     'monument',
@@ -122,8 +132,6 @@ export class PlaceFormPage {
     'hidden',
   ];
 
-  private editingId: string | null = null;
-
   readonly placeForm = this.formBuilder.nonNullable.group({
     name: ['', Validators.required],
     slug: ['', Validators.required],
@@ -141,7 +149,7 @@ export class PlaceFormPage {
     const placeId = this.route.snapshot.paramMap.get('placeId');
     if (placeId && placeId !== 'new') {
       this.isEdit.set(true);
-      this.editingId = placeId;
+      this.editingId.set(placeId);
       void this.loadPlace(placeId);
     }
 
@@ -160,7 +168,7 @@ export class PlaceFormPage {
     const raw = this.placeForm.getRawValue();
     try {
       const savedId = await this.catalogAdmin.savePlace({
-        id: this.editingId ?? undefined,
+        id: this.editingId() ?? undefined,
         territory_id: TOULOUSE_TERRITORY_ID,
         slug: raw.slug,
         name: raw.name,
@@ -178,7 +186,7 @@ export class PlaceFormPage {
           ? 'Lieu publié — visible sur mobile et le site.'
           : 'Lieu enregistré.',
       );
-      if (!this.editingId) {
+      if (!this.editingId()) {
         await this.router.navigate(['/places', savedId]);
       }
     } catch (error) {

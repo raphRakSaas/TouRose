@@ -70,6 +70,9 @@ open http://127.0.0.1:54323
 # Edge Function santé
 curl -s http://127.0.0.1:54321/functions/v1/health
 
+# Import OpenAgenda (fixture locale si pas de clé API)
+pnpm import:openagenda
+
 # Tests RLS / schéma
 pnpm exec supabase test db
 ```
@@ -109,6 +112,8 @@ pnpm test:supabase  # skip si Docker/Supabase absents
 | `pnpm test`                    | Tests unitaires                                      |
 | `pnpm build`                   | Builds                                               |
 | `pnpm check`                   | Pipeline qualité complète                            |
+| `pnpm grant:admin`             | Promouvoir un user local en admin JWT                |
+| `pnpm import:openagenda`       | Lancer l’import OpenAgenda (fixture ou API)          |
 
 ## Structure
 

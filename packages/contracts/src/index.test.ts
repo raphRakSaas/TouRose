@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   catalogSearchHitSchema,
   healthCheckSchema,
+  importRunRowSchema,
+  publicCollectionRowSchema,
   publicEventRowSchema,
   publicPlaceRowSchema,
 } from './index';
@@ -64,6 +66,37 @@ describe('contracts', () => {
       rank: 0.8,
     });
     expect(hit.entity_type).toBe('place');
+  });
+
+  it('validates a public collection row', () => {
+    const collectionRow = publicCollectionRowSchema.parse({
+      id: '66666666-6666-6666-6666-666666666601',
+      slug: 'toulouse-demo-gratuit',
+      title: 'Gratuit à Toulouse (DÉMO)',
+      summary: 'Collection seed',
+      status: 'published',
+      starts_at: null,
+      ends_at: null,
+    });
+    expect(collectionRow.slug).toBe('toulouse-demo-gratuit');
+  });
+
+  it('validates an import run row', () => {
+    const runRow = importRunRowSchema.parse({
+      id: '77777777-7777-7777-7777-777777777701',
+      source_id: '22222222-2222-2222-2222-222222222201',
+      status: 'succeeded',
+      correlation_id: 'corr-1',
+      started_at: new Date().toISOString(),
+      finished_at: new Date().toISOString(),
+      fetched_count: 2,
+      created_count: 2,
+      updated_count: 0,
+      skipped_count: 0,
+      error_count: 0,
+      message: 'Fixture mode',
+    });
+    expect(runRow.status).toBe('succeeded');
   });
 
   it('rejects an invalid event slug', () => {

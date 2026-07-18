@@ -32,6 +32,28 @@ values (
 )
 on conflict (id) do nothing;
 
+insert into public.sources (
+  id,
+  name,
+  kind,
+  base_url,
+  license_name,
+  license_url,
+  attribution_template,
+  is_active
+)
+values (
+  '22222222-2222-2222-2222-222222222201',
+  'OpenAgenda Toulouse',
+  'api',
+  'https://api.openagenda.com/v2',
+  'Selon conditions de chaque agenda OpenAgenda',
+  'https://openagenda.com',
+  'Données OpenAgenda — {title}',
+  true
+)
+on conflict (id) do nothing;
+
 insert into public.categories (id, slug, name, color_token, is_active)
 values
   ('33333333-3333-3333-3333-333333333301', 'outdoor', 'Plein air', 'garonne-500', true),
@@ -255,3 +277,31 @@ begin
   end if;
 end
 $$;
+
+insert into public.collections (
+  id,
+  territory_id,
+  slug,
+  title,
+  summary,
+  description,
+  status,
+  sort_mode
+)
+values (
+  '66666666-6666-6666-6666-666666666601',
+  '11111111-1111-1111-1111-111111111111',
+  'toulouse-demo-gratuit',
+  'Toulouse gratuitement (DÉMO)',
+  'Collection éditoriale fictive pour le bootstrap Phase 1.',
+  'Contenu de démonstration — aucun droit tiers.',
+  'published',
+  'manual'
+)
+on conflict (territory_id, slug) do nothing;
+
+insert into public.collection_items (collection_id, entity_type, entity_id, position)
+values
+  ('66666666-6666-6666-6666-666666666601', 'place', '44444444-4444-4444-4444-444444444401', 0),
+  ('66666666-6666-6666-6666-666666666601', 'event', '55555555-5555-5555-5555-555555555501', 1)
+on conflict do nothing;

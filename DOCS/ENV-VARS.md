@@ -29,3 +29,22 @@ Credentials push : EAS Secrets uniquement.
 ## Admin (`apps/admin`)
 
 Configurer `apps/admin/src/environments/environment.ts` (ou mécanisme d’env Angular) avec URL + anon key. Ne jamais y placer la service role.
+
+| Variable / champ        | Description                                      |
+| ----------------------- | ------------------------------------------------ |
+| `supabaseUrl`           | URL API                                          |
+| `supabaseAnonKey`       | Clé anon                                         |
+| `importCronSecret`      | Secret local pour déclencher `import-openagenda` |
+
+## Imports OpenAgenda (Edge Function)
+
+| Variable                 | Description                                      |
+| ------------------------ | ------------------------------------------------ |
+| `IMPORT_CRON_SECRET`     | Header `x-tourose-import-secret` (obligatoire)   |
+| `OPENAGENDA_PUBLIC_KEY`  | Clé publique lecture OA (sinon mode fixture)     |
+| `OPENAGENDA_AGENDA_UID`  | UID d’agenda OpenAgenda                          |
+| `SUPABASE_URL`           | Injecté par le runtime Edge                      |
+| `SUPABASE_SERVICE_ROLE_KEY` | Injecté par le runtime Edge                   |
+
+Fichier d’exemple : `supabase/functions/.env.example`.  
+Script local : `pnpm import:openagenda`.

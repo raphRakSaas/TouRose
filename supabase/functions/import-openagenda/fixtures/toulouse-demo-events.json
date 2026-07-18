@@ -1,0 +1,51 @@
+[
+  {
+    "uid": 900001,
+    "title": { "fr": "Balade openagenda fictive (DÉMO IMPORT)" },
+    "description": { "fr": "Événement fixture pour l’import local TouRose." },
+    "longDescription": { "fr": "Contenu inventé — ne pas confondre avec un événement réel." },
+    "slug": "balade-openagenda-fictive",
+    "status": 2,
+    "updatedAt": "2026-07-18T10:00:00.000Z",
+    "location": {
+      "uid": 800001,
+      "name": "Quai fictif OpenAgenda (DÉMO)",
+      "address": "Quai de la Daurade",
+      "city": "Toulouse",
+      "latitude": 43.5991,
+      "longitude": 1.4308
+    },
+    "timings": [
+      {
+        "begin": "2026-08-01T18:00:00+02:00",
+        "end": "2026-08-01T20:00:00+02:00"
+      },
+      {
+        "begin": "2026-08-08T18:00:00+02:00",
+        "end": "2026-08-08T20:00:00+02:00"
+      }
+    ],
+    "registration": [{ "type": "link", "value": "https://example.com/demo-oa-balade" }],
+    "image": { "filename": "ignored-for-rights.jpg" }
+  },
+  {
+    "uid": 900002,
+    "title": { "fr": "Atelier culture fictif (DÉMO IMPORT)" },
+    "description": { "fr": "Deuxième fixture OpenAgenda." },
+    "status": 2,
+    "updatedAt": "2026-07-18T11:00:00.000Z",
+    "location": {
+      "uid": 800002,
+      "name": "Salle fictive Capitole (DÉMO)",
+      "city": "Toulouse",
+      "latitude": 43.6045,
+      "longitude": 1.444
+    },
+    "timings": [
+      {
+        "begin": "2026-08-15T14:00:00+02:00",
+        "end": "2026-08-15T16:00:00+02:00"
+      }
+    ]
+  }
+]

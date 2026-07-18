@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { loadPublicPlaceBySlug } from '../../../lib/catalog';
+
+const { slug } = Astro.params;
+const placeRow = slug ? await loadPublicPlaceBySlug(slug) : null;
+
+if (!placeRow) {
+  Astro.response.status = 404;
+}
+---
+
+<BaseLayout
+  title={placeRow ? `${placeRow.name} — TouRose` : 'Lieu introuvable — TouRose'}
+  description={placeRow?.summary ?? 'Fiche lieu TouRose.'}
+>
+  <article class="grid gap-4 pt-8">
+    <p class="text-sm">
+      <a href="/catalogue" class="text-garonne-700 no-underline hover:underline">← Catalogue</a>
+    </p>
+    {
+      placeRow ? (
+        <>
+          <h1 class="brand text-4xl text-ink-800">{placeRow.name}</h1>
+          <p class="text-sm text-garonne-700">
+            {placeRow.place_type} · {placeRow.city ?? 'Toulouse'} · {placeRow.price_type}
+          </p>
+          <p class="max-w-2xl text-ink-600">{placeRow.summary ?? 'Sans résumé'}</p>
+          {placeRow.latitude != null && placeRow.longitude != null ? (
+            <p class="text-xs text-ink-500">
+              {placeRow.latitude.toFixed(5)}, {placeRow.longitude.toFixed(5)}
+            </p>
+          ) : null}
+        </>
+      ) : (
+        <p class="text-ink-600">Ce lieu n’existe pas ou n’est pas publié.</p>
+      )
+    }
+  </article>
+</BaseLayout>

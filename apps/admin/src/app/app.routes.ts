@@ -49,6 +49,23 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/event-form.page').then((module) => module.EventFormPage),
       },
+      {
+        path: 'categories',
+        loadComponent: () =>
+          import('./pages/categories.page').then((module) => module.CategoriesPage),
+      },
+      {
+        path: 'sources',
+        loadComponent: () => import('./pages/sources.page').then((module) => module.SourcesPage),
+      },
+      {
+        path: 'audit',
+        loadComponent: () => import('./pages/audit.page').then((module) => module.AuditPage),
+      },
+      {
+        path: 'imports',
+        loadComponent: () => import('./pages/imports.page').then((module) => module.ImportsPage),
+      },
     ],
   },
   { path: '**', redirectTo: 'dashboard' },

@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { loadPublicEventBySlug } from '../../../lib/catalog';
+
+const { slug } = Astro.params;
+const eventRow = slug ? await loadPublicEventBySlug(slug) : null;
+
+if (!eventRow) {
+  Astro.response.status = 404;
+}
+---
+
+<BaseLayout
+  title={eventRow ? `${eventRow.title} — TouRose` : 'Événement introuvable — TouRose'}
+  description={eventRow?.summary ?? 'Fiche événement TouRose.'}
+>
+  <article class="grid gap-4 pt-8">
+    <p class="text-sm">
+      <a href="/catalogue" class="text-garonne-700 no-underline hover:underline">← Catalogue</a>
+    </p>
+    {
+      eventRow ? (
+        <>
+          <h1 class="brand text-4xl text-ink-800">{eventRow.title}</h1>
+          {eventRow.next_starts_at ? (
+            <p class="text-sm text-garonne-700">
+              {new Date(eventRow.next_starts_at).toLocaleString('fr-FR')}
+            </p>
+          ) : null}
+          <p class="text-sm text-ink-500">
+            {eventRow.price_type} · {eventRow.indoor_outdoor}
+          </p>
+          <p class="max-w-2xl text-ink-600">{eventRow.summary ?? 'Sans résumé'}</p>
+          {eventRow.official_url ? (
+            <p>
+              <a
+                href={eventRow.official_url}
+                class="text-brick-600 no-underline hover:underline"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Site officiel
+              </a>
+            </p>
+          ) : null}
+        </>
+      ) : (
+        <p class="text-ink-600">Cet événement n’existe pas ou n’est pas publié.</p>
+      )
+    }
+  </article>
+</BaseLayout>

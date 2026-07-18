@@ -131,6 +131,7 @@ NG_APP_SUPABASE_ANON_KEY=${anonKey}
 export const generatedLocalConfig = {
   supabaseUrl: ${JSON.stringify(apiUrl)},
   supabaseAnonKey: ${JSON.stringify(anonKey)},
+  importCronSecret: ${JSON.stringify(process.env.IMPORT_CRON_SECRET ?? 'local-import-secret')},
 } as const;
 `,
   );

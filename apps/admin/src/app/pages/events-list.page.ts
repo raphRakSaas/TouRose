@@ -40,9 +40,18 @@ import { CatalogAdminService, type AdminEventRow } from '../core/catalog-admin.s
                 <td class="px-4 py-3 text-right">
                   <a
                     [routerLink]="['/events', eventRow.id]"
-                    class="text-[var(--tourose-color-garonne-500)]"
+                    class="mr-3 text-[var(--tourose-color-garonne-500)]"
                     >Éditer</a
                   >
+                  @if (eventRow.status !== 'archived') {
+                    <button
+                      type="button"
+                      class="text-[var(--tourose-color-danger)]"
+                      (click)="onArchive(eventRow)"
+                    >
+                      Archiver
+                    </button>
+                  }
                 </td>
               </tr>
             }
@@ -59,6 +68,15 @@ export class EventsListPage {
 
   constructor() {
     void this.load();
+  }
+
+  async onArchive(eventRow: AdminEventRow): Promise<void> {
+    try {
+      await this.catalogAdmin.archiveEvent(eventRow);
+      await this.load();
+    } catch (error) {
+      this.errorMessage.set(error instanceof Error ? error.message : 'Archivage impossible');
+    }
   }
 
   private async load(): Promise<void> {

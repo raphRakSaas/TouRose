@@ -3,7 +3,7 @@
 Vue d’ensemble de ce qui est **fait**, **en cours** et **à faire**.  
 Ce fichier est vivant : **ajoute des lignes** au fur et à mesure (bugs, idées, dettes techniques).
 
-Dernière mise à jour : **2026-07-18**
+Dernière mise à jour : **2026-07-18** (Phase 2 OpenAgenda partielle)
 
 ---
 
@@ -46,16 +46,16 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 | Phase | Statut | Critère de sortie | Avancement |
 | --- | --- | --- | --- |
 | **0 — Fondations** | Fait | Apps démarrent, CI, migration locale | ~100 % |
-| **1 — Catalogue admin** | Quasi fait | Admin publie → visible mobile/web | ~85 % (médias absents) |
+| **1 — Catalogue admin** | Fait | Admin publie → visible mobile/web | ~100 % (doublons / MFA / médias upload / SSR reportés) |
 | **Design** | À démarrer | Brief prêt, maquettes à produire | Brief OK |
-| **2 — Imports** | À faire | OpenAgenda idempotent | 0 % |
-| **3 — Cœur mobile** | À faire | Onboarding, fiches, favoris, carte | ~15 % (squelettes) |
+| **2 — Imports** | Partiel | OpenAgenda idempotent | ~70 % (OA + admin fraîcheur ; autres sources / cron prod ouverts) |
+| **3 — Cœur mobile** | À faire | Onboarding, fiches, favoris, carte | ~25 % (Explorer + fiches lecture) |
 | **4 — Recommandations** | À faire | 3 suggestions scorées | ~5 % (mock Aujourd’hui) |
 | **5 — Comptes / sync** | À faire | Magic link + fusion locale | 0 % |
 | **6 — Notifs / soutien** | À faire | Push + Stripe + IAP | 0 % |
 | **7 — Boutiques** | À faire | Store-ready | 0 % |
 
-**Prochaine priorité recommandée :** finaliser Phase 1 (médias optionnels) **ou** enchaîner **design** en parallèle, puis **Phase 3** / **Phase 4** selon le brief design — sinon **Phase 2** si les données réelles deviennent le goulot.
+**Prochaine priorité recommandée :** terminer **design** (maquettes), puis **Phase 3** mobile — ou brancher une vraie clé OpenAgenda / cron prod pour finaliser Phase 2.
 
 ---
 
@@ -126,11 +126,12 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 - [x] RPC `admin_save_place` / `admin_save_event`
 - [x] Seed admin local `admin@tourose.local`
 - [x] ADR Phase 1 (`docs/decisions/0002-…`)
-- [ ] Tables `media_assets` / `entity_media`
-- [ ] RLS médias (lecture publique si autorisés)
-- [ ] Admin CRUD catégories / sources (UI)
-- [ ] Soft archive UI (plutôt que delete) documenté dans l’admin
-- [ ] Collections éditoriales (schéma + UI) — peut glisser Phase 3
+- [x] Tables `media_assets` / `entity_media`
+- [x] RLS médias (lecture publique si autorisés)
+- [x] Admin CRUD catégories / sources (UI)
+- [x] Soft archive UI (plutôt que delete) documenté dans l’admin
+- [x] Collections éditoriales (schéma + lecture publique + seed DÉMO)
+- [ ] Admin UI CRUD collections + upload médias (reporté Phase 3 / polish)
 
 ### Admin
 
@@ -143,10 +144,10 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 - [x] Liste / création / édition lieux
 - [x] Liste / création / édition événements (+ occurrence)
 - [x] Publication via statut `published`
-- [ ] Édition occurrences multiples par événement
-- [ ] Prévisualisation « tel que public »
-- [ ] Gestion doublons (UI)
-- [ ] Journal d’audit (table + UI)
+- [x] Édition occurrences multiples par événement
+- [x] Prévisualisation « tel que public » (lien site catalogue)
+- [ ] Gestion doublons (UI) — Phase 2 imports
+- [x] Journal d’audit (table + UI)
 - [ ] Magic link admin / MFA (plus tard)
 - [ ] Edge Function prod « promote admin » (sans exposer service role)
 
@@ -155,21 +156,23 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 - [x] Client Supabase
 - [x] Explorer : événements à venir, lieux, recherche
 - [~] Aujourd’hui encore sur suggestions **mock**
-- [ ] Fiches détail événement / lieu
-- [ ] Pull-to-refresh / états erreur soignés (design)
+- [x] Fiches détail événement / lieu (`/event/[slug]`, `/place/[slug]`)
+- [x] Pull-to-refresh + bouton réessayer sur Explorer / fiches
+- [ ] États erreur / empty states soignés (design)
 
 ### Website lecture
 
 - [x] Page `/catalogue`
 - [x] Accueil + crédits + confidentialité placeholder
-- [ ] Fiches détail SEO
-- [ ] Recherche sur le site
+- [x] Fiches détail SEO (`/catalogue/lieux/[slug]`, `/catalogue/evenements/[slug]`)
+- [x] Recherche sur le site (`?q=` + RPC `search_public_catalog`)
 - [ ] SSR/ISR pour fraîcheur catalogue en prod
 
 ### Contracts
 
 - [x] Schémas rows publics + search + inputs admin
-- [ ] Schémas médias / collections / reports complets
+- [x] Schémas médias / collections publics
+- [ ] Schémas reports complets (Phase 3 signalements)
 
 ---
 
@@ -193,21 +196,22 @@ Source : `docs/DESIGN-BRIEF.md`
 
 **Critère :** import idempotent, observable, corrigible depuis l’admin.
 
-- [ ] Table `external_records`
-- [ ] Tables `import_runs` / `import_errors`
-- [ ] Table `editorial_overrides`
-- [ ] Edge Function / job import **OpenAgenda** (premier)
-- [ ] Normalisation dates / lieux / prix
-- [ ] Déduplication (règles + suggestions admin)
-- [ ] Application des overrides à l’import
-- [ ] Droits médias à l’import (ne jamais publier sans licence)
-- [ ] Admin : tableau de fraîcheur des imports
+- [x] Table `external_records`
+- [x] Tables `import_runs` / `import_errors`
+- [x] Table `editorial_overrides`
+- [x] Edge Function / job import **OpenAgenda** (premier) — fixture locale + API si clé
+- [x] Normalisation dates / lieux / prix (prix encore `unknown` par défaut)
+- [x] Déduplication (clé externe + log `possible_duplicate`, pas de merge destructif)
+- [x] Application des overrides à l’import (`import_upsert_event`)
+- [x] Droits médias à l’import (ne jamais publier sans licence — log `media_rights`)
+- [x] Admin : tableau de fraîcheur des imports (`/imports`)
+- [x] Fixtures de contrats / normalize (Deno) + pgTAP RLS imports
+- [x] ADR `0003-phase2-openagenda-import`
 - [ ] Import **DATAtourisme**
 - [ ] Import **Toulouse Open Data** (parcs / équipements)
 - [ ] Cron d’import (pg_cron ou scheduler Supabase)
 - [ ] Alertes import échoué / source trop ancienne
-- [ ] Fixtures de contrats par source (tests)
-
+- [ ] UI admin de résolution de doublons (au-delà du journal)
 ---
 
 ## Phase 3 — Cœur mobile

@@ -42,9 +42,18 @@ import { CatalogAdminService, type AdminPlaceRow } from '../core/catalog-admin.s
                 <td class="px-4 py-3 text-right">
                   <a
                     [routerLink]="['/places', placeRow.id]"
-                    class="text-[var(--tourose-color-garonne-500)]"
+                    class="mr-3 text-[var(--tourose-color-garonne-500)]"
                     >Éditer</a
                   >
+                  @if (placeRow.status !== 'archived') {
+                    <button
+                      type="button"
+                      class="text-[var(--tourose-color-danger)]"
+                      (click)="onArchive(placeRow)"
+                    >
+                      Archiver
+                    </button>
+                  }
                 </td>
               </tr>
             }
@@ -61,6 +70,15 @@ export class PlacesListPage {
 
   constructor() {
     void this.load();
+  }
+
+  async onArchive(placeRow: AdminPlaceRow): Promise<void> {
+    try {
+      await this.catalogAdmin.archivePlace(placeRow);
+      await this.load();
+    } catch (error) {
+      this.errorMessage.set(error instanceof Error ? error.message : 'Archivage impossible');
+    }
   }
 
   private async load(): Promise<void> {

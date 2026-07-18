@@ -1,6 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
 import {
   fetchPublicPlaces,
@@ -35,11 +44,34 @@ export default function ExploreScreen() {
     (segment === 'places' && placesQuery.isLoading) ||
     (segment === 'search' && searchQuery.isFetching);
 
+  const isRefreshing =
+    (segment === 'events' && eventsQuery.isRefetching) ||
+    (segment === 'places' && placesQuery.isRefetching) ||
+    (segment === 'search' && searchQuery.isRefetching);
+
   const errorMessage =
     (segment === 'events' && eventsQuery.error?.message) ||
     (segment === 'places' && placesQuery.error?.message) ||
     (segment === 'search' && searchQuery.error?.message) ||
     null;
+
+  async function onRefresh(): Promise<void> {
+    if (segment === 'events') {
+      await eventsQuery.refetch();
+      return;
+    }
+    if (segment === 'places') {
+      await placesQuery.refetch();
+      return;
+    }
+    if (searchText.trim().length >= 2) {
+      await searchQuery.refetch();
+    }
+  }
+
+  const refreshControl = (
+    <RefreshControl refreshing={isRefreshing} onRefresh={() => void onRefresh()} tintColor="#C45C3E" />
+  );
 
   return (
     <View className="flex-1 bg-sand-50">
@@ -87,6 +119,13 @@ export default function ExploreScreen() {
         <View className="gap-2 p-5">
           <Text className="text-base font-semibold text-brick-700">Impossible de charger</Text>
           <Text className="text-sm text-ink-600">{errorMessage}</Text>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => void onRefresh()}
+            className="self-start rounded-md bg-brick-500 px-3 py-2"
+          >
+            <Text className="text-white">Réessayer</Text>
+          </Pressable>
         </View>
       ) : null}
 
@@ -95,19 +134,22 @@ export default function ExploreScreen() {
           data={eventsQuery.data ?? []}
           keyExtractor={(item) => item.id}
           contentContainerClassName="gap-3 p-5"
+          refreshControl={refreshControl}
           ListEmptyComponent={
             <Text className="text-sm text-ink-500">Aucun événement à venir publié.</Text>
           }
           renderItem={({ item }) => (
-            <View className="rounded-lg bg-white p-4">
-              <Text className="font-semibold text-ink-800">{item.title}</Text>
-              <Text className="mt-1 text-sm text-ink-500">{item.summary ?? 'Sans résumé'}</Text>
-              {item.next_starts_at ? (
-                <Text className="mt-2 text-xs text-garonne-700">
-                  {new Date(item.next_starts_at).toLocaleString('fr-FR')}
-                </Text>
-              ) : null}
-            </View>
+            <Link href={`/event/${item.slug}`} asChild>
+              <Pressable className="rounded-lg bg-white p-4">
+                <Text className="font-semibold text-ink-800">{item.title}</Text>
+                <Text className="mt-1 text-sm text-ink-500">{item.summary ?? 'Sans résumé'}</Text>
+                {item.next_starts_at ? (
+                  <Text className="mt-2 text-xs text-garonne-700">
+                    {new Date(item.next_starts_at).toLocaleString('fr-FR')}
+                  </Text>
+                ) : null}
+              </Pressable>
+            </Link>
           )}
         />
       ) : null}
@@ -117,15 +159,18 @@ export default function ExploreScreen() {
           data={placesQuery.data ?? []}
           keyExtractor={(item) => item.id}
           contentContainerClassName="gap-3 p-5"
+          refreshControl={refreshControl}
           ListEmptyComponent={<Text className="text-sm text-ink-500">Aucun lieu publié.</Text>}
           renderItem={({ item }) => (
-            <View className="rounded-lg bg-white p-4">
-              <Text className="font-semibold text-ink-800">{item.name}</Text>
-              <Text className="mt-1 text-sm text-ink-500">{item.summary ?? 'Sans résumé'}</Text>
-              <Text className="mt-2 text-xs text-garonne-700">
-                {item.place_type} · {item.city ?? 'Toulouse'}
-              </Text>
-            </View>
+            <Link href={`/place/${item.slug}`} asChild>
+              <Pressable className="rounded-lg bg-white p-4">
+                <Text className="font-semibold text-ink-800">{item.name}</Text>
+                <Text className="mt-1 text-sm text-ink-500">{item.summary ?? 'Sans résumé'}</Text>
+                <Text className="mt-2 text-xs text-garonne-700">
+                  {item.place_type} · {item.city ?? 'Toulouse'}
+                </Text>
+              </Pressable>
+            </Link>
           )}
         />
       ) : null}
@@ -135,6 +180,7 @@ export default function ExploreScreen() {
           data={searchQuery.data ?? []}
           keyExtractor={(item) => `${item.entity_type}-${item.id}`}
           contentContainerClassName="gap-3 p-5"
+          refreshControl={refreshControl}
           ListEmptyComponent={
             <Text className="text-sm text-ink-500">
               {searchText.trim().length < 2
@@ -143,11 +189,16 @@ export default function ExploreScreen() {
             </Text>
           }
           renderItem={({ item }) => (
-            <View className="rounded-lg bg-white p-4">
-              <Text className="text-xs uppercase text-brick-600">{item.entity_type}</Text>
-              <Text className="font-semibold text-ink-800">{item.title}</Text>
-              <Text className="mt-1 text-sm text-ink-500">{item.summary ?? ''}</Text>
-            </View>
+            <Link
+              href={item.entity_type === 'place' ? `/place/${item.slug}` : `/event/${item.slug}`}
+              asChild
+            >
+              <Pressable className="rounded-lg bg-white p-4">
+                <Text className="text-xs uppercase text-brick-600">{item.entity_type}</Text>
+                <Text className="font-semibold text-ink-800">{item.title}</Text>
+                <Text className="mt-1 text-sm text-ink-500">{item.summary ?? ''}</Text>
+              </Pressable>
+            </Link>
           )}
         />
       ) : null}

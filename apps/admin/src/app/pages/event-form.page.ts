@@ -1,17 +1,19 @@
+import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import {
   CatalogAdminService,
   TOULOUSE_TERRITORY_ID,
+  type AdminOccurrenceRow,
   type AdminPlaceRow,
 } from '../core/catalog-admin.service';
 import type { EventStatus, IndoorOutdoor, PriceType } from './catalog-form.types';
 
 @Component({
   selector: 'app-event-form-page',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, DatePipe],
   template: `
     <section class="mt-6 grid max-w-2xl gap-4">
       <a routerLink="/events" class="text-sm text-[var(--tourose-color-garonne-500)]"
@@ -96,7 +98,56 @@ import type { EventStatus, IndoorOutdoor, PriceType } from './catalog-form.types
         >
           {{ isSubmitting() ? 'Enregistrement…' : 'Enregistrer' }}
         </button>
+        @if (isEdit() && editingId()) {
+          <a
+            class="text-center text-sm text-[var(--tourose-color-garonne-500)]"
+            [href]="'http://localhost:4321/catalogue/evenements/' + eventForm.controls.slug.value"
+            target="_blank"
+            rel="noopener"
+            >Prévisualiser public</a
+          >
+        }
       </form>
+
+      @if (isEdit() && editingId()) {
+        <section class="grid gap-3 rounded-xl bg-white/70 p-4">
+          <h2 class="text-xl font-semibold">Occurrences</h2>
+          <ul class="grid gap-2 text-sm">
+            @for (occurrenceRow of occurrences(); track occurrenceRow.id) {
+              <li>
+                {{ occurrenceRow.starts_at | date: 'short' }}
+                @if (occurrenceRow.ends_at) {
+                  → {{ occurrenceRow.ends_at | date: 'short' }}
+                }
+                · {{ occurrenceRow.status }}
+              </li>
+            }
+          </ul>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="grid gap-1 text-sm"
+              >Nouvelle date début
+              <input
+                type="datetime-local"
+                class="rounded-md border border-black/10 px-3 py-2"
+                [formControl]="extraOccurrenceStart"
+            /></label>
+            <label class="grid gap-1 text-sm"
+              >Fin
+              <input
+                type="datetime-local"
+                class="rounded-md border border-black/10 px-3 py-2"
+                [formControl]="extraOccurrenceEnd"
+            /></label>
+          </div>
+          <button
+            type="button"
+            class="rounded-md border border-black/10 px-4 py-2"
+            (click)="onAddOccurrence()"
+          >
+            Ajouter une occurrence
+          </button>
+        </section>
+      }
     </section>
   `,
 })
@@ -111,6 +162,11 @@ export class EventFormPage {
   readonly errorMessage = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
   readonly places = signal<AdminPlaceRow[]>([]);
+  readonly occurrences = signal<AdminOccurrenceRow[]>([]);
+  readonly editingId = signal<string | null>(null);
+
+  readonly extraOccurrenceStart = new FormControl('', { nonNullable: true });
+  readonly extraOccurrenceEnd = new FormControl('', { nonNullable: true });
 
   readonly eventStatusOptions: EventStatus[] = [
     'draft',
@@ -120,8 +176,6 @@ export class EventFormPage {
     'archived',
     'hidden',
   ];
-
-  private editingId: string | null = null;
 
   readonly eventForm = this.formBuilder.nonNullable.group({
     title: ['', Validators.required],
@@ -142,8 +196,9 @@ export class EventFormPage {
     const eventId = this.route.snapshot.paramMap.get('eventId');
     if (eventId && eventId !== 'new') {
       this.isEdit.set(true);
-      this.editingId = eventId;
+      this.editingId.set(eventId);
       void this.loadEvent(eventId);
+      void this.loadOccurrences(eventId);
     }
 
     this.eventForm.controls.title.valueChanges.subscribe((title) => {
@@ -161,7 +216,7 @@ export class EventFormPage {
 
     try {
       const savedId = await this.catalogAdmin.saveEvent({
-        id: this.editingId ?? undefined,
+        id: this.editingId() ?? undefined,
         territory_id: TOULOUSE_TERRITORY_ID,
         place_id: raw.place_id || null,
         slug: raw.slug,
@@ -179,13 +234,36 @@ export class EventFormPage {
           ? 'Événement publié — visible sur mobile et le site.'
           : 'Événement enregistré.',
       );
-      if (!this.editingId) {
+      if (!this.editingId()) {
         await this.router.navigate(['/events', savedId]);
+      } else {
+        await this.loadOccurrences(savedId);
       }
     } catch (error) {
       this.errorMessage.set(error instanceof Error ? error.message : 'Enregistrement impossible');
     } finally {
       this.isSubmitting.set(false);
+    }
+  }
+
+  async onAddOccurrence(): Promise<void> {
+    const eventId = this.editingId();
+    if (!eventId || !this.extraOccurrenceStart.value) {
+      return;
+    }
+    try {
+      await this.catalogAdmin.addOccurrence(
+        eventId,
+        new Date(this.extraOccurrenceStart.value).toISOString(),
+        this.extraOccurrenceEnd.value
+          ? new Date(this.extraOccurrenceEnd.value).toISOString()
+          : null,
+      );
+      this.extraOccurrenceStart.setValue('');
+      this.extraOccurrenceEnd.setValue('');
+      await this.loadOccurrences(eventId);
+    } catch (error) {
+      this.errorMessage.set(error instanceof Error ? error.message : 'Occurrence impossible');
     }
   }
 
@@ -206,6 +284,10 @@ export class EventFormPage {
     } catch (error) {
       this.errorMessage.set(error instanceof Error ? error.message : 'Chargement impossible');
     }
+  }
+
+  private async loadOccurrences(eventId: string): Promise<void> {
+    this.occurrences.set(await this.catalogAdmin.listOccurrences(eventId));
   }
 }
 

@@ -1,8 +1,10 @@
 import {
   catalogSearchHitSchema,
+  publicCollectionRowSchema,
   publicEventRowSchema,
   publicPlaceRowSchema,
   type CatalogSearchHit,
+  type PublicCollectionRow,
   type PublicEventRow,
   type PublicPlaceRow,
 } from '@tourose/contracts';
@@ -71,4 +73,51 @@ export async function loadCatalogSearch(
     throw new Error(error.message);
   }
   return z.array(catalogSearchHitSchema).parse(data ?? []);
+}
+
+export async function loadPublicPlaceBySlug(placeSlug: string): Promise<PublicPlaceRow | null> {
+  const client = createBrowserOrBuildClient();
+  if (!client) {
+    return null;
+  }
+
+  const { data, error } = await client.rpc('get_public_place', {
+    place_slug: placeSlug,
+  });
+  if (error) {
+    throw new Error(error.message);
+  }
+  const rows = z.array(publicPlaceRowSchema).parse(data ?? []);
+  return rows[0] ?? null;
+}
+
+export async function loadPublicEventBySlug(eventSlug: string): Promise<PublicEventRow | null> {
+  const client = createBrowserOrBuildClient();
+  if (!client) {
+    return null;
+  }
+
+  const { data, error } = await client.rpc('get_public_event', {
+    event_slug: eventSlug,
+  });
+  if (error) {
+    throw new Error(error.message);
+  }
+  const rows = z.array(publicEventRowSchema).parse(data ?? []);
+  return rows[0] ?? null;
+}
+
+export async function loadPublicCollections(limitCount = 20): Promise<PublicCollectionRow[]> {
+  const client = createBrowserOrBuildClient();
+  if (!client) {
+    return [];
+  }
+
+  const { data, error } = await client.rpc('list_public_collections', {
+    limit_count: limitCount,
+  });
+  if (error) {
+    throw new Error(error.message);
+  }
+  return z.array(publicCollectionRowSchema).parse(data ?? []);
 }

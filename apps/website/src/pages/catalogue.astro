@@ -1,14 +1,28 @@
 ---
-import type { PublicEventRow, PublicPlaceRow } from '@tourose/contracts';
+import type { CatalogSearchHit, PublicCollectionRow, PublicEventRow, PublicPlaceRow } from '@tourose/contracts';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { loadPublicPlaces, loadUpcomingEvents } from '../lib/catalog';
+import {
+  loadCatalogSearch,
+  loadPublicCollections,
+  loadPublicPlaces,
+  loadUpcomingEvents,
+} from '../lib/catalog';
+
+const searchQuery = Astro.url.searchParams.get('q')?.trim() ?? '';
 
 let events: PublicEventRow[] = [];
 let places: PublicPlaceRow[] = [];
+let collections: PublicCollectionRow[] = [];
+let searchHits: CatalogSearchHit[] = [];
 let loadError: string | null = null;
 
 try {
-  [events, places] = await Promise.all([loadUpcomingEvents(20), loadPublicPlaces(50)]);
+  [events, places, collections, searchHits] = await Promise.all([
+    loadUpcomingEvents(20),
+    loadPublicPlaces(50),
+    loadPublicCollections(10),
+    searchQuery.length >= 2 ? loadCatalogSearch(searchQuery) : Promise.resolve([]),
+  ]);
 } catch (error) {
   loadError = error instanceof Error ? error.message : 'Chargement impossible';
 }
@@ -25,6 +39,23 @@ try {
         Lecture publique des contenus publiés via les vues et RPC Supabase. Les brouillons admin
         n’apparaissent pas ici.
       </p>
+      <form class="mt-4 flex max-w-xl gap-2" method="get" action="/catalogue">
+        <label class="absolute -left-[9999px]" for="catalogue-search">Rechercher</label>
+        <input
+          id="catalogue-search"
+          type="search"
+          name="q"
+          value={searchQuery}
+          placeholder="Rechercher un lieu ou un événement…"
+          class="flex-1 rounded-md border border-sand-200 bg-white px-3 py-2 text-ink-800"
+        />
+        <button
+          type="submit"
+          class="rounded-md bg-brick-500 px-4 py-2 text-white"
+        >
+          Rechercher
+        </button>
+      </form>
     </div>
 
     {
@@ -32,6 +63,38 @@ try {
         <p class="rounded-lg bg-sand-100 px-4 py-3 text-sm text-brick-700">
           {loadError} — vérifie <code>pnpm dev:up</code> et <code>.env.local</code>.
         </p>
+      ) : null
+    }
+
+    {
+      searchQuery.length >= 2 ? (
+        <div class="grid gap-4">
+          <h2 class="text-2xl font-semibold text-brick-700">
+            Résultats pour « {searchQuery} »
+          </h2>
+          {searchHits.length === 0 ? (
+            <p class="text-sm text-ink-500">Aucun résultat.</p>
+          ) : (
+            <ul class="grid gap-3">
+              {searchHits.map((hit) => (
+                <li class="rounded-lg bg-white/70 p-4">
+                  <p class="text-xs uppercase text-brick-600">{hit.entity_type}</p>
+                  <a
+                    class="font-semibold text-ink-800 no-underline hover:underline"
+                    href={
+                      hit.entity_type === 'place'
+                        ? `/catalogue/lieux/${hit.slug}`
+                        : `/catalogue/evenements/${hit.slug}`
+                    }
+                  >
+                    {hit.title}
+                  </a>
+                  <p class="mt-1 text-sm text-ink-600">{hit.summary ?? ''}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       ) : null
     }
 
@@ -44,13 +107,34 @@ try {
       ) : null
     }
 
+    {
+      collections.length > 0 ? (
+        <div class="grid gap-4">
+          <h2 class="text-2xl font-semibold text-brick-700">Collections</h2>
+          <ul class="grid gap-3">
+            {collections.map((collectionRow) => (
+              <li class="rounded-lg bg-white/70 p-4">
+                <p class="font-semibold text-ink-800">{collectionRow.title}</p>
+                <p class="mt-1 text-sm text-ink-600">{collectionRow.summary ?? ''}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null
+    }
+
     <div class="grid gap-4">
       <h2 class="text-2xl font-semibold text-brick-700">Événements à venir</h2>
       <ul class="grid gap-3">
         {
           events.map((eventRow) => (
             <li class="rounded-lg bg-white/70 p-4">
-              <p class="font-semibold text-ink-800">{eventRow.title}</p>
+              <a
+                class="font-semibold text-ink-800 no-underline hover:underline"
+                href={`/catalogue/evenements/${eventRow.slug}`}
+              >
+                {eventRow.title}
+              </a>
               <p class="mt-1 text-sm text-ink-600">{eventRow.summary ?? 'Sans résumé'}</p>
               {eventRow.next_starts_at ? (
                 <p class="mt-2 text-xs text-garonne-700">
@@ -69,7 +153,12 @@ try {
         {
           places.map((placeRow) => (
             <li class="rounded-lg bg-white/70 p-4">
-              <p class="font-semibold text-ink-800">{placeRow.name}</p>
+              <a
+                class="font-semibold text-ink-800 no-underline hover:underline"
+                href={`/catalogue/lieux/${placeRow.slug}`}
+              >
+                {placeRow.name}
+              </a>
               <p class="mt-1 text-sm text-ink-600">{placeRow.summary ?? 'Sans résumé'}</p>
               <p class="mt-2 text-xs text-garonne-700">
                 {placeRow.place_type} · {placeRow.city ?? 'Toulouse'}

@@ -54,3 +54,13 @@ function toRadians(degrees: number): number {
 }
 
 export { TOULOUSE_CENTER };
+
+export {
+  hashPayload,
+  localizeText,
+  normalizeOpenAgendaEvent,
+  OPENAGENDA_SOURCE_ID,
+  slugify,
+  stableStringify,
+  TOULOUSE_TERRITORY_ID,
+} from './openagenda-normalize';
