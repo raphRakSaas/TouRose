@@ -264,6 +264,14 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [x] Partage natif
 - [x] Ajout calendrier
 
+### Pour moi — réglages
+
+- [x] Préférences : centres d’intérêt + compagnie éditables, revoir l’onboarding, réinitialisation
+- [x] Notifications : réglages granulaires persistés localement (prêts pour le push Phase 6)
+- [x] Compte : écran mode invité (compteurs de données locales, sync annoncée Phase 5)
+- [x] Sources & confidentialité : sources ouvertes cliquables + engagements vie privée
+- [x] Soutenir TouRose (maquette montants, paiement réel = Phase 6)
+
 ---
 
 ## Phase 4 — Recommandations

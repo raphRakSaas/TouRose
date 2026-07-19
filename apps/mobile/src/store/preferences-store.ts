@@ -16,12 +16,23 @@ export const INTEREST_OPTIONS = [
 
 export type InterestOption = (typeof INTEREST_OPTIONS)[number];
 
+export type NotificationSettings = {
+  /** Idées de sorties pour le week-end (vendredi). */
+  weekendIdeas: boolean;
+  /** Rappel la veille d'un événement mis en favori. */
+  favoriteReminders: boolean;
+  /** Suggestions adaptées à la météo du jour. */
+  weatherSuggestions: boolean;
+};
+
 type PreferencesState = {
   company: CompanyPreference;
   interests: InterestOption[];
   onboardingCompleted: boolean;
+  notificationSettings: NotificationSettings;
   setCompany: (company: CompanyPreference) => void;
   toggleInterest: (interest: InterestOption) => void;
+  setNotificationSetting: (settingKey: keyof NotificationSettings, enabled: boolean) => void;
   resetPreferences: () => void;
   completeOnboarding: () => void;
   resetOnboarding: () => void;
@@ -29,6 +40,11 @@ type PreferencesState = {
 
 const DEFAULT_COMPANY: CompanyPreference = 'couple';
 const DEFAULT_INTERESTS: InterestOption[] = ['Balades', 'Terrasses', 'Nature'];
+const DEFAULT_NOTIFICATION_SETTINGS: NotificationSettings = {
+  weekendIdeas: true,
+  favoriteReminders: true,
+  weatherSuggestions: false,
+};
 
 export const usePreferencesStore = create<PreferencesState>()(
   persist(
@@ -36,6 +52,7 @@ export const usePreferencesStore = create<PreferencesState>()(
       company: DEFAULT_COMPANY,
       interests: DEFAULT_INTERESTS,
       onboardingCompleted: false,
+      notificationSettings: DEFAULT_NOTIFICATION_SETTINGS,
       setCompany: (company) => set({ company }),
       toggleInterest: (interest) =>
         set((state) => ({
@@ -43,7 +60,16 @@ export const usePreferencesStore = create<PreferencesState>()(
             ? state.interests.filter((item) => item !== interest)
             : [...state.interests, interest],
         })),
-      resetPreferences: () => set({ company: DEFAULT_COMPANY, interests: DEFAULT_INTERESTS }),
+      setNotificationSetting: (settingKey, enabled) =>
+        set((state) => ({
+          notificationSettings: { ...state.notificationSettings, [settingKey]: enabled },
+        })),
+      resetPreferences: () =>
+        set({
+          company: DEFAULT_COMPANY,
+          interests: DEFAULT_INTERESTS,
+          notificationSettings: DEFAULT_NOTIFICATION_SETTINGS,
+        }),
       completeOnboarding: () => set({ onboardingCompleted: true }),
       resetOnboarding: () => set({ onboardingCompleted: false }),
     }),
@@ -54,6 +80,7 @@ export const usePreferencesStore = create<PreferencesState>()(
         company: state.company,
         interests: state.interests,
         onboardingCompleted: state.onboardingCompleted,
+        notificationSettings: state.notificationSettings,
       }),
     },
   ),

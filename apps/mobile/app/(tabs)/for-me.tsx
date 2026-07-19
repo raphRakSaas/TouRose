@@ -1,6 +1,6 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -200,17 +200,22 @@ export default function ForMeScreen() {
 
           {(
             [
-              ['Préférences', null],
-              ['Notifications', null],
-              ['Compte (facultatif)', null],
+              ['Préférences', '/settings/preferences'],
+              ['Notifications', '/settings/notifications'],
+              ['Compte (facultatif)', '/settings/account'],
               ['Soutenir TouRose', 'support'],
-              ['Sources & confidentialité', null],
+              ['Sources & confidentialité', '/settings/privacy'],
             ] as const
           ).map(([label, action], index, rows) => (
             <Pressable
               key={label}
+              testID={`me-menu-${label}`}
               accessibilityRole="button"
-              onPress={action === 'support' ? () => setSupportScreen('form') : undefined}
+              onPress={
+                action === 'support'
+                  ? () => setSupportScreen('form')
+                  : () => router.push(action as never)
+              }
               className={`flex-row items-center justify-between py-3.5 ${
                 index < rows.length - 1 ? 'border-b border-sand-200' : ''
               }`}

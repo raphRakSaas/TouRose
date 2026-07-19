@@ -103,6 +103,21 @@ export default function RootLayout() {
             headerTitleStyle: { fontFamily: 'Fraunces_700Bold' },
           }}
         />
+        {['settings/preferences', 'settings/notifications', 'settings/account', 'settings/privacy'].map(
+          (settingsRoute) => (
+            <Stack.Screen
+              key={settingsRoute}
+              name={settingsRoute}
+              options={{
+                headerShown: true,
+                headerBackTitle: 'Retour',
+                headerStyle: { backgroundColor: '#FBF8F4' },
+                headerTintColor: '#1F1C19',
+                headerTitleStyle: { fontFamily: 'Fraunces_700Bold' },
+              }}
+            />
+          ),
+        )}
       </Stack>
     </QueryClientProvider>
   );
