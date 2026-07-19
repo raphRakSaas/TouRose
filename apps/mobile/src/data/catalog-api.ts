@@ -3,12 +3,14 @@ import {
   publicCollectionRowSchema,
   publicEventMediaSchema,
   publicEventRowSchema,
+  publicPlaceMediaSchema,
   publicPlaceRowSchema,
   recommendationPicksSchema,
   type CatalogSearchHit,
   type PublicCollectionRow,
   type PublicEventMedia,
   type PublicEventRow,
+  type PublicPlaceMedia,
   type PublicPlaceRow,
   type RecommendationPick,
 } from '@tourose/contracts';
@@ -33,14 +35,32 @@ export async function fetchUpcomingEvents(limitCount = 20): Promise<PublicEventR
   return z.array(publicEventRowSchema).parse(data ?? []);
 }
 
-export async function fetchPublicPlaces(limitCount = 50): Promise<PublicPlaceRow[]> {
+export type FetchPublicPlacesOptions = {
+  limitCount?: number;
+  latitude?: number;
+  longitude?: number;
+  /** Exclut les salles d’événements OpenAgenda (`cultural_venue`). Défaut true. */
+  discoveryOnly?: boolean;
+};
+
+export async function fetchPublicPlaces(
+  limitCountOrOptions: number | FetchPublicPlacesOptions = 50,
+): Promise<PublicPlaceRow[]> {
   const client = getSupabaseClient();
   if (!client) {
     throw new Error('Supabase non configuré — lance `pnpm dev:up`.');
   }
 
+  const options: FetchPublicPlacesOptions =
+    typeof limitCountOrOptions === 'number'
+      ? { limitCount: limitCountOrOptions }
+      : limitCountOrOptions;
+
   const { data, error } = await client.rpc('list_public_places', {
-    limit_count: limitCount,
+    limit_count: options.limitCount ?? 50,
+    origin_latitude: options.latitude ?? null,
+    origin_longitude: options.longitude ?? null,
+    discovery_only: options.discoveryOnly ?? true,
   });
 
   if (error) {
@@ -131,6 +151,20 @@ export async function fetchPublicEventBySlug(eventSlug: string): Promise<PublicE
 
 /** Toutes les images publiques liées à un événement (cover en premier). */
 export async function fetchEventMedia(eventId: string): Promise<PublicEventMedia[]> {
+  return fetchEntityMedia('event', eventId, publicEventMediaSchema, ['allowed', 'needs_review']);
+}
+
+/** Toutes les images publiques liées à un lieu (cover en premier). */
+export async function fetchPlaceMedia(placeId: string): Promise<PublicPlaceMedia[]> {
+  return fetchEntityMedia('place', placeId, publicPlaceMediaSchema, ['allowed']);
+}
+
+async function fetchEntityMedia<T>(
+  entityType: 'event' | 'place',
+  entityId: string,
+  mediaSchema: z.ZodType<T>,
+  allowedRightsStatuses: string[],
+): Promise<T[]> {
   const client = getSupabaseClient();
   if (!client) {
     return [];
@@ -138,9 +172,12 @@ export async function fetchEventMedia(eventId: string): Promise<PublicEventMedia
 
   const { data, error } = await client
     .from('entity_media')
-    .select('position, is_cover, media_assets ( remote_url, alt_text, attribution_text )')
-    .eq('entity_type', 'event')
-    .eq('entity_id', eventId)
+    .select(
+      'position, is_cover, media_assets!inner ( remote_url, alt_text, attribution_text, rights_status )',
+    )
+    .eq('entity_type', entityType)
+    .eq('entity_id', entityId)
+    .in('media_assets.rights_status', allowedRightsStatuses)
     .order('is_cover', { ascending: false })
     .order('position', { ascending: true });
 
@@ -168,7 +205,7 @@ export async function fetchEventMedia(eventId: string): Promise<PublicEventMedia
     })
     .filter((row): row is NonNullable<typeof row> => row !== null);
 
-  return z.array(publicEventMediaSchema).parse(mediaRows);
+  return z.array(mediaSchema).parse(mediaRows);
 }
 
 /** Lieu public par id (fiche événement → lieu associé). */

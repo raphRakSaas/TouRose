@@ -26,6 +26,8 @@
     "dev:down": "node ./scripts/dev-down.mjs",
     "grant:admin": "node ./scripts/grant-admin.mjs",
     "import:openagenda": "node ./scripts/import-openagenda.mjs",
+    "import:wikimedia-places": "node ./scripts/import-wikimedia-places.mjs",
+    "import:editorial-photos": "node ./scripts/import-editorial-place-photos.mjs",
     "openagenda:find": "node ./scripts/find-openagenda-agendas.mjs",
     "supabase:start": "pnpm exec supabase start",
     "supabase:stop": "pnpm exec supabase stop",

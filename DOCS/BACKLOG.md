@@ -159,6 +159,9 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 - [x] Fiches détail événement / lieu (`/event/[slug]`, `/place/[slug]`)
 - [x] Fiche événement enrichie : carrousel photos, description complète, adresse cliquable → itinéraire natif (Plans / Google Maps / Waze), CTA fixe « Y aller / Réserver / Partager »
 - [x] Détails OpenAgenda complets (import `detailed=1`) : description longue markdown, prochaines dates, tarifs/conditions, âge, accessibilité, réservation/contact, mots-clés
+- [x] Explorer / lieux enrichis : couvertures réelles, galerie multi-photos, descriptions et accès OpenAgenda, itinéraire natif, contacts et CTA fixe
+- [x] Import Wikimedia Commons conservateur pour les lieux (jusqu’à 3 photos, auteur/licence/attribution obligatoires)
+- [x] Catalogue lieux **découverte** (éditorial) séparé des salles OpenAgenda + tri proximité + filtre « Autour de moi » (ADR 0006)
 - [x] Pull-to-refresh + bouton réessayer sur Explorer / fiches
 - [ ] États erreur / empty states soignés (design)
 
@@ -207,6 +210,7 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [x] Mapping catégories OpenAgenda (`types-devenements` → `categories` / `event_categories`)
 - [x] Prévisualisations images OpenAgenda CDN + attribution (ADR 0004, `needs_review`)
 - [x] Déduplication (clé externe + log `possible_duplicate`, pas de merge destructif)
+- [x] Déduplication lieux : merge des doublons existants + rapprochement à l’import par nom normalisé (+ proximité 500 m)
 - [x] Application des overrides à l’import (`import_upsert_event`)
 - [x] Droits médias à l’import (ne jamais publier sans licence — log `media_rights`)
 - [x] Admin : tableau de fraîcheur des imports (`/imports`)

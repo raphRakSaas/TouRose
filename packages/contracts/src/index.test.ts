@@ -32,8 +32,24 @@ describe('contracts', () => {
       indoor_outdoor: 'outdoor',
       status: 'published',
       last_verified_at: new Date().toISOString(),
+      address: 'Place du Capitole',
+      description: 'Lieu emblématique.',
+      postal_code: '31000',
+      website_url: 'https://example.com/place',
+      phone: '05 61 00 00 00',
+      details: {
+        access: 'Métro A',
+        email: 'contact@example.com',
+        links: [{ label: 'Programme', url: 'https://example.com/programme' }],
+      },
+      image_url: 'https://upload.wikimedia.org/example.jpg',
+      image_alt: 'Le jardin',
+      image_attribution: 'Auteur · CC BY-SA 4.0 · Wikimedia Commons',
+      image_source_url: 'https://commons.wikimedia.org/wiki/File:Example.jpg',
     });
     expect(place.place_type).toBe('park');
+    expect(place.details.access).toBe('Métro A');
+    expect(place.image_url).toContain('wikimedia.org');
   });
 
   it('validates a public event row', () => {

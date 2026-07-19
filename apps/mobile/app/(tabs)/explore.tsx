@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import type { PublicEventRow, PublicPlaceRow } from '@tourose/contracts';
+import { distanceInKilometers } from '@tourose/shared';
 
 import { CatalogListRow } from '@/components/ui/CatalogListRow';
 import { Chip } from '@/components/ui/Chip';
@@ -22,10 +23,12 @@ import {
   fetchUpcomingEvents,
   searchPublicCatalog,
 } from '@/src/data/catalog-api';
+import { formatDistanceLabel, placeTypeLabel } from '@/src/domain/place-labels';
 import { getMomentRange, isEventInRange } from '@/src/domain/today-feed';
+import { getUserCoordinatesOrToulouse } from '@/src/lib/location';
 
 type CatalogSegment = 'events' | 'places' | 'collections';
-type ExploreFilterKey = 'weekend' | 'free' | 'outdoor';
+type ExploreFilterKey = 'weekend' | 'free' | 'outdoor' | 'nearby';
 
 function filterEvents(
   events: PublicEventRow[],
@@ -68,16 +71,32 @@ function filterPlaces(
     ) {
       return false;
     }
-    // Weekend n'a pas de sens sur les lieux permanents — on ignore.
     return true;
   });
+}
+
+function placeSubtitle(
+  placeRow: PublicPlaceRow,
+  origin: { latitude: number; longitude: number } | undefined,
+): string {
+  const typeLabel = placeTypeLabel(placeRow.place_type);
+  const cityLabel = placeRow.city ?? 'Toulouse';
+  if (origin && placeRow.latitude != null && placeRow.longitude != null) {
+    const distanceKm = distanceInKilometers(
+      origin.latitude,
+      origin.longitude,
+      placeRow.latitude,
+      placeRow.longitude,
+    );
+    return `${typeLabel} · ${formatDistanceLabel(distanceKm)} · ${cityLabel}`;
+  }
+  return `${typeLabel} · ${cityLabel}`;
 }
 
 export default function ExploreScreen() {
   const routeParams = useLocalSearchParams<{ segment?: string }>();
   const [segment, setSegment] = useState<CatalogSegment>('events');
   const [searchText, setSearchText] = useState('');
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Set<ExploreFilterKey>>(new Set());
 
   useEffect(() => {
@@ -90,14 +109,33 @@ export default function ExploreScreen() {
     }
   }, [routeParams.segment]);
 
+  const userLocationQuery = useQuery({
+    queryKey: ['user-coordinates'],
+    queryFn: getUserCoordinatesOrToulouse,
+    staleTime: 5 * 60 * 1000,
+  });
+
   const eventsQuery = useQuery({
     queryKey: ['catalog', 'events', 100],
     queryFn: () => fetchUpcomingEvents(100),
   });
 
   const placesQuery = useQuery({
-    queryKey: ['catalog', 'places'],
-    queryFn: () => fetchPublicPlaces(50),
+    queryKey: [
+      'catalog',
+      'places',
+      'discovery',
+      userLocationQuery.data?.latitude,
+      userLocationQuery.data?.longitude,
+    ],
+    queryFn: () =>
+      fetchPublicPlaces({
+        limitCount: 80,
+        latitude: userLocationQuery.data?.latitude,
+        longitude: userLocationQuery.data?.longitude,
+        discoveryOnly: true,
+      }),
+    enabled: Boolean(userLocationQuery.data),
   });
 
   const searchQuery = useQuery({
@@ -117,15 +155,32 @@ export default function ExploreScreen() {
     [eventsQuery.data, activeFilters],
   );
 
-  const filteredPlaces = useMemo(
-    () => filterPlaces(placesQuery.data ?? [], activeFilters),
-    [placesQuery.data, activeFilters],
-  );
+  const filteredPlaces = useMemo(() => {
+    const places = filterPlaces(placesQuery.data ?? [], activeFilters);
+    if (!activeFilters.has('nearby') || !userLocationQuery.data) {
+      return places;
+    }
+    return places.filter((placeRow) => {
+      if (placeRow.latitude == null || placeRow.longitude == null) {
+        return false;
+      }
+      return (
+        distanceInKilometers(
+          userLocationQuery.data.latitude,
+          userLocationQuery.data.longitude,
+          placeRow.latitude,
+          placeRow.longitude,
+        ) <= 3
+      );
+    });
+  }, [placesQuery.data, activeFilters, userLocationQuery.data]);
 
   const isSearching = searchText.trim().length >= 2;
   const isLoading =
     (!isSearching && segment === 'events' && eventsQuery.isLoading) ||
-    (!isSearching && segment === 'places' && placesQuery.isLoading) ||
+    (!isSearching &&
+      segment === 'places' &&
+      (userLocationQuery.isLoading || placesQuery.isLoading)) ||
     (isSearching && searchQuery.isFetching);
 
   const isRefreshing =
@@ -160,7 +215,7 @@ export default function ExploreScreen() {
       await eventsQuery.refetch();
       return;
     }
-    await placesQuery.refetch();
+    await Promise.all([userLocationQuery.refetch(), placesQuery.refetch()]);
   }
 
   return (
@@ -181,75 +236,83 @@ export default function ExploreScreen() {
           <TextInput
             value={searchText}
             onChangeText={setSearchText}
-            onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setIsSearchFocused(false)}
-            placeholder="Rechercher à Toulouse"
+            placeholder="Rechercher un lieu, un événement…"
             placeholderTextColor="#A39B90"
             className="flex-1 text-[15px] font-body text-ink-800"
-            autoCapitalize="none"
             autoCorrect={false}
+            autoCapitalize="none"
+            returnKeyType="search"
           />
-          {isSearchFocused || searchText ? (
+          {searchText.length > 0 ? (
             <Pressable accessibilityRole="button" onPress={() => setSearchText('')}>
-              <Text className="text-[13px] font-body text-brick-900">Effacer</Text>
+              <FontAwesome name="times-circle" size={16} color="#A39B90" />
             </Pressable>
           ) : null}
         </View>
 
-        {!isSearching ? (
-          <View className="mb-3.5 flex-row gap-5 border-b border-sand-200">
-            {(
-              [
-                ['events', 'Événements'],
-                ['places', 'Lieux'],
-                ['collections', 'Collections'],
-              ] as const
-            ).map(([value, label]) => {
-              const isActive = segment === value;
-              return (
-                <Pressable
-                  key={value}
-                  accessibilityRole="button"
-                  onPress={() => setSegment(value)}
-                  className={`pb-2.5 ${isActive ? 'border-b-2 border-brick-500' : ''}`}
+        <View className="mb-3 flex-row gap-2">
+          {(
+            [
+              ['events', 'Événements'],
+              ['places', 'Lieux'],
+              ['collections', 'Sélections'],
+            ] as const
+          ).map(([segmentKey, label]) => {
+            const isActive = segment === segmentKey;
+            return (
+              <Pressable
+                key={segmentKey}
+                accessibilityRole="button"
+                onPress={() => setSegment(segmentKey)}
+                className={`rounded-full px-3.5 py-2 ${
+                  isActive ? 'bg-brick-500' : 'bg-white'
+                }`}
+              >
+                <Text
+                  className={`text-[13px] font-body-semibold ${
+                    isActive ? 'text-white' : 'text-ink-600'
+                  }`}
                 >
-                  <Text
-                    className={`text-[14px] ${
-                      isActive
-                        ? 'font-body-bold text-brick-500'
-                        : 'font-body text-ink-300'
-                    }`}
-                  >
-                    {label}
-                  </Text>
-                </Pressable>
-              );
-            })}
+                  {label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        {!isSearching ? (
+          <View className="flex-row flex-wrap gap-2">
+            {segment === 'events' ? (
+              <Chip
+                label="Ce week-end"
+                selected={activeFilters.has('weekend')}
+                onPress={() => toggleFilter('weekend')}
+              />
+            ) : null}
+            {segment === 'places' ? (
+              <Chip
+                label="Autour de moi"
+                selected={activeFilters.has('nearby')}
+                onPress={() => toggleFilter('nearby')}
+              />
+            ) : null}
+            <Chip
+              label="Gratuit"
+              selected={activeFilters.has('free')}
+              onPress={() => toggleFilter('free')}
+            />
+            <Chip
+              label="Dehors"
+              selected={activeFilters.has('outdoor')}
+              onPress={() => toggleFilter('outdoor')}
+            />
           </View>
         ) : null}
 
-        {!isSearching && segment !== 'collections' ? (
-          <View className="mb-2 flex-row flex-wrap gap-2">
-            {(
-              [
-                ['weekend', 'Ce week-end'],
-                ['free', 'Gratuit'],
-                ['outdoor', 'Extérieur'],
-              ] as const
-            ).map(([key, label]) => {
-              const isSelected = activeFilters.has(key);
-              return (
-                <Chip
-                  key={key}
-                  testID={`explore-filter-${key}`}
-                  label={label}
-                  selected={isSelected}
-                  tone={isSelected ? 'solid' : 'white'}
-                  onPress={() => toggleFilter(key)}
-                />
-              );
-            })}
-          </View>
+        {segment === 'places' && !isSearching ? (
+          <Text className="mt-2.5 text-[12px] font-body text-ink-500">
+            Parcs, monuments, coins et bons plans — triés par proximité.
+          </Text>
         ) : null}
       </View>
 
@@ -260,9 +323,8 @@ export default function ExploreScreen() {
       ) : null}
 
       {errorMessage ? (
-        <View className="gap-2 px-5">
-          <Text className="text-base font-body-semibold text-brick-700">Impossible de charger</Text>
-          <Text className="text-sm font-body text-ink-500">{errorMessage}</Text>
+        <View className="px-5">
+          <Text className="text-sm font-body text-brick-700">{errorMessage}</Text>
         </View>
       ) : null}
 
@@ -283,12 +345,20 @@ export default function ExploreScreen() {
           }
           renderItem={({ item, index }) => (
             <Link
-              href={item.entity_type === 'place' ? `/place/${item.slug}` : `/event/${item.slug}`}
+              href={
+                item.entity_type === 'place'
+                  ? `/place/${item.slug}`
+                  : `/event/${item.slug}`
+              }
               asChild
             >
               <CatalogListRow
                 title={item.title}
-                subtitle={item.summary ?? item.entity_type}
+                subtitle={
+                  item.entity_type === 'place'
+                    ? item.summary ?? 'Lieu'
+                    : item.summary ?? 'Événement'
+                }
                 imageLabel={item.title}
                 showDivider={index < (searchQuery.data?.length ?? 0) - 1}
               />
@@ -356,8 +426,10 @@ export default function ExploreScreen() {
             <Link href={`/place/${item.slug}`} asChild>
               <CatalogListRow
                 title={item.name}
-                subtitle={`${item.place_type} · ${item.city ?? 'Toulouse'}`}
+                subtitle={placeSubtitle(item, userLocationQuery.data)}
                 imageLabel={item.name}
+                imageSource={item.image_url ? { uri: item.image_url } : undefined}
+                imageAttribution={item.image_attribution}
                 showDivider={index < filteredPlaces.length - 1}
               />
             </Link>
@@ -375,14 +447,14 @@ export default function ExploreScreen() {
               <ActivityIndicator color="#C45C3E" />
             ) : (
               <Text className="text-sm font-body text-ink-500">
-                Aucune collection publiée pour l'instant.
+                Aucune sélection pour le moment.
               </Text>
             )
           }
           renderItem={({ item, index }) => (
             <CatalogListRow
               title={item.title}
-              subtitle={item.summary ?? 'Collection'}
+              subtitle={item.summary ?? 'Sélection éditoriale'}
               imageLabel={item.title}
               showDivider={index < (collectionsQuery.data?.length ?? 0) - 1}
             />

@@ -11,6 +11,19 @@
 - prix dérivé à l’import : `participation` (entrée libre/gratuite) ou legacy `entreelibre` → `free` ; URL `billetterie` → `paid` ; sinon `unknown` ;
 - catégories dérivées du champ agenda `types-devenements` (Spectacle, Visite, Exposition…) ;
 - import en mode `detailed=1` : `longDescription` (markdown) → `events.description`, et `events.details` (jsonb) regroupe `conditions` (tarifs), `age`, `accessibility` (hi/ii/mi/pi/vi), `attendanceMode`, `onlineAccessLink`, `keywords` et `registration` (lien/téléphone/email).
+- les `location` OpenAgenda créent des lieux `cultural_venue` pour rattacher les événements ;
+  **ils n’alimentent pas** le catalogue Explorer « Lieux » (voir ADR 0006).
+
+### Catalogue lieux découverte (éditorial TouRose)
+
+- parcs, monuments, places, balades, points de vue, activités, sites historiques, bons plans ;
+- contenus rédigés / curés TouRose (source `TouRose Editorial Places`) ;
+- détails riches : description, durée, gratuit/payant, famille, chiens, accessibilité, tips/accès ;
+- `list_public_places(discovery_only := true)` exclut `cultural_venue` et peut trier par proximité GPS ;
+- photos via Wikimedia Commons avec attribution : `pnpm import:editorial-photos`
+  (catégorie Commons curée par lieu, plus fiable pour les monuments) ou
+  `pnpm import:wikimedia-places` (recherche floue générique) ; un lieu sans catégorie
+  fiable reste sans photo plutôt que d’afficher une image erronée.
 
 ### DATAtourisme
 
@@ -29,7 +42,12 @@
 
 - photographies sous licence libre ou domaine public ;
 - licence et auteur propres à chaque fichier ;
-- utiliser l'API et non du scraping fragile.
+- utiliser l'API et non du scraping fragile ;
+- l’import local `pnpm import:wikimedia-places` recherche strictement le nom du lieu avec
+  « Toulouse », vérifie les mots distinctifs du fichier, conserve au maximum trois photos
+  et refuse tout média sans auteur, licence ou URL de licence ;
+- les médias acceptés conservent l’URL Commons, l’auteur, la licence, son URL et le texte
+  d’attribution ; aucun fichier n’est copié localement.
 
 ### Archives de Toulouse
 

@@ -37,6 +37,20 @@ export const placeTypeSchema = z.enum([
   'permanent_tip',
 ]);
 
+export const publicPlaceDetailsSchema = z.object({
+  access: z.string().nullish(),
+  email: z.string().nullish(),
+  best_moment: z.string().nullish(),
+  tips: z
+    .array(z.string())
+    .nullish()
+    .transform((value) => value ?? []),
+  links: z
+    .array(z.object({ label: z.string().nullish(), url: z.string().url() }))
+    .nullish()
+    .transform((value) => value ?? []),
+});
+
 /** Matches `public.public_places` / `list_public_places` rows (snake_case). */
 export const publicPlaceRowSchema = z.object({
   id: z.string().uuid(),
@@ -52,6 +66,20 @@ export const publicPlaceRowSchema = z.object({
   status: placeStatusSchema,
   last_verified_at: z.string().nullable(),
   address: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  postal_code: z.string().nullable().optional(),
+  website_url: z.string().url().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  price_details: z.string().nullable().optional(),
+  recommended_duration_minutes: z.number().int().nullable().optional(),
+  family_friendly: z.boolean().nullable().optional(),
+  dog_friendly: z.boolean().nullable().optional(),
+  accessible: z.boolean().nullable().optional(),
+  details: publicPlaceDetailsSchema.nullish().transform((value) => value ?? { links: [], tips: [] }),
+  image_url: z.string().url().nullable().optional(),
+  image_alt: z.string().nullable().optional(),
+  image_attribution: z.string().nullable().optional(),
+  image_source_url: z.string().url().nullable().optional(),
 });
 
 /** Détails riches importés d'OpenAgenda (conditions, accessibilité, inscription…). */
@@ -111,6 +139,8 @@ export const publicEventMediaSchema = z.object({
   alt_text: z.string().nullable(),
   attribution_text: z.string().nullable(),
 });
+
+export const publicPlaceMediaSchema = publicEventMediaSchema;
 
 export const recommendationReasonSchema = z.object({
   code: z.string().min(1),
@@ -345,10 +375,12 @@ export const publicEventSchema = publicEventRowSchema.transform((row) => ({
 }));
 
 export type PublicPlaceRow = z.infer<typeof publicPlaceRowSchema>;
+export type PublicPlaceDetails = z.infer<typeof publicPlaceDetailsSchema>;
 export type PublicEventRow = z.infer<typeof publicEventRowSchema>;
 export type PublicEventDetails = z.infer<typeof publicEventDetailsSchema>;
 export type EventOccurrence = z.infer<typeof eventOccurrenceSchema>;
 export type PublicEventMedia = z.infer<typeof publicEventMediaSchema>;
+export type PublicPlaceMedia = z.infer<typeof publicPlaceMediaSchema>;
 export type RecommendationReason = z.infer<typeof recommendationReasonSchema>;
 export type RecommendationPick = z.infer<typeof recommendationPickSchema>;
 export type CatalogSearchHit = z.infer<typeof catalogSearchHitSchema>;

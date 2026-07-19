@@ -124,6 +124,8 @@ pnpm test:supabase  # skip si Docker/Supabase absents
 | `pnpm check`                   | Pipeline qualité complète                            |
 | `pnpm grant:admin`             | Promouvoir un user local en admin JWT                |
 | `pnpm import:openagenda`       | Lancer l’import OpenAgenda (fixture ou API)          |
+| `pnpm import:wikimedia-places` | Importer des galeries libres pour les lieux locaux   |
+| `pnpm import:editorial-photos` | Photos Commons (catégorie curée) pour lieux éditoriaux |
 | `pnpm openagenda:find`         | Lister les agendas OpenAgenda + UID                  |
 
 ## Structure

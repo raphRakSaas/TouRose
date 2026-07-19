@@ -10,8 +10,18 @@ export type OpenAgendaLocation = {
   name?: string;
   address?: string;
   city?: string;
+  adminLevel4?: string;
+  postalCode?: string;
   latitude?: number;
   longitude?: number;
+  description?: string | Record<string, string>;
+  access?: string | Record<string, string>;
+  website?: string;
+  phone?: string;
+  email?: string;
+  links?: Array<{ link?: string; url?: string; label?: string }>;
+  image?: OpenAgendaImage | null;
+  imageCredits?: string;
 };
 
 export type OpenAgendaImage = {
@@ -52,7 +62,7 @@ export type OpenAgendaEvent = {
   imageCredits?: string;
   updatedAt?: string;
   createdAt?: string;
-  'types-devenements'?: Array<number | string> | null;
+  "types-devenements"?: Array<number | string> | null;
   /** Legacy checkbox — option id 1 = entrée libre (souvent vide sur l'agenda Toulouse). */
   entreelibre?: Array<number | string> | null;
   /** Participation : 35 = entrée libre, 42 = entrée gratuite. */
@@ -66,17 +76,17 @@ export type OpenAgendaEvent = {
  * Source: schéma de l'agenda 42448083 (champ personnalisé `types-devenements`).
  */
 export const OPENAGENDA_TYPE_TO_CATEGORY_SLUG: Record<string, string> = {
-  '44': 'cinema',
-  '16': 'conference',
-  '17': 'congres',
-  '19': 'sport',
-  '20': 'exposition',
-  '22': 'festival',
-  '21': 'marche',
-  '23': 'reunion-publique',
-  '24': 'spectacle',
-  '25': 'atelier',
-  '45': 'visite',
+  "44": "cinema",
+  "16": "conference",
+  "17": "congres",
+  "19": "sport",
+  "20": "exposition",
+  "22": "festival",
+  "21": "marche",
+  "23": "reunion-publique",
+  "24": "spectacle",
+  "25": "atelier",
+  "45": "visite",
 };
 
 export function mapOpenAgendaCategorySlugs(
@@ -96,8 +106,8 @@ export function mapOpenAgendaCategorySlugs(
 }
 
 /** Option IDs that mean free entrance on the Toulouse metro OpenAgenda schema. */
-const FREE_PARTICIPATION_IDS = new Set(['35', '42']);
-const FREE_ENTREELIBRE_IDS = new Set(['1', 'true']);
+const FREE_PARTICIPATION_IDS = new Set(["35", "42"]);
+const FREE_ENTREELIBRE_IDS = new Set(["1", "true"]);
 
 function hasOptionId(
   values: Array<number | string> | null | undefined,
@@ -110,11 +120,11 @@ function hasOptionId(
 }
 
 function isNonEmptyUrl(value: string | null | undefined): boolean {
-  if (!value || typeof value !== 'string') {
+  if (!value || typeof value !== "string") {
     return false;
   }
   const trimmed = value.trim();
-  return trimmed.startsWith('http://') || trimmed.startsWith('https://');
+  return trimmed.startsWith("http://") || trimmed.startsWith("https://");
 }
 
 /**
@@ -125,17 +135,17 @@ export function mapOpenAgendaPriceType(eventRow: {
   participation?: Array<number | string> | null;
   entreelibre?: Array<number | string> | null;
   billetterie?: string | null;
-}): 'free' | 'paid' | 'unknown' {
+}): "free" | "paid" | "unknown" {
   if (
     hasOptionId(eventRow.participation, FREE_PARTICIPATION_IDS) ||
     hasOptionId(eventRow.entreelibre, FREE_ENTREELIBRE_IDS)
   ) {
-    return 'free';
+    return "free";
   }
   if (isNonEmptyUrl(eventRow.billetterie)) {
-    return 'paid';
+    return "paid";
   }
-  return 'unknown';
+  return "unknown";
 }
 
 export type NormalizedEventDetails = {
@@ -145,7 +155,7 @@ export type NormalizedEventDetails = {
   age_max?: number;
   /** Codes accessibilité actifs : hi, ii, mi, pi, vi. */
   accessibility: string[];
-  attendance_mode?: 'onsite' | 'online' | 'mixed';
+  attendance_mode?: "onsite" | "online" | "mixed";
   online_access_link?: string;
   keywords: string[];
   registration: Array<{ type: string; value: string }>;
@@ -156,58 +166,81 @@ function normalizeKeywords(
   keywords: { fr?: string[] } | string[] | undefined,
 ): string[] {
   if (Array.isArray(keywords)) {
-    return keywords.filter((keyword): keyword is string => typeof keyword === 'string');
+    return keywords.filter((keyword): keyword is string =>
+      typeof keyword === "string"
+    );
   }
   if (keywords && Array.isArray(keywords.fr)) {
-    return keywords.fr.filter((keyword): keyword is string => typeof keyword === 'string');
+    return keywords.fr.filter((keyword): keyword is string =>
+      typeof keyword === "string"
+    );
   }
   return [];
 }
 
-const ATTENDANCE_MODES: Record<number, NormalizedEventDetails['attendance_mode']> = {
-  1: 'onsite',
-  2: 'online',
-  3: 'mixed',
+const ATTENDANCE_MODES: Record<
+  number,
+  NormalizedEventDetails["attendance_mode"]
+> = {
+  1: "onsite",
+  2: "online",
+  3: "mixed",
 };
 
 /** Regroupe tous les détails publics OpenAgenda utiles à la fiche événement. */
-export function buildOpenAgendaEventDetails(eventRow: OpenAgendaEvent): NormalizedEventDetails {
+export function buildOpenAgendaEventDetails(
+  eventRow: OpenAgendaEvent,
+): NormalizedEventDetails {
   const conditions = localizeText(eventRow.conditions) || undefined;
 
   const accessibility = eventRow.accessibility
     ? Object.entries(eventRow.accessibility)
-        .filter(([, isEnabled]) => isEnabled === true)
-        .map(([code]) => code)
-        .sort()
+      .filter(([, isEnabled]) => isEnabled === true)
+      .map(([code]) => code)
+      .sort()
     : [];
 
   const registration = (eventRow.registration ?? [])
     .filter(
       (entry): entry is { type: string; value: string } =>
-        typeof entry?.type === 'string' && typeof entry?.value === 'string' && entry.value.length > 0,
+        typeof entry?.type === "string" && typeof entry?.value === "string" &&
+        entry.value.length > 0,
     )
     .map((entry) => ({ type: entry.type, value: entry.value }));
 
-  const onlineAccessLink =
-    typeof eventRow.onlineAccessLink === 'string' && isNonEmptyUrl(eventRow.onlineAccessLink)
-      ? eventRow.onlineAccessLink.trim()
-      : undefined;
+  const onlineAccessLink = typeof eventRow.onlineAccessLink === "string" &&
+      isNonEmptyUrl(eventRow.onlineAccessLink)
+    ? eventRow.onlineAccessLink.trim()
+    : undefined;
 
   return {
     conditions,
-    age_min: typeof eventRow.age?.min === 'number' ? eventRow.age.min : undefined,
-    age_max: typeof eventRow.age?.max === 'number' ? eventRow.age.max : undefined,
+    age_min: typeof eventRow.age?.min === "number"
+      ? eventRow.age.min
+      : undefined,
+    age_max: typeof eventRow.age?.max === "number"
+      ? eventRow.age.max
+      : undefined,
     accessibility,
-    attendance_mode:
-      typeof eventRow.attendanceMode === 'number'
-        ? ATTENDANCE_MODES[eventRow.attendanceMode]
-        : undefined,
+    attendance_mode: typeof eventRow.attendanceMode === "number"
+      ? ATTENDANCE_MODES[eventRow.attendanceMode]
+      : undefined,
     online_access_link: onlineAccessLink,
     keywords: normalizeKeywords(eventRow.keywords),
     registration,
     timezone: eventRow.timezone,
   };
 }
+
+export type NormalizedMedia = {
+  remote_url: string;
+  width_px?: number;
+  height_px?: number;
+  alt_text: string;
+  author?: string;
+  source_url: string;
+  attribution_text: string;
+};
 
 export type NormalizedImportPayload = {
   source_id: string;
@@ -221,9 +254,9 @@ export type NormalizedImportPayload = {
   slug: string;
   summary?: string;
   description?: string;
-  status: 'published' | 'draft';
-  price_type: 'free' | 'paid' | 'donation' | 'unknown';
-  indoor_outdoor: 'indoor' | 'outdoor' | 'mixed' | 'unknown';
+  status: "published" | "draft";
+  price_type: "free" | "paid" | "donation" | "unknown";
+  indoor_outdoor: "indoor" | "outdoor" | "mixed" | "unknown";
   official_url?: string;
   latitude?: number;
   longitude?: number;
@@ -232,58 +265,62 @@ export type NormalizedImportPayload = {
     slug: string;
     name: string;
     summary?: string;
-    place_type: 'cultural_venue';
+    place_type: "cultural_venue";
     latitude?: number;
     longitude?: number;
     address?: string;
     city?: string;
+    postal_code?: string;
+    description?: string;
+    website_url?: string;
+    phone?: string;
+    details: {
+      access?: string;
+      email?: string;
+      links: Array<{ label?: string; url: string }>;
+    };
+    image: NormalizedMedia | null;
     payload_hash: string;
-    status: 'published';
+    status: "published";
   } | null;
   occurrences: Array<{ starts_at: string; ends_at: string | null }>;
   category_slugs: string[];
   details: NormalizedEventDetails;
-  image: {
-    remote_url: string;
-    width_px?: number;
-    height_px?: number;
-    alt_text: string;
-    author?: string;
-    source_url: string;
-    attribution_text: string;
-  } | null;
+  image: NormalizedMedia | null;
 };
 
-export const OPENAGENDA_SOURCE_ID = '22222222-2222-2222-2222-222222222201';
-export const TOULOUSE_TERRITORY_ID = '11111111-1111-1111-1111-111111111111';
+export const OPENAGENDA_SOURCE_ID = "22222222-2222-2222-2222-222222222201";
+export const TOULOUSE_TERRITORY_ID = "11111111-1111-1111-1111-111111111111";
 
-export function localizeText(value: string | Record<string, string> | undefined): string {
+export function localizeText(
+  value: string | Record<string, string> | undefined,
+): string {
   if (!value) {
-    return '';
+    return "";
   }
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     return value.trim();
   }
-  return (value.fr ?? value.en ?? Object.values(value)[0] ?? '').trim();
+  return (value.fr ?? value.en ?? Object.values(value)[0] ?? "").trim();
 }
 
 export function slugify(value: string): string {
   return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
     .slice(0, 80);
 }
 
 /** Stable SHA-256 hex via Web Crypto (Deno / modern runtimes). */
 export async function hashPayload(value: unknown): Promise<string> {
   const encoded = new TextEncoder().encode(stableStringify(value));
-  const digest = await crypto.subtle.digest('SHA-256', encoded);
+  const digest = await crypto.subtle.digest("SHA-256", encoded);
   return Array.from(new Uint8Array(digest))
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('');
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export function stableStringify(value: unknown): string {
@@ -294,7 +331,7 @@ function sortKeys(value: unknown): unknown {
   if (Array.isArray(value)) {
     return value.map(sortKeys);
   }
-  if (value && typeof value === 'object') {
+  if (value && typeof value === "object") {
     const record = value as Record<string, unknown>;
     const sorted: Record<string, unknown> = {};
     for (const key of Object.keys(record).sort()) {
@@ -310,24 +347,27 @@ export function isOpenAgendaEventPublic(eventRow: OpenAgendaEvent): boolean {
   if (eventRow.status === undefined || eventRow.status === null) {
     return true;
   }
-  if (typeof eventRow.status === 'number') {
+  if (typeof eventRow.status === "number") {
     return eventRow.status === 2 || eventRow.status === 1;
   }
   const normalized = String(eventRow.status).toLowerCase();
-  return normalized === '2' || normalized === 'published' || normalized === 'confirmed';
+  return normalized === "2" || normalized === "published" ||
+    normalized === "confirmed";
 }
 
 export function normalizeOpenAgendaImage(
   image: OpenAgendaImage | null | undefined,
   options: { title: string; sourceUrl?: string; credits?: string },
-): NormalizedImportPayload['image'] {
+): NormalizedImportPayload["image"] {
   if (!image?.base || !options.sourceUrl) {
     return null;
   }
 
   const preferredVariant =
-    image.variants?.find((variant) => variant.type === 'full' && variant.filename) ??
-    image.variants?.find((variant) => variant.filename);
+    image.variants?.find((variant) =>
+      variant.type === "full" && variant.filename
+    ) ??
+      image.variants?.find((variant) => variant.filename);
   const filename = preferredVariant?.filename ?? image.filename;
   if (!filename) {
     return null;
@@ -340,7 +380,7 @@ export function normalizeOpenAgendaImage(
     return null;
   }
 
-  if (!remoteUrl.startsWith('https://cdn.openagenda.com/')) {
+  if (!remoteUrl.startsWith("https://cdn.openagenda.com/")) {
     return null;
   }
 
@@ -352,7 +392,9 @@ export function normalizeOpenAgendaImage(
     alt_text: options.title,
     author: credits || undefined,
     source_url: options.sourceUrl,
-    attribution_text: credits ? `Photo : ${credits} · OpenAgenda` : 'Photo : OpenAgenda',
+    attribution_text: credits
+      ? `Photo : ${credits} · OpenAgenda`
+      : "Photo : OpenAgenda",
   };
 }
 
@@ -362,19 +404,19 @@ export async function normalizeOpenAgendaEvent(
 ): Promise<NormalizedImportPayload> {
   const sourceId = options?.sourceId ?? OPENAGENDA_SOURCE_ID;
   const territoryId = options?.territoryId ?? TOULOUSE_TERRITORY_ID;
-  const externalId = String(eventRow.uid ?? '');
+  const externalId = String(eventRow.uid ?? "");
   if (!externalId) {
-    throw new Error('OpenAgenda event missing uid');
+    throw new Error("OpenAgenda event missing uid");
   }
 
-  const title = localizeText(eventRow.title) || `Événement OpenAgenda ${externalId}`;
+  const title = localizeText(eventRow.title) ||
+    `Événement OpenAgenda ${externalId}`;
   const summary = localizeText(eventRow.description) || undefined;
   const description = localizeText(eventRow.longDescription) || summary;
   const slugBase = slugify(eventRow.slug ?? title) || `event-${externalId}`;
   const slug = `oa-${externalId}-${slugBase}`.slice(0, 120);
 
-  const timings =
-    (eventRow.timings?.length ? eventRow.timings : null) ??
+  const timings = (eventRow.timings?.length ? eventRow.timings : null) ??
     [eventRow.firstTiming, eventRow.lastTiming].filter(Boolean);
   const occurrences = timings
     .filter((timing): timing is OpenAgendaTiming => Boolean(timing?.begin))
@@ -384,30 +426,63 @@ export async function normalizeOpenAgendaEvent(
     }));
 
   const location = eventRow.location ?? null;
-  let place: NormalizedImportPayload['place'] = null;
+  let place: NormalizedImportPayload["place"] = null;
   if (location?.name || location?.uid) {
-    const placeExternalId = String(location.uid ?? slugify(location.name ?? 'lieu'));
+    const placeExternalId = String(
+      location.uid ?? slugify(location.name ?? "lieu"),
+    );
+    const placeSourceUrl = options?.agendaUid
+      ? `https://openagenda.com/agendas/${options.agendaUid}/locations/${placeExternalId}`
+      : undefined;
+    const placeImage = normalizeOpenAgendaImage(location.image, {
+      title: location.name?.trim() || title,
+      sourceUrl: placeSourceUrl,
+      credits: location.imageCredits,
+    });
+    const placeLinks = (location.links ?? [])
+      .map((link) => ({
+        label: typeof link.label === "string" ? link.label : undefined,
+        url: typeof link.url === "string"
+          ? link.url
+          : typeof link.link === "string"
+          ? link.link
+          : "",
+      }))
+      .filter((link) => isNonEmptyUrl(link.url));
     place = {
       external_id: placeExternalId,
-      slug: `oa-place-${placeExternalId}-${slugify(location.name ?? 'lieu')}`.slice(0, 120),
+      slug: `oa-place-${placeExternalId}-${slugify(location.name ?? "lieu")}`
+        .slice(0, 120),
       name: location.name?.trim() || `Lieu OpenAgenda ${placeExternalId}`,
-      place_type: 'cultural_venue',
+      place_type: "cultural_venue",
       latitude: location.latitude,
       longitude: location.longitude,
       address: location.address,
-      city: location.city ?? 'Toulouse',
+      city: location.city ?? location.adminLevel4 ?? "Toulouse",
+      postal_code: location.postalCode,
+      description: localizeText(location.description) || undefined,
+      website_url: isNonEmptyUrl(location.website)
+        ? location.website?.trim()
+        : undefined,
+      phone: location.phone?.trim() || undefined,
+      details: {
+        access: localizeText(location.access) || undefined,
+        email: location.email?.trim() || undefined,
+        links: placeLinks,
+      },
+      image: placeImage,
       payload_hash: await hashPayload(location),
-      status: 'published',
+      status: "published",
     };
   }
 
   const registrationUrl = eventRow.registration?.find(
-    (entry) => entry.type === 'link' && entry.value,
+    (entry) => entry.type === "link" && entry.value,
   )?.value;
-  const billetterieUrl =
-    typeof eventRow.billetterie === 'string' && isNonEmptyUrl(eventRow.billetterie)
-      ? eventRow.billetterie.trim()
-      : undefined;
+  const billetterieUrl = typeof eventRow.billetterie === "string" &&
+      isNonEmptyUrl(eventRow.billetterie)
+    ? eventRow.billetterie.trim()
+    : undefined;
 
   const agendaUid = options?.agendaUid;
   const externalUrl = agendaUid
@@ -420,6 +495,7 @@ export async function normalizeOpenAgendaEvent(
   });
 
   const payloadHash = await hashPayload({
+    normalization_version: 2,
     uid: eventRow.uid,
     title: eventRow.title,
     description: eventRow.description,
@@ -433,7 +509,7 @@ export async function normalizeOpenAgendaEvent(
     participation: eventRow.participation,
     entreelibre: eventRow.entreelibre,
     billetterie: eventRow.billetterie,
-    'types-devenements': eventRow['types-devenements'],
+    "types-devenements": eventRow["types-devenements"],
     conditions: eventRow.conditions,
     accessibility: eventRow.accessibility,
     age: eventRow.age,
@@ -455,15 +531,15 @@ export async function normalizeOpenAgendaEvent(
     slug,
     summary,
     description,
-    status: isOpenAgendaEventPublic(eventRow) ? 'published' : 'draft',
+    status: isOpenAgendaEventPublic(eventRow) ? "published" : "draft",
     price_type: mapOpenAgendaPriceType(eventRow),
-    indoor_outdoor: 'unknown',
+    indoor_outdoor: "unknown",
     official_url: registrationUrl ?? billetterieUrl,
     latitude: location?.latitude,
     longitude: location?.longitude,
     place,
     occurrences,
-    category_slugs: mapOpenAgendaCategorySlugs(eventRow['types-devenements']),
+    category_slugs: mapOpenAgendaCategorySlugs(eventRow["types-devenements"]),
     details: buildOpenAgendaEventDetails(eventRow),
     image,
   };

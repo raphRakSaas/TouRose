@@ -49,6 +49,9 @@ export async function loadPublicPlaces(limitCount = 50): Promise<PublicPlaceRow[
 
   const { data, error } = await client.rpc('list_public_places', {
     limit_count: limitCount,
+    origin_latitude: 43.6045,
+    origin_longitude: 1.444,
+    discovery_only: true,
   });
   if (error) {
     throw new Error(error.message);
