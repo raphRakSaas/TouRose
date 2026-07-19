@@ -14,12 +14,17 @@ import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { StackedPicksModal } from '@/components/ui/StackedPicksModal';
 import { SuggestionCard } from '@/components/ui/SuggestionCard';
 import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
-import { fetchUpcomingEvents } from '@/src/data/catalog-api';
+import {
+  fetchRecommendationPicks,
+  fetchUpcomingEvents,
+  logRecommendationImpression,
+} from '@/src/data/catalog-api';
 import { fetchToulouseWeather, formatWeatherLine } from '@/src/data/weather-api';
 import {
   buildTodayFeed,
+  EVENT_CATEGORIES,
   formatCustomDateLabel,
-  type CategorySectionKey,
+  type CategoryFilterKey,
   type MomentKey,
   type PriceFilterKey,
 } from '@/src/domain/today-feed';
@@ -45,14 +50,9 @@ const PRICE_CHIPS: { key: PriceFilterKey; label: string }[] = [
   { key: 'paid', label: 'Payant' },
 ];
 
-const CATEGORY_CHIPS: { key: CategorySectionKey | 'all'; label: string }[] = [
+const CATEGORY_CHIPS: { key: CategoryFilterKey; label: string }[] = [
   { key: 'all', label: 'Toutes' },
-  { key: 'forYou', label: 'Pour toi' },
-  { key: 'nearby', label: 'Proximité' },
-  { key: 'free', label: 'Gratuit' },
-  { key: 'hike', label: 'Randonnée' },
-  { key: 'visit', label: 'Visite' },
-  { key: 'museum', label: 'Musée' },
+  ...EVENT_CATEGORIES.map((category) => ({ key: category.slug, label: category.label })),
 ];
 
 const SECTION_PHOTOS = [
@@ -68,6 +68,7 @@ type FilterModalKey = 'moment' | 'price' | 'category' | null;
 
 export default function TodayScreen() {
   const company = usePreferencesStore((state) => state.company);
+  const interests = usePreferencesStore((state) => state.interests);
   const setCompany = usePreferencesStore((state) => state.setCompany);
   const resetPreferences = usePreferencesStore((state) => state.resetPreferences);
 
@@ -75,7 +76,7 @@ export default function TodayScreen() {
   const [customDate, setCustomDate] = useState<Date | null>(null);
   const [showNativeDatePicker, setShowNativeDatePicker] = useState(false);
   const [priceFilter, setPriceFilter] = useState<PriceFilterKey>('all');
-  const [categoryFilter, setCategoryFilter] = useState<CategorySectionKey | 'all'>('all');
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilterKey>('all');
   const [filterModal, setFilterModal] = useState<FilterModalKey>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [stackedModalOpen, setStackedModalOpen] = useState(false);
@@ -93,6 +94,27 @@ export default function TodayScreen() {
     queryFn: () => fetchUpcomingEvents(100),
   });
 
+  const recommendationsQuery = useQuery({
+    queryKey: [
+      'catalog',
+      'recommendations',
+      company,
+      interests.join('|'),
+      priceFilter,
+      weatherQuery.data?.weatherCode ?? null,
+    ],
+    queryFn: () =>
+      fetchRecommendationPicks({
+        interests: [...interests],
+        company,
+        price: priceFilter,
+        weatherCode: weatherQuery.data?.weatherCode,
+        limit: 3,
+      }),
+    staleTime: 5 * 60_000,
+    retry: 1,
+  });
+
   const feed = useMemo(() => {
     if (!eventsQuery.data) {
       return { sections: [], allEvents: [], forYouPicks: [] };
@@ -105,8 +127,16 @@ export default function TodayScreen() {
         price: priceFilter,
         category: categoryFilter,
       },
+      scoredPicks: recommendationsQuery.data,
     });
-  }, [eventsQuery.data, selectedMoment, customDate, priceFilter, categoryFilter]);
+  }, [
+    eventsQuery.data,
+    recommendationsQuery.data,
+    selectedMoment,
+    customDate,
+    priceFilter,
+    categoryFilter,
+  ]);
 
   useEffect(() => {
     if (stackedPicksShownThisSession || !eventsQuery.data || feed.forYouPicks.length === 0) {
@@ -121,12 +151,21 @@ export default function TodayScreen() {
       }
       stackedPicksShownThisSession = true;
       setStackedModalOpen(true);
+      if (recommendationsQuery.data && recommendationsQuery.data.length > 0) {
+        void logRecommendationImpression({
+          eventIds: recommendationsQuery.data.map((pick) => pick.event.id),
+          reasons: recommendationsQuery.data.map((pick) => ({
+            slot: pick.slot,
+            reasons: pick.reasons,
+          })),
+        });
+      }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [eventsQuery.data, feed.forYouPicks.length]);
+  }, [eventsQuery.data, feed.forYouPicks.length, recommendationsQuery.data]);
 
   const isLoading = eventsQuery.isLoading;
   const loadError = eventsQuery.error;
@@ -184,10 +223,7 @@ export default function TodayScreen() {
     famille: 'Famille',
   };
 
-  const listEvents =
-    categoryFilter === 'all'
-      ? feed.allEvents
-      : (feed.sections.find((section) => section.key === categoryFilter)?.items ?? []);
+  const listEvents = feed.allEvents;
 
   return (
     <SafeAreaView className="flex-1 bg-sand-50" edges={['top']}>
@@ -421,7 +457,11 @@ export default function TodayScreen() {
                   : 'Quelle catégorie ?'}
             </Text>
 
-            <View className="flex-row flex-wrap gap-2">
+            <ScrollView
+              style={{ maxHeight: 320 }}
+              showsVerticalScrollIndicator={false}
+              contentContainerClassName="flex-row flex-wrap gap-2"
+            >
               {filterModal === 'moment'
                 ? MOMENT_CHIPS.map((moment) => {
                     const isSelected =
@@ -475,7 +515,7 @@ export default function TodayScreen() {
                     />
                   ))
                 : null}
-            </View>
+            </ScrollView>
 
             {filterModal === 'moment' && showNativeDatePicker ? (
               <View className="mt-4 overflow-hidden rounded-2xl bg-white px-2 py-1">

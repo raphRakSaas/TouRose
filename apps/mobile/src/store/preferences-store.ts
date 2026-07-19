@@ -1,4 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type CompanyPreference = 'seul' | 'couple' | 'amis' | 'famille';
 
@@ -28,18 +30,31 @@ type PreferencesState = {
 const DEFAULT_COMPANY: CompanyPreference = 'couple';
 const DEFAULT_INTERESTS: InterestOption[] = ['Balades', 'Terrasses', 'Nature'];
 
-export const usePreferencesStore = create<PreferencesState>((set) => ({
-  company: DEFAULT_COMPANY,
-  interests: DEFAULT_INTERESTS,
-  onboardingCompleted: false,
-  setCompany: (company) => set({ company }),
-  toggleInterest: (interest) =>
-    set((state) => ({
-      interests: state.interests.includes(interest)
-        ? state.interests.filter((item) => item !== interest)
-        : [...state.interests, interest],
-    })),
-  resetPreferences: () => set({ company: DEFAULT_COMPANY, interests: DEFAULT_INTERESTS }),
-  completeOnboarding: () => set({ onboardingCompleted: true }),
-  resetOnboarding: () => set({ onboardingCompleted: false }),
-}));
+export const usePreferencesStore = create<PreferencesState>()(
+  persist(
+    (set) => ({
+      company: DEFAULT_COMPANY,
+      interests: DEFAULT_INTERESTS,
+      onboardingCompleted: false,
+      setCompany: (company) => set({ company }),
+      toggleInterest: (interest) =>
+        set((state) => ({
+          interests: state.interests.includes(interest)
+            ? state.interests.filter((item) => item !== interest)
+            : [...state.interests, interest],
+        })),
+      resetPreferences: () => set({ company: DEFAULT_COMPANY, interests: DEFAULT_INTERESTS }),
+      completeOnboarding: () => set({ onboardingCompleted: true }),
+      resetOnboarding: () => set({ onboardingCompleted: false }),
+    }),
+    {
+      name: 'tourose.preferences',
+      storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({
+        company: state.company,
+        interests: state.interests,
+        onboardingCompleted: state.onboardingCompleted,
+      }),
+    },
+  ),
+);

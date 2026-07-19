@@ -15,7 +15,7 @@ describe('weatherCodeToLabel', () => {
 
 describe('formatWeatherLine', () => {
   it('arrondit la température et compose la phrase', () => {
-    expect(formatWeatherLine({ temperatureCelsius: 17.6, label: 'Ensoleillé' })).toBe(
+    expect(formatWeatherLine({ temperatureCelsius: 17.6, label: 'Ensoleillé', weatherCode: 1 })).toBe(
       '18° · Ensoleillé à Toulouse',
     );
   });
@@ -35,7 +35,7 @@ describe('fetchToulouseWeather', () => {
     }) as unknown as typeof fetch;
 
     const weather = await fetchToulouseWeather();
-    expect(weather).toEqual({ temperatureCelsius: 21.3, label: 'Éclaircies' });
+    expect(weather).toEqual({ temperatureCelsius: 21.3, label: 'Éclaircies', weatherCode: 2 });
     expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('api.open-meteo.com'));
   });
 

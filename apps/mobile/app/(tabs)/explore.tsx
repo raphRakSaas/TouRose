@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import type { PublicEventRow, PublicPlaceRow } from '@tourose/contracts';
 
 import { CatalogListRow } from '@/components/ui/CatalogListRow';
 import { Chip } from '@/components/ui/Chip';
@@ -21,14 +22,63 @@ import {
   fetchUpcomingEvents,
   searchPublicCatalog,
 } from '@/src/data/catalog-api';
+import { getMomentRange, isEventInRange } from '@/src/domain/today-feed';
 
 type CatalogSegment = 'events' | 'places' | 'collections';
+type ExploreFilterKey = 'weekend' | 'free' | 'outdoor';
+
+function filterEvents(
+  events: PublicEventRow[],
+  activeFilters: ReadonlySet<ExploreFilterKey>,
+  now: Date,
+): PublicEventRow[] {
+  return events.filter((eventRow) => {
+    if (activeFilters.has('free') && eventRow.price_type !== 'free') {
+      return false;
+    }
+    if (
+      activeFilters.has('outdoor') &&
+      eventRow.indoor_outdoor !== 'outdoor' &&
+      eventRow.indoor_outdoor !== 'mixed'
+    ) {
+      return false;
+    }
+    if (activeFilters.has('weekend')) {
+      const range = getMomentRange('weekend', now);
+      if (!isEventInRange(eventRow, range)) {
+        return false;
+      }
+    }
+    return true;
+  });
+}
+
+function filterPlaces(
+  places: PublicPlaceRow[],
+  activeFilters: ReadonlySet<ExploreFilterKey>,
+): PublicPlaceRow[] {
+  return places.filter((placeRow) => {
+    if (activeFilters.has('free') && placeRow.price_type !== 'free') {
+      return false;
+    }
+    if (
+      activeFilters.has('outdoor') &&
+      placeRow.indoor_outdoor !== 'outdoor' &&
+      placeRow.indoor_outdoor !== 'mixed'
+    ) {
+      return false;
+    }
+    // Weekend n'a pas de sens sur les lieux permanents — on ignore.
+    return true;
+  });
+}
 
 export default function ExploreScreen() {
   const routeParams = useLocalSearchParams<{ segment?: string }>();
   const [segment, setSegment] = useState<CatalogSegment>('events');
   const [searchText, setSearchText] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [activeFilters, setActiveFilters] = useState<Set<ExploreFilterKey>>(new Set());
 
   useEffect(() => {
     if (
@@ -41,8 +91,8 @@ export default function ExploreScreen() {
   }, [routeParams.segment]);
 
   const eventsQuery = useQuery({
-    queryKey: ['catalog', 'events'],
-    queryFn: () => fetchUpcomingEvents(30),
+    queryKey: ['catalog', 'events', 100],
+    queryFn: () => fetchUpcomingEvents(100),
   });
 
   const placesQuery = useQuery({
@@ -62,6 +112,16 @@ export default function ExploreScreen() {
     enabled: segment === 'collections',
   });
 
+  const filteredEvents = useMemo(
+    () => filterEvents(eventsQuery.data ?? [], activeFilters, new Date()),
+    [eventsQuery.data, activeFilters],
+  );
+
+  const filteredPlaces = useMemo(
+    () => filterPlaces(placesQuery.data ?? [], activeFilters),
+    [placesQuery.data, activeFilters],
+  );
+
   const isSearching = searchText.trim().length >= 2;
   const isLoading =
     (!isSearching && segment === 'events' && eventsQuery.isLoading) ||
@@ -78,6 +138,18 @@ export default function ExploreScreen() {
     (!isSearching && segment === 'places' && placesQuery.error?.message) ||
     (isSearching && searchQuery.error?.message) ||
     null;
+
+  function toggleFilter(filterKey: ExploreFilterKey): void {
+    setActiveFilters((previous) => {
+      const next = new Set(previous);
+      if (next.has(filterKey)) {
+        next.delete(filterKey);
+      } else {
+        next.add(filterKey);
+      }
+      return next;
+    });
+  }
 
   async function onRefresh(): Promise<void> {
     if (isSearching) {
@@ -156,11 +228,27 @@ export default function ExploreScreen() {
           </View>
         ) : null}
 
-        {!isSearching ? (
-          <View className="mb-2 flex-row gap-2">
-            <Chip label="Ce week-end" />
-            <Chip label="Gratuit" />
-            <Chip label="Extérieur" />
+        {!isSearching && segment !== 'collections' ? (
+          <View className="mb-2 flex-row flex-wrap gap-2">
+            {(
+              [
+                ['weekend', 'Ce week-end'],
+                ['free', 'Gratuit'],
+                ['outdoor', 'Extérieur'],
+              ] as const
+            ).map(([key, label]) => {
+              const isSelected = activeFilters.has(key);
+              return (
+                <Chip
+                  key={key}
+                  testID={`explore-filter-${key}`}
+                  label={label}
+                  selected={isSelected}
+                  tone={isSelected ? 'solid' : 'white'}
+                  onPress={() => toggleFilter(key)}
+                />
+              );
+            })}
           </View>
         ) : null}
       </View>
@@ -211,7 +299,7 @@ export default function ExploreScreen() {
 
       {!isLoading && !errorMessage && !isSearching && segment === 'events' ? (
         <FlatList
-          data={eventsQuery.data ?? []}
+          data={filteredEvents}
           keyExtractor={(item) => item.id}
           contentContainerClassName="px-5 pb-8"
           refreshControl={
@@ -222,7 +310,9 @@ export default function ExploreScreen() {
             />
           }
           ListEmptyComponent={
-            <Text className="text-sm font-body text-ink-500">Aucun événement à venir publié.</Text>
+            <Text className="text-sm font-body text-ink-500">
+              Aucun événement pour ces filtres.
+            </Text>
           }
           renderItem={({ item, index }) => (
             <Link href={`/event/${item.slug}`} asChild>
@@ -238,7 +328,9 @@ export default function ExploreScreen() {
                     : item.summary ?? 'Événement'
                 }
                 imageLabel={item.title}
-                showDivider={index < (eventsQuery.data?.length ?? 0) - 1}
+                imageSource={item.image_url ? { uri: item.image_url } : undefined}
+                imageAttribution={item.image_attribution}
+                showDivider={index < filteredEvents.length - 1}
               />
             </Link>
           )}
@@ -247,7 +339,7 @@ export default function ExploreScreen() {
 
       {!isLoading && !errorMessage && !isSearching && segment === 'places' ? (
         <FlatList
-          data={placesQuery.data ?? []}
+          data={filteredPlaces}
           keyExtractor={(item) => item.id}
           contentContainerClassName="px-5 pb-8"
           refreshControl={
@@ -258,7 +350,7 @@ export default function ExploreScreen() {
             />
           }
           ListEmptyComponent={
-            <Text className="text-sm font-body text-ink-500">Aucun lieu publié.</Text>
+            <Text className="text-sm font-body text-ink-500">Aucun lieu pour ces filtres.</Text>
           }
           renderItem={({ item, index }) => (
             <Link href={`/place/${item.slug}`} asChild>
@@ -266,7 +358,7 @@ export default function ExploreScreen() {
                 title={item.name}
                 subtitle={`${item.place_type} · ${item.city ?? 'Toulouse'}`}
                 imageLabel={item.name}
-                showDivider={index < (placesQuery.data?.length ?? 0) - 1}
+                showDivider={index < filteredPlaces.length - 1}
               />
             </Link>
           )}

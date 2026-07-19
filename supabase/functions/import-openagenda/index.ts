@@ -69,6 +69,8 @@ Deno.serve(async (request) => {
     const events = await loadEvents(openAgendaKey, agendaUid);
     fetchedCount = events.length;
 
+    const categorySlugToId = await loadCategoryMap(client);
+
     for (const eventRow of events) {
       try {
         const normalized = await normalizeOpenAgendaEvent(eventRow, { agendaUid });
@@ -96,6 +98,16 @@ Deno.serve(async (request) => {
         if (action === 'created') createdCount += 1;
         else if (action === 'skipped') skippedCount += 1;
         else updatedCount += 1;
+
+        await syncEventCategories(client, eventId, normalized.category_slugs, categorySlugToId);
+
+        // Détails riches (conditions, accessibilité, âge, inscription…) hors RPC d'upsert.
+        if (action !== 'skipped') {
+          await client
+            .from('events')
+            .update({ details: normalized.details })
+            .eq('id', eventId);
+        }
 
         // Soft duplicate hint (non-destructive)
         const { data: similarRows } = await client
@@ -266,6 +278,9 @@ async function loadEvents(
   for (let pageIndex = 0; pageIndex < 50; pageIndex += 1) {
     const url = new URL(`https://api.openagenda.com/v2/agendas/${agendaUid}/events`);
     url.searchParams.set('size', '100');
+    // detailed=1 → longDescription, conditions, accessibilité, âge, inscription, timings complets.
+    url.searchParams.set('detailed', '1');
+    url.searchParams.set('longDescriptionFormat', 'markdown');
     url.searchParams.append('relative[]', 'upcoming');
     url.searchParams.append('relative[]', 'current');
     if (after) {
@@ -292,6 +307,45 @@ async function loadEvents(
   }
 
   return events;
+}
+
+async function loadCategoryMap(
+  client: ReturnType<typeof createClient>,
+): Promise<Map<string, string>> {
+  const { data: categoryRows } = await client.from('categories').select('id, slug');
+  const slugToId = new Map<string, string>();
+  for (const categoryRow of categoryRows ?? []) {
+    const { id, slug } = categoryRow as { id: string; slug: string };
+    if (id && slug) {
+      slugToId.set(slug, id);
+    }
+  }
+  return slugToId;
+}
+
+async function syncEventCategories(
+  client: ReturnType<typeof createClient>,
+  eventId: string,
+  categorySlugs: string[],
+  categorySlugToId: Map<string, string>,
+): Promise<void> {
+  if (categorySlugs.length === 0) {
+    return;
+  }
+
+  const categoryIds = categorySlugs
+    .map((slug) => categorySlugToId.get(slug))
+    .filter((id): id is string => Boolean(id));
+
+  if (categoryIds.length === 0) {
+    return;
+  }
+
+  await client.from('event_categories').delete().eq('event_id', eventId);
+  await client.from('event_categories').upsert(
+    categoryIds.map((categoryId) => ({ event_id: eventId, category_id: categoryId })),
+    { onConflict: 'event_id,category_id' },
+  );
 }
 
 async function logImportError(

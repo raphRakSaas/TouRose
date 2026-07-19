@@ -26,6 +26,8 @@
       }
     ],
     "registration": [{ "type": "link", "value": "https://example.com/demo-oa-balade" }],
+    "participation": [42],
+    "types-devenements": [45],
     "image": { "filename": "ignored-for-rights.jpg" }
   },
   {
@@ -46,6 +48,8 @@
         "begin": "2026-08-15T14:00:00+02:00",
         "end": "2026-08-15T16:00:00+02:00"
       }
-    ]
+    ],
+    "billetterie": "https://example.com/demo-oa-atelier-billets",
+    "types-devenements": [25]
   }
 ]

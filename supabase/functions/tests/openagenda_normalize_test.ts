@@ -1,6 +1,8 @@
 import {
+  buildOpenAgendaEventDetails,
   hashPayload,
   localizeText,
+  mapOpenAgendaPriceType,
   normalizeOpenAgendaEvent,
   slugify,
   type OpenAgendaEvent,
@@ -54,6 +56,18 @@ Deno.test('normalizeOpenAgendaEvent maps fixture shape', async () => {
       ],
     },
     imageCredits: 'Photographe test',
+    'types-devenements': [24, 45],
+    participation: [42],
+    longDescription: { fr: '**Programme complet** de la soirée.' },
+    conditions: { fr: 'Plein tarif 12 €, réduit 8 €' },
+    accessibility: { mi: true, vi: false },
+    age: { min: 6, max: 120 },
+    attendanceMode: 1,
+    keywords: { fr: ['concert', 'plein air'] },
+    registration: [
+      { type: 'link', value: 'https://billetterie.example.com/e/42' },
+      { type: 'phone', value: '05 61 00 00 00' },
+    ],
   };
 
   const normalized = await normalizeOpenAgendaEvent(eventRow, { agendaUid: '999' });
@@ -68,5 +82,63 @@ Deno.test('normalizeOpenAgendaEvent maps fixture shape', async () => {
   }
   if (normalized.image.attribution_text !== 'Photo : Photographe test · OpenAgenda') {
     throw new Error('image attribution');
+  }
+  if (normalized.category_slugs.join(',') !== 'spectacle,visite') {
+    throw new Error('category slugs');
+  }
+  if (normalized.price_type !== 'free') {
+    throw new Error('price_type free via participation');
+  }
+  if (normalized.description !== '**Programme complet** de la soirée.') {
+    throw new Error('description should use longDescription');
+  }
+  if (normalized.details.conditions !== 'Plein tarif 12 €, réduit 8 €') {
+    throw new Error('details.conditions');
+  }
+  if (normalized.details.age_min !== 6) throw new Error('details.age_min');
+  if (normalized.details.accessibility.join(',') !== 'mi') {
+    throw new Error('details.accessibility keeps only enabled codes');
+  }
+  if (normalized.details.attendance_mode !== 'onsite') {
+    throw new Error('details.attendance_mode');
+  }
+  if (normalized.details.keywords.join(',') !== 'concert,plein air') {
+    throw new Error('details.keywords');
+  }
+  if (normalized.details.registration.length !== 2) {
+    throw new Error('details.registration');
+  }
+});
+
+Deno.test('buildOpenAgendaEventDetails tolerates missing fields', () => {
+  const details = buildOpenAgendaEventDetails({ uid: 1 });
+  if (details.accessibility.length !== 0) throw new Error('accessibility default');
+  if (details.keywords.length !== 0) throw new Error('keywords default');
+  if (details.registration.length !== 0) throw new Error('registration default');
+  if (details.conditions !== undefined) throw new Error('conditions default');
+});
+
+Deno.test('mapOpenAgendaPriceType covers free, paid and unknown', () => {
+  if (mapOpenAgendaPriceType({ participation: [42] }) !== 'free') {
+    throw new Error('participation 42');
+  }
+  if (mapOpenAgendaPriceType({ entreelibre: [1] }) !== 'free') {
+    throw new Error('entreelibre 1');
+  }
+  if (
+    mapOpenAgendaPriceType({ billetterie: 'https://billetterie.example.com/e/1' }) !== 'paid'
+  ) {
+    throw new Error('billetterie url');
+  }
+  if (
+    mapOpenAgendaPriceType({
+      participation: [42],
+      billetterie: 'https://billetterie.example.com/e/1',
+    }) !== 'free'
+  ) {
+    throw new Error('free wins over ticket url');
+  }
+  if (mapOpenAgendaPriceType({}) !== 'unknown') {
+    throw new Error('unknown default');
   }
 });

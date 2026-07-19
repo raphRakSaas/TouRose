@@ -1,22 +1,26 @@
 import { useQuery } from '@tanstack/react-query';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
   RefreshControl,
   ScrollView,
+  Share,
   Text,
   View,
 } from 'react-native';
 
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { fetchPublicPlaceBySlug } from '@/src/data/catalog-api';
+import { isFavorite, isVisited, toggleFavorite, toggleVisited } from '@/src/data/local-catalog';
+import { buildPublicCatalogUrl } from '@/src/lib/public-urls';
 
 export default function PlaceDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const placeSlug = typeof slug === 'string' ? slug : '';
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavoriteState, setIsFavoriteState] = useState(false);
+  const [isVisitedState, setIsVisitedState] = useState(false);
 
   const placeQuery = useQuery({
     queryKey: ['catalog', 'place', placeSlug],
@@ -25,6 +29,66 @@ export default function PlaceDetailScreen() {
   });
 
   const placeRow = placeQuery.data;
+
+  useEffect(() => {
+    if (!placeRow) {
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      const [favorite, visited] = await Promise.all([
+        isFavorite('place', placeRow.id),
+        isVisited('place', placeRow.id),
+      ]);
+      if (!cancelled) {
+        setIsFavoriteState(favorite);
+        setIsVisitedState(visited);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [placeRow]);
+
+  async function onToggleFavorite(): Promise<void> {
+    if (!placeRow) {
+      return;
+    }
+    const nextValue = await toggleFavorite({
+      entityType: 'place',
+      entityId: placeRow.id,
+      slug: placeRow.slug,
+      title: placeRow.name,
+      subtitle: `${placeRow.place_type} · ${placeRow.price_type}`,
+    });
+    setIsFavoriteState(nextValue);
+  }
+
+  async function onToggleVisited(): Promise<void> {
+    if (!placeRow) {
+      return;
+    }
+    const nextValue = await toggleVisited({
+      entityType: 'place',
+      entityId: placeRow.id,
+      slug: placeRow.slug,
+      title: placeRow.name,
+      subtitle: `${placeRow.place_type} · ${placeRow.city ?? 'Toulouse'}`,
+    });
+    setIsVisitedState(nextValue);
+  }
+
+  async function onShare(): Promise<void> {
+    if (!placeRow) {
+      return;
+    }
+    const url = buildPublicCatalogUrl('place', placeRow.slug);
+    await Share.share({
+      title: placeRow.name,
+      message: `${placeRow.name}\n${url}`,
+      url,
+    });
+  }
 
   return (
     <>
@@ -71,25 +135,45 @@ export default function PlaceDetailScreen() {
             </Text>
             <View className="mb-5 flex-row gap-2.5">
               <Pressable
+                testID="place-favorite"
                 accessibilityRole="button"
-                onPress={() => setIsFavorite((previous) => !previous)}
+                accessibilityState={{ selected: isFavoriteState }}
+                onPress={() => void onToggleFavorite()}
                 className="flex-1 items-center rounded-[14px] border-[1.5px] border-brick-500 py-[11px]"
-                style={{ backgroundColor: isFavorite ? '#C45C3E' : 'transparent' }}
+                style={{ backgroundColor: isFavoriteState ? '#C45C3E' : 'transparent' }}
               >
                 <Text
                   className={`text-[14px] font-body-semibold ${
-                    isFavorite ? 'text-white' : 'text-brick-700'
+                    isFavoriteState ? 'text-white' : 'text-brick-700'
                   }`}
                 >
                   Favori
                 </Text>
               </Pressable>
-              <View className="flex-1 items-center rounded-[14px] border-[1.5px] border-sand-200 py-[11px]">
+              <Pressable
+                testID="place-share"
+                accessibilityRole="button"
+                onPress={() => void onShare()}
+                className="flex-1 items-center rounded-[14px] border-[1.5px] border-sand-200 py-[11px]"
+              >
                 <Text className="text-[14px] font-body-semibold text-ink-800">Partager</Text>
-              </View>
-              <View className="flex-1 items-center rounded-[14px] border-[1.5px] border-sand-200 py-[11px]">
-                <Text className="text-[14px] font-body-semibold text-ink-800">Visité</Text>
-              </View>
+              </Pressable>
+              <Pressable
+                testID="place-visited"
+                accessibilityRole="button"
+                accessibilityState={{ selected: isVisitedState }}
+                onPress={() => void onToggleVisited()}
+                className="flex-1 items-center rounded-[14px] border-[1.5px] border-sand-200 py-[11px]"
+                style={{ backgroundColor: isVisitedState ? '#26525C' : 'transparent' }}
+              >
+                <Text
+                  className={`text-[14px] font-body-semibold ${
+                    isVisitedState ? 'text-white' : 'text-ink-800'
+                  }`}
+                >
+                  Visité
+                </Text>
+              </Pressable>
             </View>
             <Text className="mb-5 text-[15px] leading-[1.7] font-body text-ink-800">
               {placeRow.summary ?? 'Sans résumé'}

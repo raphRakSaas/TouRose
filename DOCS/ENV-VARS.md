@@ -12,7 +12,8 @@
 | ----------------------------------- | ----------------------- |
 | `EXPO_PUBLIC_SUPABASE_URL`          | URL API Supabase        |
 | `EXPO_PUBLIC_SUPABASE_ANON_KEY`     | Clé anon                |
-| `EXPO_PUBLIC_MAP_STYLE_URL`         | Style / tuiles MapLibre |
+| `EXPO_PUBLIC_MAP_STYLE_URL`         | Style / tuiles MapLibre (development build) |
+| `EXPO_PUBLIC_WEBSITE_ORIGIN`        | Origine site pour URLs de partage (défaut `http://127.0.0.1:4321`) |
 | `EXPO_PUBLIC_NOTIFICATIONS_ENABLED` | Feature flag local      |
 
 Credentials push : EAS Secrets uniquement.

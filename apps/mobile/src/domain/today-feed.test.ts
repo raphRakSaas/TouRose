@@ -2,10 +2,9 @@ import type { PublicEventRow } from '@tourose/contracts';
 
 import {
   buildTodayFeed,
-  classifyEventCategory,
+  eventCategorySlugs,
   getMomentRange,
   isEventInRange,
-  matchesKeywords,
   pickForYouEvents,
   type PriceFilterKey,
 } from './today-feed';
@@ -28,6 +27,9 @@ function makeEvent(overrides: Partial<PublicEventRow>): PublicEventRow {
     next_ends_at: null,
     official_url: null,
     last_verified_at: null,
+    categories: [],
+    details: {},
+    upcoming_occurrences: [],
     ...overrides,
   };
 }
@@ -70,26 +72,16 @@ describe('isEventInRange', () => {
   });
 });
 
-describe('matchesKeywords / classifyEventCategory', () => {
-  it('détecte randonnée / balade', () => {
-    expect(matchesKeywords('Grande balade sur les quais', ['balade'])).toBe(true);
-    expect(classifyEventCategory(makeEvent({ title: 'Randonnée en forêt' }))).toContain('hike');
+describe('eventCategorySlugs', () => {
+  it('renvoie les catégories OpenAgenda de l’événement', () => {
+    expect(eventCategorySlugs(makeEvent({ categories: ['spectacle', 'visite'] }))).toEqual([
+      'spectacle',
+      'visite',
+    ]);
   });
 
-  it('détecte musée / exposition', () => {
-    expect(classifyEventCategory(makeEvent({ title: 'Exposition au musée' }))).toEqual(
-      expect.arrayContaining(['museum']),
-    );
-  });
-
-  it('détecte visite guidée', () => {
-    expect(classifyEventCategory(makeEvent({ title: 'Visite guidée du Capitole' }))).toContain(
-      'visit',
-    );
-  });
-
-  it('marque le gratuit', () => {
-    expect(classifyEventCategory(makeEvent({ price_type: 'free' }))).toContain('free');
+  it('renvoie un tableau vide si aucune catégorie', () => {
+    expect(eventCategorySlugs(makeEvent({ categories: [] }))).toEqual([]);
   });
 });
 
@@ -99,6 +91,7 @@ describe('pickForYouEvents / buildTodayFeed', () => {
     slug: 'concert',
     title: 'Concert',
     next_starts_at: '2026-07-18T19:00:00',
+    categories: ['spectacle'],
   });
   const balade = makeEvent({
     id: '55555555-5555-5555-5555-555555555502',
@@ -106,6 +99,7 @@ describe('pickForYouEvents / buildTodayFeed', () => {
     title: 'Balade gratuite',
     price_type: 'free',
     next_starts_at: '2026-07-19T10:00:00',
+    categories: ['visite'],
   });
   const musee = makeEvent({
     id: '55555555-5555-5555-5555-555555555503',
@@ -113,12 +107,14 @@ describe('pickForYouEvents / buildTodayFeed', () => {
     title: 'Exposition au musée',
     price_type: 'paid',
     next_starts_at: '2026-07-19T14:00:00',
+    categories: ['exposition'],
   });
   const visite = makeEvent({
     id: '55555555-5555-5555-5555-555555555504',
     slug: 'visite-guidée',
     title: 'Visite guidée',
     next_starts_at: '2026-07-19T11:00:00',
+    categories: ['visite'],
   });
 
   it('choisit jusqu’à 3 picks Pour toi', () => {
@@ -138,9 +134,8 @@ describe('pickForYouEvents / buildTodayFeed', () => {
 
     expect(forYouPicks.length).toBeGreaterThan(0);
     expect(sections.some((section) => section.key === 'forYou')).toBe(true);
-    expect(sections.some((section) => section.key === 'hike')).toBe(true);
-    expect(sections.some((section) => section.key === 'museum')).toBe(true);
-    expect(sections.some((section) => section.key === 'visit')).toBe(true);
+    expect(sections.some((section) => section.key === 'exposition')).toBe(true);
+    expect(sections.some((section) => section.key === 'visite')).toBe(true);
     expect(allEvents.length).toBeGreaterThan(0);
   });
 
@@ -152,13 +147,30 @@ describe('pickForYouEvents / buildTodayFeed', () => {
     expect(allEvents.every((item) => item.priceType === 'free')).toBe(true);
   });
 
-  it('filtre une seule catégorie', () => {
-    const { sections } = buildTodayFeed([concert, balade, musee, visite], {
+  it('filtre une seule catégorie (liste sans carrousels)', () => {
+    const { sections, allEvents } = buildTodayFeed([concert, balade, musee, visite], {
       now: NOW,
-      filters: { moment: 'weekend', price: 'all', category: 'museum' },
+      filters: { moment: 'weekend', price: 'all', category: 'exposition' },
     });
-    expect(sections).toHaveLength(1);
-    expect(sections[0].key).toBe('museum');
+    expect(sections).toHaveLength(0);
+    expect(allEvents).toHaveLength(1);
+    expect(allEvents[0].categories).toContain('exposition');
+  });
+
+  it('utilise les picks scorés quand fournis', () => {
+    const { forYouPicks } = buildTodayFeed([concert, balade, musee], {
+      now: NOW,
+      filters: { moment: 'weekend', price: 'all', category: 'all' },
+      scoredPicks: [
+        {
+          slot: 'best',
+          score: 80,
+          reasons: [{ code: 'time', label: 'Bientôt', weight: 20 }],
+          event: concert,
+        },
+      ],
+    });
+    expect(forYouPicks[0].reason).toContain('Bientôt');
   });
 
   it('renvoie vide sans événements', () => {

@@ -7,7 +7,10 @@
 - événements publics ;
 - API authentifiée ;
 - licence ouverte selon les agendas et conditions applicables ;
-- conserver agenda, identifiant, URL, dates et image/crédit.
+- conserver agenda, identifiant, URL, dates et image/crédit ;
+- prix dérivé à l’import : `participation` (entrée libre/gratuite) ou legacy `entreelibre` → `free` ; URL `billetterie` → `paid` ; sinon `unknown` ;
+- catégories dérivées du champ agenda `types-devenements` (Spectacle, Visite, Exposition…) ;
+- import en mode `detailed=1` : `longDescription` (markdown) → `events.description`, et `events.details` (jsonb) regroupe `conditions` (tarifs), `age`, `accessibility` (hi/ii/mi/pi/vi), `attendanceMode`, `onlineAccessLink`, `keywords` et `registration` (lien/téléphone/email).
 
 ### DATAtourisme
 

@@ -1,28 +1,23 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useFocusEffect } from '@react-navigation/native';
 import { Link } from 'expo-router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CatalogListRow } from '@/components/ui/CatalogListRow';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
+import {
+  hrefForLocalItem,
+  listDiscover,
+  listFavorites,
+  listVisited,
+  type LocalCatalogItem,
+} from '@/src/data/local-catalog';
 import { usePreferencesStore } from '@/src/store/preferences-store';
 
 type MeSegment = 'favorites' | 'discover' | 'visited';
 type SupportScreen = null | 'form' | 'thanks';
-
-const FAVORITES = [
-  {
-    title: 'Jardin des Plantes',
-    subtitle: 'Lieu · gratuit',
-    href: '/place/jardin-fictif-des-briques' as const,
-  },
-  {
-    title: 'Cinéma en plein air',
-    subtitle: 'Événement · ven. 24 juillet',
-    href: '/event/balade-fictive-quais' as const,
-  },
-];
 
 const SUPPORT_AMOUNTS = [
   { label: 'Une gorgée de café', amount: '1 €' },
@@ -35,6 +30,26 @@ export default function ForMeScreen() {
   const setCompany = usePreferencesStore((state) => state.setCompany);
   const [segment, setSegment] = useState<MeSegment>('favorites');
   const [supportScreen, setSupportScreen] = useState<SupportScreen>(null);
+  const [favorites, setFavorites] = useState<LocalCatalogItem[]>([]);
+  const [discover, setDiscover] = useState<LocalCatalogItem[]>([]);
+  const [visited, setVisited] = useState<LocalCatalogItem[]>([]);
+
+  const reloadLists = useCallback(async () => {
+    const [favoriteRows, discoverRows, visitedRows] = await Promise.all([
+      listFavorites(),
+      listDiscover(),
+      listVisited(),
+    ]);
+    setFavorites(favoriteRows);
+    setDiscover(discoverRows);
+    setVisited(visitedRows);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      void reloadLists();
+    }, [reloadLists]),
+  );
 
   if (supportScreen === 'form') {
     return (
@@ -91,6 +106,9 @@ export default function ForMeScreen() {
     );
   }
 
+  const segmentItems =
+    segment === 'favorites' ? favorites : segment === 'discover' ? discover : visited;
+
   return (
     <SafeAreaView className="flex-1 bg-sand-50" edges={['top']}>
       <ScrollView className="flex-1" contentContainerClassName="pb-10">
@@ -125,25 +143,30 @@ export default function ForMeScreen() {
         </View>
 
         <View className="px-5 pb-3">
-          {segment === 'favorites'
-            ? FAVORITES.map((favorite, index) => (
-                <Link key={favorite.title} href={favorite.href} asChild>
-                  <CatalogListRow
-                    title={favorite.title}
-                    subtitle={favorite.subtitle}
-                    imageLabel={favorite.title}
-                    thumbSize={56}
-                    showDivider={index < FAVORITES.length - 1}
-                  />
-                </Link>
-              ))
-            : (
-              <Text className="py-4 text-sm font-body text-ink-500">
-                {segment === 'discover'
+          {segmentItems.length === 0 ? (
+            <Text className="py-4 text-sm font-body text-ink-500">
+              {segment === 'favorites'
+                ? 'Aucun favori pour l’instant — ajoute-en depuis une fiche.'
+                : segment === 'discover'
                   ? 'Rien à découvrir pour le moment — ajoute des idées depuis Explorer.'
                   : 'Aucun lieu visité pour l’instant.'}
-              </Text>
-            )}
+            </Text>
+          ) : (
+            segmentItems.map((item, index) => (
+              <Link key={`${item.entityType}-${item.entityId}`} href={hrefForLocalItem(item) as never} asChild>
+                <CatalogListRow
+                  title={item.title}
+                  subtitle={
+                    item.subtitle ??
+                    (item.entityType === 'event' ? 'Événement' : 'Lieu')
+                  }
+                  imageLabel={item.title}
+                  thumbSize={56}
+                  showDivider={index < segmentItems.length - 1}
+                />
+              </Link>
+            ))
+          )}
         </View>
 
         <View className="mx-5 my-2 h-px bg-sand-200" />

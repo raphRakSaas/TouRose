@@ -32,17 +32,182 @@ export type OpenAgendaEvent = {
   longDescription?: string | Record<string, string>;
   slug?: string;
   status?: number | string;
-  keywords?: { fr?: string[] };
+  keywords?: { fr?: string[] } | string[];
   location?: OpenAgendaLocation | null;
   timings?: OpenAgendaTiming[];
   firstTiming?: OpenAgendaTiming;
   lastTiming?: OpenAgendaTiming;
   registration?: Array<{ type?: string; value?: string }>;
+  /** Tarifs / conditions de participation (multilingue, mode detailed=1). */
+  conditions?: string | Record<string, string>;
+  /** Accessibilité handicap : hi/ii/mi/pi/vi → booléens (mode detailed=1). */
+  accessibility?: Record<string, boolean>;
+  /** Tranche d'âge conseillée (mode detailed=1). */
+  age?: { min?: number | null; max?: number | null };
+  /** 1 = sur place, 2 = en ligne, 3 = mixte. */
+  attendanceMode?: number;
+  onlineAccessLink?: string | null;
+  timezone?: string;
   image?: OpenAgendaImage | null;
   imageCredits?: string;
   updatedAt?: string;
   createdAt?: string;
+  'types-devenements'?: Array<number | string> | null;
+  /** Legacy checkbox — option id 1 = entrée libre (souvent vide sur l'agenda Toulouse). */
+  entreelibre?: Array<number | string> | null;
+  /** Participation : 35 = entrée libre, 42 = entrée gratuite. */
+  participation?: Array<number | string> | null;
+  /** Lien billetterie (URL) → signal payant si pas déjà gratuit. */
+  billetterie?: string | null;
 };
+
+/**
+ * OpenAgenda "types d'événements" option IDs → TouRose category slugs.
+ * Source: schéma de l'agenda 42448083 (champ personnalisé `types-devenements`).
+ */
+export const OPENAGENDA_TYPE_TO_CATEGORY_SLUG: Record<string, string> = {
+  '44': 'cinema',
+  '16': 'conference',
+  '17': 'congres',
+  '19': 'sport',
+  '20': 'exposition',
+  '22': 'festival',
+  '21': 'marche',
+  '23': 'reunion-publique',
+  '24': 'spectacle',
+  '25': 'atelier',
+  '45': 'visite',
+};
+
+export function mapOpenAgendaCategorySlugs(
+  typeIds: Array<number | string> | null | undefined,
+): string[] {
+  if (!Array.isArray(typeIds)) {
+    return [];
+  }
+  const slugs = new Set<string>();
+  for (const typeId of typeIds) {
+    const slug = OPENAGENDA_TYPE_TO_CATEGORY_SLUG[String(typeId)];
+    if (slug) {
+      slugs.add(slug);
+    }
+  }
+  return [...slugs];
+}
+
+/** Option IDs that mean free entrance on the Toulouse metro OpenAgenda schema. */
+const FREE_PARTICIPATION_IDS = new Set(['35', '42']);
+const FREE_ENTREELIBRE_IDS = new Set(['1', 'true']);
+
+function hasOptionId(
+  values: Array<number | string> | null | undefined,
+  allowedIds: ReadonlySet<string>,
+): boolean {
+  if (!Array.isArray(values)) {
+    return false;
+  }
+  return values.some((value) => allowedIds.has(String(value)));
+}
+
+function isNonEmptyUrl(value: string | null | undefined): boolean {
+  if (!value || typeof value !== 'string') {
+    return false;
+  }
+  const trimmed = value.trim();
+  return trimmed.startsWith('http://') || trimmed.startsWith('https://');
+}
+
+/**
+ * Derive TouRose `price_type` from OpenAgenda custom fields.
+ * Priority: explicit free tags → ticket URL → unknown.
+ */
+export function mapOpenAgendaPriceType(eventRow: {
+  participation?: Array<number | string> | null;
+  entreelibre?: Array<number | string> | null;
+  billetterie?: string | null;
+}): 'free' | 'paid' | 'unknown' {
+  if (
+    hasOptionId(eventRow.participation, FREE_PARTICIPATION_IDS) ||
+    hasOptionId(eventRow.entreelibre, FREE_ENTREELIBRE_IDS)
+  ) {
+    return 'free';
+  }
+  if (isNonEmptyUrl(eventRow.billetterie)) {
+    return 'paid';
+  }
+  return 'unknown';
+}
+
+export type NormalizedEventDetails = {
+  /** Tarifs / conditions (texte libre OpenAgenda). */
+  conditions?: string;
+  age_min?: number;
+  age_max?: number;
+  /** Codes accessibilité actifs : hi, ii, mi, pi, vi. */
+  accessibility: string[];
+  attendance_mode?: 'onsite' | 'online' | 'mixed';
+  online_access_link?: string;
+  keywords: string[];
+  registration: Array<{ type: string; value: string }>;
+  timezone?: string;
+};
+
+function normalizeKeywords(
+  keywords: { fr?: string[] } | string[] | undefined,
+): string[] {
+  if (Array.isArray(keywords)) {
+    return keywords.filter((keyword): keyword is string => typeof keyword === 'string');
+  }
+  if (keywords && Array.isArray(keywords.fr)) {
+    return keywords.fr.filter((keyword): keyword is string => typeof keyword === 'string');
+  }
+  return [];
+}
+
+const ATTENDANCE_MODES: Record<number, NormalizedEventDetails['attendance_mode']> = {
+  1: 'onsite',
+  2: 'online',
+  3: 'mixed',
+};
+
+/** Regroupe tous les détails publics OpenAgenda utiles à la fiche événement. */
+export function buildOpenAgendaEventDetails(eventRow: OpenAgendaEvent): NormalizedEventDetails {
+  const conditions = localizeText(eventRow.conditions) || undefined;
+
+  const accessibility = eventRow.accessibility
+    ? Object.entries(eventRow.accessibility)
+        .filter(([, isEnabled]) => isEnabled === true)
+        .map(([code]) => code)
+        .sort()
+    : [];
+
+  const registration = (eventRow.registration ?? [])
+    .filter(
+      (entry): entry is { type: string; value: string } =>
+        typeof entry?.type === 'string' && typeof entry?.value === 'string' && entry.value.length > 0,
+    )
+    .map((entry) => ({ type: entry.type, value: entry.value }));
+
+  const onlineAccessLink =
+    typeof eventRow.onlineAccessLink === 'string' && isNonEmptyUrl(eventRow.onlineAccessLink)
+      ? eventRow.onlineAccessLink.trim()
+      : undefined;
+
+  return {
+    conditions,
+    age_min: typeof eventRow.age?.min === 'number' ? eventRow.age.min : undefined,
+    age_max: typeof eventRow.age?.max === 'number' ? eventRow.age.max : undefined,
+    accessibility,
+    attendance_mode:
+      typeof eventRow.attendanceMode === 'number'
+        ? ATTENDANCE_MODES[eventRow.attendanceMode]
+        : undefined,
+    online_access_link: onlineAccessLink,
+    keywords: normalizeKeywords(eventRow.keywords),
+    registration,
+    timezone: eventRow.timezone,
+  };
+}
 
 export type NormalizedImportPayload = {
   source_id: string;
@@ -76,6 +241,8 @@ export type NormalizedImportPayload = {
     status: 'published';
   } | null;
   occurrences: Array<{ starts_at: string; ends_at: string | null }>;
+  category_slugs: string[];
+  details: NormalizedEventDetails;
   image: {
     remote_url: string;
     width_px?: number;
@@ -237,6 +404,10 @@ export async function normalizeOpenAgendaEvent(
   const registrationUrl = eventRow.registration?.find(
     (entry) => entry.type === 'link' && entry.value,
   )?.value;
+  const billetterieUrl =
+    typeof eventRow.billetterie === 'string' && isNonEmptyUrl(eventRow.billetterie)
+      ? eventRow.billetterie.trim()
+      : undefined;
 
   const agendaUid = options?.agendaUid;
   const externalUrl = agendaUid
@@ -259,6 +430,17 @@ export async function normalizeOpenAgendaEvent(
     updatedAt: eventRow.updatedAt,
     image: eventRow.image,
     imageCredits: eventRow.imageCredits,
+    participation: eventRow.participation,
+    entreelibre: eventRow.entreelibre,
+    billetterie: eventRow.billetterie,
+    'types-devenements': eventRow['types-devenements'],
+    conditions: eventRow.conditions,
+    accessibility: eventRow.accessibility,
+    age: eventRow.age,
+    attendanceMode: eventRow.attendanceMode,
+    onlineAccessLink: eventRow.onlineAccessLink,
+    keywords: eventRow.keywords,
+    registration: eventRow.registration,
   });
 
   return {
@@ -274,13 +456,15 @@ export async function normalizeOpenAgendaEvent(
     summary,
     description,
     status: isOpenAgendaEventPublic(eventRow) ? 'published' : 'draft',
-    price_type: 'unknown',
+    price_type: mapOpenAgendaPriceType(eventRow),
     indoor_outdoor: 'unknown',
-    official_url: registrationUrl,
+    official_url: registrationUrl ?? billetterieUrl,
     latitude: location?.latitude,
     longitude: location?.longitude,
     place,
     occurrences,
+    category_slugs: mapOpenAgendaCategorySlugs(eventRow['types-devenements']),
+    details: buildOpenAgendaEventDetails(eventRow),
     image,
   };
 }

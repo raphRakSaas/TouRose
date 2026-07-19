@@ -3,7 +3,7 @@
 Vue d’ensemble de ce qui est **fait**, **en cours** et **à faire**.  
 Ce fichier est vivant : **ajoute des lignes** au fur et à mesure (bugs, idées, dettes techniques).
 
-Dernière mise à jour : **2026-07-18** (Phase 2 OpenAgenda partielle)
+Dernière mise à jour : **2026-07-19** (Phase 3 cœur local + Phase 4 scoring)
 
 ---
 
@@ -48,14 +48,14 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 | **0 — Fondations** | Fait | Apps démarrent, CI, migration locale | ~100 % |
 | **1 — Catalogue admin** | Fait | Admin publie → visible mobile/web | ~100 % (doublons / MFA / médias upload / SSR reportés) |
 | **Design** | En cours | Brief + maquette mobile intégrée | Mobile UI OK ; site/admin maquettes ouvertes |
-| **2 — Imports** | Partiel | OpenAgenda idempotent | ~70 % (OA + admin fraîcheur ; autres sources / cron prod ouverts) |
-| **3 — Cœur mobile** | En cours | Onboarding, fiches, favoris, carte | ~55 % (UI maquette + Explorer réel ; MapLibre/favoris SQLite ouverts) |
-| **4 — Recommandations** | À faire | 3 suggestions scorées | ~5 % (mock Aujourd’hui) |
+| **2 — Imports** | Partiel | OpenAgenda idempotent | ~80 % (OA + images + catégories + prix ; autres sources / cron prod ouverts) |
+| **3 — Cœur mobile** | En cours | Onboarding, fiches, favoris, carte | ~85 % (SQLite favoris, partage, calendrier, Explorer filtres ; MapLibre natif = dev build) |
+| **4 — Recommandations** | Partiel | 3 suggestions scorées | ~90 % (RPC scoring + impressions + ADR 0005 ; cache Query→SQLite ouvert) |
 | **5 — Comptes / sync** | À faire | Magic link + fusion locale | 0 % |
 | **6 — Notifs / soutien** | À faire | Push + Stripe + IAP | 0 % |
 | **7 — Boutiques** | À faire | Store-ready | 0 % |
 
-**Prochaine priorité recommandée :** terminer **design** (maquettes), puis **Phase 3** mobile — ou brancher une vraie clé OpenAgenda / cron prod pour finaliser Phase 2.
+**Prochaine priorité recommandée :** finaliser MapLibre en development build — ou **Phase 5** comptes/sync — ou design (hors MVP mobile).
 
 ---
 
@@ -155,8 +155,10 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 
 - [x] Client Supabase
 - [x] Explorer : événements à venir, lieux, recherche
-- [~] Aujourd’hui encore sur suggestions **mock**
+- [x] Aujourd’hui branché sur catalogue réel (OpenAgenda + météo Open-Meteo)
 - [x] Fiches détail événement / lieu (`/event/[slug]`, `/place/[slug]`)
+- [x] Fiche événement enrichie : carrousel photos, description complète, adresse cliquable → itinéraire natif (Plans / Google Maps / Waze), CTA fixe « Y aller / Réserver / Partager »
+- [x] Détails OpenAgenda complets (import `detailed=1`) : description longue markdown, prochaines dates, tarifs/conditions, âge, accessibilité, réservation/contact, mots-clés
 - [x] Pull-to-refresh + bouton réessayer sur Explorer / fiches
 - [ ] États erreur / empty states soignés (design)
 
@@ -201,13 +203,16 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [x] Tables `import_runs` / `import_errors`
 - [x] Table `editorial_overrides`
 - [x] Edge Function / job import **OpenAgenda** (premier) — fixture locale + API si clé
-- [x] Normalisation dates / lieux / prix (prix encore `unknown` par défaut)
+- [x] Normalisation dates / lieux / prix (`participation` / `entreelibre` / billetterie → `price_type`)
+- [x] Mapping catégories OpenAgenda (`types-devenements` → `categories` / `event_categories`)
+- [x] Prévisualisations images OpenAgenda CDN + attribution (ADR 0004, `needs_review`)
 - [x] Déduplication (clé externe + log `possible_duplicate`, pas de merge destructif)
 - [x] Application des overrides à l’import (`import_upsert_event`)
 - [x] Droits médias à l’import (ne jamais publier sans licence — log `media_rights`)
 - [x] Admin : tableau de fraîcheur des imports (`/imports`)
 - [x] Fixtures de contrats / normalize (Deno) + pgTAP RLS imports
 - [x] ADR `0003-phase2-openagenda-import`
+- [x] ADR `0004-openagenda-image-previews`
 - [ ] Import **DATAtourisme**
 - [ ] Import **Toulouse Open Data** (parcs / équipements)
 - [ ] Cron d’import (pg_cron ou scheduler Supabase)
@@ -221,37 +226,38 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 ### Onboarding & Aujourd’hui
 
-- [x] Onboarding skippable (histoire, intérêts, localisation expliquée) — UI maquette
-- [x] Salutation + météo (placeholder Open-Meteo)
-- [x] Sélecteur de moment
-- [x] Trois suggestions (UI maquette ; scoring Phase 4 encore mock)
-- [x] Affiner mes envies (feuille filtres)
-- [x] Raccourcis Gratuit / Dehors / Week-end / Autour de moi
+- [x] Onboarding skippable (histoire, intérêts, localisation expliquée) — UI maquette + permission localisation
+- [x] Salutation + météo réelle (Open-Meteo)
+- [x] Filtres Quand / Prix / Catégorie (modals + date picker natif)
+- [x] Feed sections + liste (cartes/liste) branchés sur événements OpenAgenda
+- [x] Modal 3 cartes empilées (1× / lancement, option masquer aujourd’hui)
+- [x] Affiner mes envies (feuille filtres compagnie)
+- [x] Trois suggestions « Pour toi » via RPC scoring (ADR 0005 ; fallback heuristique)
 
 ### Explorer & fiches
 
 - [x] Segments Événements / Lieux / Collections
-- [~] Filtres complets (chips UI ; logique avancée ouverte)
-- [x] Fiche événement (favori local UI, partage/agenda stubs)
-- [x] Fiche lieu
+- [x] Filtres Explorer (week-end / gratuit / extérieur) câblés
+- [x] Fiche événement (favori SQLite, partage, agenda, lien officiel)
+- [x] Fiche lieu (favori / visité / partage)
 - [~] États UX : skeleton basique ; erreur/vide OK ; hors-ligne/obsolète ouverts
 
 ### Carte
 
-- [x] UI carte maquette (placeholder stylé + panneau détail)
-- [ ] MapLibre (development build)
-- [ ] Marqueurs + clustering événement/lieu
-- [ ] Attribution visible
+- [x] UI carte + liste géolocalisée catalogue + attribution
+- [~] MapLibre natif (development build / `EXPO_PUBLIC_MAP_STYLE_URL` — pas Expo Go)
+- [~] Marqueurs via liste proximités (clustering MapLibre ouvert)
+- [x] Attribution visible
 - [ ] [!] Fournisseur de tuiles prod (pas OSM community CDN)
 
 ### Favoris & local
 
-- [~] Favoris invité (UI locale ; SQLite ouvert)
-- [~] À découvrir / visité (onglets UI)
-- [ ] File d’ops à synchroniser (préparer Phase 5)
+- [x] Favoris invité (SQLite)
+- [x] À découvrir / visité (SQLite + onglets Pour moi)
+- [x] File d’ops à synchroniser (`local_ops_queue`, préparer Phase 5)
 - [ ] Cache TanStack Query + SQLite
-- [ ] Partage natif
-- [ ] Ajout calendrier
+- [x] Partage natif
+- [x] Ajout calendrier
 
 ---
 
@@ -259,13 +265,14 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 **Critère :** 3 suggestions déterministes + raisons structurées.
 
-- [ ] RPC / SQL scoring (temps, distance, budget, météo, préférences, fraîcheur, diversité, éditorial)
-- [ ] Poids configurables
-- [ ] Raisons structurées → libellés client
-- [ ] Diversité (éviter 3× le même type)
-- [ ] Table `recommendation_impressions` (privacy-friendly)
-- [ ] Remplacer le mock de l’onglet Aujourd’hui
-- [ ] Tests unitaires du scoring
+- [x] RPC / SQL scoring (temps, distance, budget, météo, préférences, fraîcheur, diversité, éditorial)
+- [x] Poids configurables (`recommendation_weights`)
+- [x] Raisons structurées → libellés client
+- [x] Diversité (slot unexpected hors catégorie du best)
+- [x] Table `recommendation_impressions` (privacy-friendly)
+- [x] Remplacer le mock / heuristique seule de l’onglet Aujourd’hui
+- [x] Tests unitaires / pgTAP du scoring
+- [x] ADR `0005-recommendation-scoring`
 
 ---
 
@@ -336,7 +343,7 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 *(Ajoute ici librement.)*
 
-- [ ] Remplacer suggestions mock Aujourd’hui dès qu’un scoring minimal existe
+- [ ] Remplacer heuristique fallback « Pour toi » uniquement si RPC scoring indisponible (déjà en place)
 - [ ] Nettoyer composants template Expo inutilisés (`EditScreenInfo`, etc.)
 - [ ] Harmoniser env admin (fichier généré vs `.env.local` Angular)
 - [ ] Page catalogue web : recherche live
@@ -360,5 +367,7 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 | --- | --- |
 | 2026-07-18 | Création du backlog initial (Phases 0–7 + design + transversal) |
 | 2026-07-18 | Auth JWT admin + sécu injection SQL documentées / testées |
+| 2026-07-19 | Sync backlog : Aujourd’hui réel, images OA (ADR 0004), catégories `types-devenements`, prix `participation`/`billetterie` |
+| 2026-07-19 | Phase 3 (SQLite favoris, partage, calendrier, Explorer) + Phase 4 scoring (ADR 0005) |
 
 *(Ajoute une ligne ici quand tu modifies significativement le backlog.)*

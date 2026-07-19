@@ -4,6 +4,7 @@ const TOULOUSE_LONGITUDE = 1.444;
 export type CurrentWeather = {
   temperatureCelsius: number;
   label: string;
+  weatherCode: number;
 };
 
 /** Codes météo WMO (Open-Meteo) → libellés français courts. */
@@ -69,5 +70,6 @@ export async function fetchToulouseWeather(): Promise<CurrentWeather> {
   return {
     temperatureCelsius: temperature,
     label: weatherCodeToLabel(weatherCode),
+    weatherCode,
   };
 }

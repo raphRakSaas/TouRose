@@ -1,11 +1,28 @@
 import { distanceFromToulouseCenter, formatRelativeDayLabel } from '@tourose/shared';
-import type { PublicEventRow } from '@tourose/contracts';
+import type { PublicEventRow, RecommendationPick } from '@tourose/contracts';
 
 export type MomentKey = 'tonight' | 'today' | 'weekend' | 'custom-date';
 
 export type PriceFilterKey = 'all' | 'free' | 'paid';
 
-export type CategorySectionKey = 'forYou' | 'nearby' | 'free' | 'hike' | 'visit' | 'museum';
+/** Slugs des catégories OpenAgenda (« types d'événements »). */
+export type EventCategorySlug =
+  | 'spectacle'
+  | 'visite'
+  | 'atelier'
+  | 'exposition'
+  | 'cinema'
+  | 'festival'
+  | 'conference'
+  | 'sport'
+  | 'marche'
+  | 'congres'
+  | 'reunion-publique';
+
+/** Sections curées par TouRose (indépendantes des catégories OpenAgenda). */
+export type CuratedSectionKey = 'forYou' | 'nearby' | 'free';
+
+export type CategoryFilterKey = 'all' | EventCategorySlug;
 
 export type FeedItem = {
   id: string;
@@ -19,6 +36,7 @@ export type FeedItem = {
   latitude: number | null;
   longitude: number | null;
   nextStartsAt: string | null;
+  categories: string[];
   imageUrl: string | null;
   imageAlt: string | null;
   imageAttribution: string | null;
@@ -26,7 +44,7 @@ export type FeedItem = {
 };
 
 export type FeedSection = {
-  key: CategorySectionKey;
+  key: string;
   title: string;
   items: FeedItem[];
 };
@@ -37,54 +55,45 @@ export type TodayFeedFilters = {
   moment: MomentKey;
   customDate?: Date;
   price: PriceFilterKey;
-  /** Si défini, ne garde que cette section (hors liste « tous »). */
-  category: CategorySectionKey | 'all';
+  /** Si défini (≠ all), ne garde que les événements de cette catégorie. */
+  category: CategoryFilterKey;
 };
 
-const HIKE_KEYWORDS = [
-  'randonnée',
-  'randonnee',
-  'balade',
-  'marche',
-  'chemin',
-  'sentier',
-  'trek',
-  'hiking',
+/** Catalogue d'affichage des catégories OpenAgenda (libellé + couleur du badge). */
+export const EVENT_CATEGORIES: {
+  slug: EventCategorySlug;
+  label: string;
+  color: string;
+}[] = [
+  { slug: 'spectacle', label: 'Spectacle & Musique', color: '#A94A30' },
+  { slug: 'visite', label: 'Visite', color: '#26525C' },
+  { slug: 'atelier', label: 'Stage & Atelier', color: '#A88B63' },
+  { slug: 'exposition', label: 'Exposition', color: '#8B5EAD' },
+  { slug: 'cinema', label: 'Cinéma', color: '#5D3B77' },
+  { slug: 'festival', label: 'Fête & Festival', color: '#C2410C' },
+  { slug: 'conference', label: 'Conférence', color: '#3F6B74' },
+  { slug: 'sport', label: 'Sport', color: '#2F7D4A' },
+  { slug: 'marche', label: 'Foire & Marché', color: '#B45309' },
+  { slug: 'congres', label: 'Congrès & Salon', color: '#475569' },
+  { slug: 'reunion-publique', label: 'Réunion publique', color: '#64748B' },
 ];
 
-const VISIT_KEYWORDS = [
-  'visite',
-  'visites',
-  'visiter',
-  'guidée',
-  'guidee',
-  'patrimoine',
-  'monument',
-  'château',
-  'chateau',
-];
+const CATEGORY_BY_SLUG = new Map(EVENT_CATEGORIES.map((category) => [category.slug, category]));
 
-const MUSEUM_KEYWORDS = [
-  'musée',
-  'musee',
-  'museum',
-  'exposition',
-  'expo ',
-  'galerie',
-  'collection',
-];
+const DEFAULT_BADGE = { label: 'Sortie', color: '#A94A30' };
 
-const SECTION_META: Record<
-  CategorySectionKey,
+const CURATED_SECTION_META: Record<
+  CuratedSectionKey,
   { title: string; badge: string; badgeColor: string }
 > = {
   forYou: { title: 'Pour toi', badge: 'Pour toi', badgeColor: '#A94A30' },
   nearby: { title: 'Proximité', badge: 'Proche', badgeColor: '#26525C' },
   free: { title: 'Gratuit', badge: 'Gratuit', badgeColor: '#2F7D4A' },
-  hike: { title: 'Randonnée', badge: 'Balade', badgeColor: '#A88B63' },
-  visit: { title: 'Visite', badge: 'Visite', badgeColor: '#5D3B77' },
-  museum: { title: 'Musée', badge: 'Musée', badgeColor: '#8B5EAD' },
 };
+
+/** Nombre maximum de carrousels de catégories affichés sur la page d'accueil. */
+const MAX_CATEGORY_SECTIONS = 6;
+const MAX_ITEMS_PER_SECTION = 12;
 
 export function getMomentRange(moment: MomentKey, now: Date, customDate?: Date): MomentRange {
   const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -125,40 +134,19 @@ export function isEventInRange(eventRow: PublicEventRow, range: MomentRange): bo
   return startsAt >= range.start && startsAt <= range.end;
 }
 
-export function matchesKeywords(text: string, keywords: string[]): boolean {
-  const normalized = text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-  return keywords.some((keyword) => {
-    const needle = keyword
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
-    return normalized.includes(needle);
-  });
+export function eventCategorySlugs(eventRow: PublicEventRow): string[] {
+  return eventRow.categories ?? [];
 }
 
-export function eventSearchText(eventRow: PublicEventRow): string {
-  return `${eventRow.title} ${eventRow.summary ?? ''}`;
-}
-
-export function classifyEventCategory(eventRow: PublicEventRow): CategorySectionKey[] {
-  const text = eventSearchText(eventRow);
-  const categories: CategorySectionKey[] = [];
-  if (eventRow.price_type === 'free') {
-    categories.push('free');
+/** Libellé + couleur du badge à partir de la première catégorie connue de l'événement. */
+function primaryCategoryBadge(eventRow: PublicEventRow): { label: string; color: string } {
+  for (const slug of eventCategorySlugs(eventRow)) {
+    const category = CATEGORY_BY_SLUG.get(slug as EventCategorySlug);
+    if (category) {
+      return { label: category.label, color: category.color };
+    }
   }
-  if (matchesKeywords(text, HIKE_KEYWORDS)) {
-    categories.push('hike');
-  }
-  if (matchesKeywords(text, VISIT_KEYWORDS)) {
-    categories.push('visit');
-  }
-  if (matchesKeywords(text, MUSEUM_KEYWORDS)) {
-    categories.push('museum');
-  }
-  return categories;
+  return DEFAULT_BADGE;
 }
 
 function sortByStartDate(events: PublicEventRow[]): PublicEventRow[] {
@@ -207,6 +195,16 @@ function applyDateFilter(
   return inRange.length > 0 ? inRange : sortByStartDate(events);
 }
 
+function applyCategoryFilter(
+  events: PublicEventRow[],
+  category: CategoryFilterKey,
+): PublicEventRow[] {
+  if (category === 'all') {
+    return events;
+  }
+  return events.filter((eventRow) => eventCategorySlugs(eventRow).includes(category));
+}
+
 function eventReason(eventRow: PublicEventRow, now: Date): string {
   const parts: string[] = [];
   if (eventRow.next_starts_at) {
@@ -226,22 +224,23 @@ function eventReason(eventRow: PublicEventRow, now: Date): string {
 function toFeedItem(
   eventRow: PublicEventRow,
   now: Date,
-  sectionKey: CategorySectionKey,
+  badge: string,
+  badgeColor: string,
   photoIndex: number,
 ): FeedItem {
-  const meta = SECTION_META[sectionKey];
   return {
     id: eventRow.id,
     title: eventRow.title,
     reason: eventReason(eventRow, now),
-    badge: meta.badge,
-    badgeColor: meta.badgeColor,
+    badge,
+    badgeColor,
     href: `/event/${eventRow.slug}`,
     photoIndex,
     priceType: eventRow.price_type,
     latitude: eventRow.latitude,
     longitude: eventRow.longitude,
     nextStartsAt: eventRow.next_starts_at,
+    categories: eventCategorySlugs(eventRow),
     imageUrl: eventRow.image_url ?? null,
     imageAlt: eventRow.image_alt ?? null,
     imageAttribution: eventRow.image_attribution ?? null,
@@ -251,6 +250,7 @@ function toFeedItem(
 
 /**
  * Trois picks « Pour toi » : prochain, un gratuit distinct, un 3e pour variété.
+ * Conservé comme fallback local si la RPC scoring est indisponible.
  */
 export function pickForYouEvents(events: PublicEventRow[], now: Date): PublicEventRow[] {
   const upcoming = sortByStartDate(events);
@@ -282,54 +282,114 @@ export function pickForYouEvents(events: PublicEventRow[], now: Date): PublicEve
   return picks.slice(0, 3);
 }
 
+/** Convertit les picks scorés (RPC Phase 4) en FeedItem avec raison structurée. */
+export function recommendationPicksToFeedItems(
+  picks: RecommendationPick[],
+  now: Date,
+): FeedItem[] {
+  const forYouMeta = CURATED_SECTION_META.forYou;
+  return picks.map((pick, index) => {
+    const primaryReason = pick.reasons[0]?.label;
+    const item = toFeedItem(
+      pick.event,
+      now,
+      forYouMeta.badge,
+      forYouMeta.badgeColor,
+      index,
+    );
+    return {
+      ...item,
+      reason: primaryReason
+        ? `${primaryReason} · ${item.reason}`
+        : item.reason,
+    };
+  });
+}
+
 export function buildTodayFeed(
   events: PublicEventRow[],
   options: {
     now: Date;
     filters: TodayFeedFilters;
+    /** Picks scorés Phase 4 ; sinon fallback heuristique locale. */
+    scoredPicks?: RecommendationPick[];
   },
 ): { sections: FeedSection[]; allEvents: FeedItem[]; forYouPicks: FeedItem[] } {
-  const { now, filters } = options;
+  const { now, filters, scoredPicks } = options;
   const dated = applyDateFilter(events, filters.moment, now, filters.customDate);
   const priced = applyPriceFilter(dated, filters.price);
-  const upcoming = sortByStartDate(priced);
+  const scoped = applyCategoryFilter(priced, filters.category);
+  const upcoming = sortByStartDate(scoped);
 
-  const forYouEvents = pickForYouEvents(upcoming, now);
-  const forYouPicks = forYouEvents.map((eventRow, index) =>
-    toFeedItem(eventRow, now, 'forYou', index),
-  );
+  const forYouSource = sortByStartDate(applyPriceFilter(dated, filters.price));
+  const forYouEvents =
+    scoredPicks && scoredPicks.length > 0
+      ? scoredPicks.map((pick) => pick.event)
+      : pickForYouEvents(forYouSource, now);
+  const forYouMeta = CURATED_SECTION_META.forYou;
+  const forYouPicks =
+    scoredPicks && scoredPicks.length > 0
+      ? recommendationPicksToFeedItems(scoredPicks, now)
+      : forYouEvents.map((eventRow, index) =>
+          toFeedItem(eventRow, now, forYouMeta.badge, forYouMeta.badgeColor, index),
+        );
 
-  const nearbyEvents = sortByDistance(upcoming).slice(0, 12);
-  const freeEvents = upcoming.filter((eventRow) => eventRow.price_type === 'free').slice(0, 12);
-  const hikeEvents = upcoming
-    .filter((eventRow) => matchesKeywords(eventSearchText(eventRow), HIKE_KEYWORDS))
-    .slice(0, 12);
-  const visitEvents = upcoming
-    .filter((eventRow) => matchesKeywords(eventSearchText(eventRow), VISIT_KEYWORDS))
-    .slice(0, 12);
-  const museumEvents = upcoming
-    .filter((eventRow) => matchesKeywords(eventSearchText(eventRow), MUSEUM_KEYWORDS))
-    .slice(0, 12);
+  const sections: FeedSection[] = [];
 
-  const rawSections: { key: CategorySectionKey; events: PublicEventRow[] }[] = [
-    { key: 'forYou', events: forYouEvents },
-    { key: 'nearby', events: nearbyEvents },
-    { key: 'free', events: freeEvents },
-    { key: 'hike', events: hikeEvents },
-    { key: 'visit', events: visitEvents },
-    { key: 'museum', events: museumEvents },
-  ];
+  // Les carrousels (curés + catégories) ne s'affichent que sans filtre catégorie actif.
+  if (filters.category === 'all') {
+    const curatedSections: { key: CuratedSectionKey; events: PublicEventRow[] }[] = [
+      { key: 'forYou', events: forYouEvents },
+      { key: 'nearby', events: sortByDistance(upcoming).slice(0, MAX_ITEMS_PER_SECTION) },
+      {
+        key: 'free',
+        events: upcoming
+          .filter((eventRow) => eventRow.price_type === 'free')
+          .slice(0, MAX_ITEMS_PER_SECTION),
+      },
+    ];
 
-  const sections = rawSections
-    .filter((section) => section.events.length > 0)
-    .filter((section) => filters.category === 'all' || filters.category === section.key)
-    .map((section) => ({
-      key: section.key,
-      title: SECTION_META[section.key].title,
-      items: section.events.map((eventRow, index) => toFeedItem(eventRow, now, section.key, index)),
-    }));
+    for (const section of curatedSections) {
+      if (section.events.length === 0) {
+        continue;
+      }
+      const meta = CURATED_SECTION_META[section.key];
+      sections.push({
+        key: section.key,
+        title: meta.title,
+        items: section.events.map((eventRow, index) =>
+          toFeedItem(eventRow, now, meta.badge, meta.badgeColor, index),
+        ),
+      });
+    }
 
-  const allEvents = upcoming.map((eventRow, index) => toFeedItem(eventRow, now, 'forYou', index));
+    const categorySections = EVENT_CATEGORIES.map((category) => ({
+      category,
+      events: upcoming.filter((eventRow) =>
+        eventCategorySlugs(eventRow).includes(category.slug),
+      ),
+    }))
+      .filter((entry) => entry.events.length > 0)
+      .sort((first, second) => second.events.length - first.events.length)
+      .slice(0, MAX_CATEGORY_SECTIONS);
+
+    for (const entry of categorySections) {
+      sections.push({
+        key: entry.category.slug,
+        title: entry.category.label,
+        items: entry.events
+          .slice(0, MAX_ITEMS_PER_SECTION)
+          .map((eventRow, index) =>
+            toFeedItem(eventRow, now, entry.category.label, entry.category.color, index),
+          ),
+      });
+    }
+  }
+
+  const allEvents = upcoming.map((eventRow, index) => {
+    const badge = primaryCategoryBadge(eventRow);
+    return toFeedItem(eventRow, now, badge.label, badge.color, index);
+  });
 
   return { sections, allEvents, forYouPicks };
 }

@@ -37,6 +37,8 @@ jest.mock('@/src/data/catalog-api', () => ({
   fetchUpcomingEvents: jest.fn(),
   fetchPublicPlaces: jest.fn(),
   fetchPublicCollections: jest.fn(),
+  fetchRecommendationPicks: jest.fn(async () => []),
+  logRecommendationImpression: jest.fn(async () => undefined),
 }));
 
 jest.mock('@/src/data/weather-api', () => {
@@ -72,6 +74,7 @@ const EVENTS = [
     image_alt: 'Concert OpenAgenda',
     image_attribution: 'Photo : Renaud Monfourny · OpenAgenda',
     image_source_url: 'https://openagenda.com/agendas/1/events/1',
+    categories: ['spectacle'],
   },
   {
     id: '55555555-5555-5555-5555-555555555502',
@@ -88,6 +91,7 @@ const EVENTS = [
     next_ends_at: null,
     official_url: null,
     last_verified_at: null,
+    categories: ['visite'],
   },
   {
     id: '55555555-5555-5555-5555-555555555503',
@@ -104,6 +108,7 @@ const EVENTS = [
     next_ends_at: null,
     official_url: null,
     last_verified_at: null,
+    categories: ['exposition'],
   },
 ];
 
@@ -137,6 +142,7 @@ beforeEach(async () => {
   (fetchToulouseWeather as jest.Mock).mockResolvedValue({
     temperatureCelsius: 21.3,
     label: 'Éclaircies',
+    weatherCode: 2,
   });
 });
 
@@ -192,12 +198,12 @@ describe('TodayScreen', () => {
     expect(screen.getAllByText('Balade gratuite sur les quais').length).toBeGreaterThan(0);
   });
 
-  it('filtre la catégorie Musée', async () => {
+  it('filtre la catégorie Exposition', async () => {
     renderTodayScreen();
     await dismissStackedModal();
 
     fireEvent.press(screen.getByTestId('open-filter-category'));
-    fireEvent.press(screen.getByTestId('category-filter-museum'));
+    fireEvent.press(screen.getByTestId('category-filter-exposition'));
 
     await waitFor(() => {
       expect(screen.getAllByText('Exposition au musée des Augustins').length).toBeGreaterThan(0);

@@ -50,6 +50,12 @@
           "locationWhenInUsePermission": "TouRose utilise ta position pour te proposer des sorties près de toi à Toulouse."
         }
       ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "TouRose ajoute les événements que tu choisis dans ton calendrier."
+        }
+      ],
       "@react-native-community/datetimepicker"
     ],
     "experiments": {

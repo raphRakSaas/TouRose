@@ -56,8 +56,10 @@ describe('contracts', () => {
       image_alt: 'Balade',
       image_attribution: 'Photo : OpenAgenda',
       image_source_url: 'https://openagenda.com/agendas/1/events/2',
+      categories: ['visite', 'spectacle'],
     });
     expect(eventRow.title).toBe('Balade');
+    expect(eventRow.categories).toEqual(['visite', 'spectacle']);
   });
 
   it('validates a search hit', () => {
