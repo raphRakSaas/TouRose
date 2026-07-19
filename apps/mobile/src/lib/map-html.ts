@@ -11,6 +11,10 @@ export type WebMapPin = {
   kind: 'event' | 'place';
   latitude: number;
   longitude: number;
+  /** Jour du mois de l'événement (ex. « 19 ») — pins événements uniquement. */
+  dayLabel?: string;
+  /** Mois abrégé de l'événement (ex. « juil. ») — pins événements uniquement. */
+  monthLabel?: string;
 };
 
 export const MAP_HTML = `<!DOCTYPE html>
@@ -23,17 +27,45 @@ export const MAP_HTML = `<!DOCTYPE html>
 <style>
   html, body, #map { margin: 0; padding: 0; height: 100%; width: 100%; background: #f5eee3; }
   .tourose-pin {
-    width: 30px; height: 30px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    border: 2.5px solid #ffffff;
     box-shadow: 0 2px 6px rgba(31,28,25,0.35);
-    color: #ffffff; font-size: 13px; line-height: 1;
-    transition: transform 0.15s ease, background-color 0.15s ease;
+    transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
     cursor: pointer;
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
   }
-  .tourose-pin.event { background: #C45C3E; }
-  .tourose-pin.place { background: #26525C; }
-  .tourose-pin.selected { background: #E03D2E; transform: scale(1.35); z-index: 10; }
+  /* Pin lieu : pastille ronde bleu Garonne. */
+  .tourose-pin.place {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #26525C; border: 2.5px solid #ffffff;
+    color: #ffffff; font-size: 13px; line-height: 1;
+  }
+  .tourose-pin.place.selected { background: #E03D2E; transform: scale(1.35); z-index: 10; }
+  /* Pin événement : mini-calendrier avec la vraie date. */
+  .tourose-pin.event {
+    width: 34px; border-radius: 8px; overflow: hidden;
+    background: #ffffff; border: 2px solid #ffffff;
+    flex-direction: column; align-items: stretch;
+  }
+  .tourose-pin.event .pin-month {
+    background: #C45C3E; color: #ffffff;
+    font-size: 8px; font-weight: 700; text-transform: uppercase;
+    text-align: center; padding: 1.5px 0; letter-spacing: 0.3px;
+  }
+  .tourose-pin.event .pin-day {
+    color: #1F1C19; font-size: 14px; font-weight: 700;
+    text-align: center; padding: 1px 0 2px;
+    background: #ffffff; line-height: 1.1;
+  }
+  .tourose-pin.event.selected { transform: scale(1.3); z-index: 10; border-color: #E03D2E; }
+  .tourose-pin.event.selected .pin-month { background: #E03D2E; }
+  /* Événement sans date connue : pastille ronde brique. */
+  .tourose-pin.event.no-date {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #C45C3E; border: 2.5px solid #ffffff;
+    color: #ffffff; font-size: 13px; line-height: 1;
+    flex-direction: row; align-items: center; justify-content: center;
+  }
+  .tourose-pin.event.no-date.selected { background: #E03D2E; }
 </style>
 </head>
 <body>
@@ -65,7 +97,21 @@ export const MAP_HTML = `<!DOCTYPE html>
     pins.forEach(function (pin) {
       var el = document.createElement('div');
       el.className = 'tourose-pin ' + pin.kind + (pin.id === selectedId ? ' selected' : '');
-      el.textContent = pin.kind === 'event' ? '📅' : '📍';
+      if (pin.kind === 'event' && pin.dayLabel) {
+        var monthEl = document.createElement('div');
+        monthEl.className = 'pin-month';
+        monthEl.textContent = pin.monthLabel || '';
+        var dayEl = document.createElement('div');
+        dayEl.className = 'pin-day';
+        dayEl.textContent = pin.dayLabel;
+        el.appendChild(monthEl);
+        el.appendChild(dayEl);
+      } else {
+        if (pin.kind === 'event') {
+          el.className += ' no-date';
+        }
+        el.textContent = pin.kind === 'event' ? '🎟' : '📍';
+      }
       el.addEventListener('click', function (clickEvent) {
         clickEvent.stopPropagation();
         post({ type: 'pinPress', id: pin.id });

@@ -36,6 +36,9 @@ type MapPin = {
   longitude: number;
   imageUrl: string | null;
   isFree: boolean;
+  /** Date de l'événement pour le pin mini-calendrier (jour + mois abrégé). */
+  dayLabel?: string;
+  monthLabel?: string;
 };
 
 const TOULOUSE_CENTER = { latitude: 43.6045, longitude: 1.444 };
@@ -52,25 +55,32 @@ function buildPins(
 ): MapPin[] {
   const eventPins: MapPin[] = events
     .filter((eventRow) => eventRow.latitude != null && eventRow.longitude != null)
-    .map((eventRow) => ({
-      id: `event-${eventRow.id}`,
-      kind: 'event' as const,
-      slug: eventRow.slug,
-      title: eventRow.title,
-      subtitle: eventRow.next_starts_at
-        ? new Date(eventRow.next_starts_at).toLocaleString('fr-FR', {
-            weekday: 'short',
-            day: 'numeric',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit',
-          })
-        : 'Événement',
-      latitude: eventRow.latitude as number,
-      longitude: eventRow.longitude as number,
-      imageUrl: eventRow.image_url ?? null,
-      isFree: eventRow.price_type === 'free',
-    }));
+    .map((eventRow) => {
+      const startDate = eventRow.next_starts_at ? new Date(eventRow.next_starts_at) : null;
+      return {
+        id: `event-${eventRow.id}`,
+        kind: 'event' as const,
+        slug: eventRow.slug,
+        title: eventRow.title,
+        subtitle: startDate
+          ? startDate.toLocaleString('fr-FR', {
+              weekday: 'short',
+              day: 'numeric',
+              month: 'short',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          : 'Événement',
+        latitude: eventRow.latitude as number,
+        longitude: eventRow.longitude as number,
+        imageUrl: eventRow.image_url ?? null,
+        isFree: eventRow.price_type === 'free',
+        dayLabel: startDate ? String(startDate.getDate()) : undefined,
+        monthLabel: startDate
+          ? startDate.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '')
+          : undefined,
+      };
+    });
 
   const placePins: MapPin[] = places
     .filter((placeRow) => placeRow.latitude != null && placeRow.longitude != null)
@@ -163,6 +173,8 @@ export default function MapScreen() {
       kind: pin.kind,
       latitude: pin.latitude,
       longitude: pin.longitude,
+      dayLabel: pin.dayLabel,
+      monthLabel: pin.monthLabel,
     }));
     webViewRef.current?.injectJavaScript(
       `window.__setPins(${JSON.stringify(JSON.stringify(webPins))}); true;`,
