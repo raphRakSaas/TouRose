@@ -56,6 +56,8 @@ const PLACE_ROW = {
   details: {
     access: 'Métro A, station Esquirol.',
     email: 'contact@example.com',
+    best_moment: 'Après-midi',
+    tips: ['Vérifiez les jours de gratuité municipale.'],
     links: [{ label: 'Programme', url: 'https://example.com/programme' }],
   },
   image_url: 'https://cdn.openagenda.com/main/musee.jpg',

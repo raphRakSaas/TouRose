@@ -59,7 +59,10 @@
 - données cartographiques ODbL ;
 - attribution visible ;
 - ne pas utiliser les serveurs de tuiles communautaires comme CDN de production ;
-- fournisseur de tuiles conforme et configurable.
+- fournisseur de tuiles conforme et configurable ;
+- l’onglet Carte mobile utilise MapLibre GL JS (WebView) avec les tuiles vectorielles
+  [OpenFreeMap](https://openfreemap.org) (gratuites, usage production autorisé) ;
+  l’attribution OSM est affichée par le contrôle MapLibre intégré.
 
 ### Open-Meteo
 

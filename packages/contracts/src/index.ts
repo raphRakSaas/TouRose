@@ -75,7 +75,9 @@ export const publicPlaceRowSchema = z.object({
   family_friendly: z.boolean().nullable().optional(),
   dog_friendly: z.boolean().nullable().optional(),
   accessible: z.boolean().nullable().optional(),
-  details: publicPlaceDetailsSchema.nullish().transform((value) => value ?? { links: [], tips: [] }),
+  details: publicPlaceDetailsSchema
+    .nullish()
+    .transform((value) => value ?? publicPlaceDetailsSchema.parse({})),
   image_url: z.string().url().nullable().optional(),
   image_alt: z.string().nullable().optional(),
   image_attribution: z.string().nullable().optional(),

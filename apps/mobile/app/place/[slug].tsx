@@ -113,7 +113,7 @@ export default function PlaceDetailScreen() {
           ]
         : [];
 
-  const details = placeRow?.details ?? { links: [] };
+  const details = placeRow?.details ?? { links: [], tips: [] };
   const addressLine = placeRow
     ? [placeRow.address, [placeRow.postal_code, placeRow.city].filter(Boolean).join(' ')]
         .filter(Boolean)

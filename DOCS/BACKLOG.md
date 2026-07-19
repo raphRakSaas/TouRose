@@ -248,11 +248,12 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 ### Carte
 
-- [x] UI carte + liste géolocalisée catalogue + attribution
-- [~] MapLibre natif (development build / `EXPO_PUBLIC_MAP_STYLE_URL` — pas Expo Go)
-- [~] Marqueurs via liste proximités (clustering MapLibre ouvert)
-- [x] Attribution visible
-- [ ] [!] Fournisseur de tuiles prod (pas OSM community CDN)
+- [x] Carte interactive MapLibre GL JS via WebView (Expo Go OK — react-native-maps crashait sur iOS SDK 54) : pins événements/lieux, sélection rouge, recentrage
+- [x] Carrousel horizontal bas compact synchronisé avec les pins (swipe ↔ pin, tap carte → fiche)
+- [x] Filtres Tout / Événements / Lieux / Gratuit
+- [~] MapLibre natif (`@maplibre/maplibre-react-native`) + style custom (development build / `EXPO_PUBLIC_MAP_STYLE_URL`) — optionnel
+- [ ] Clustering des pins denses (centre-ville)
+- [ ] [!] Fournisseur de tuiles prod si passage MapLibre (pas OSM community CDN)
 
 ### Favoris & local
 

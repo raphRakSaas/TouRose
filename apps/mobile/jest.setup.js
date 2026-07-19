@@ -113,3 +113,5 @@ jest.mock('expo-calendar', () => ({
 jest.mock('expo-web-browser', () => ({
   openBrowserAsync: jest.fn(async () => ({ type: 'dismiss' })),
 }));
+
+jest.mock('react-native-webview');
