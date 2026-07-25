@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { readCatalogCache, writeCatalogCache, withCatalogCache } from '@/src/lib/catalog-cache';
+import { CATALOG_CACHE_KEY_PREFIX, readCatalogCache, writeCatalogCache, withCatalogCache } from '@/src/lib/catalog-cache';
 
 jest.mock('@/src/lib/local-db', () => ({
   getLocalDatabase: jest.fn(),
@@ -36,8 +36,9 @@ describe('catalog-cache', () => {
   });
 
   it('retourne le cache si le fetch échoue', async () => {
-    await writeCatalogCache('catalog:events:10', [{ id: 'cached' }]);
-    const result = await withCatalogCache('catalog:events:10', async () => {
+    const cacheKey = `${CATALOG_CACHE_KEY_PREFIX}events:10`;
+    await writeCatalogCache(cacheKey, [{ id: 'cached' }]);
+    const result = await withCatalogCache('events:10', async () => {
       throw new Error('offline');
     });
     expect(result.fromCache).toBe(true);

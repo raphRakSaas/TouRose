@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   View,
+  type ImageSourcePropType,
   type ViewToken,
 } from 'react-native';
 import { WebView, type WebViewMessageEvent } from 'react-native-webview';
@@ -21,6 +22,8 @@ import { distanceInKilometers } from '@tourose/shared';
 import { Chip } from '@/components/ui/Chip';
 import { fetchPublicPlaces, fetchUpcomingEvents } from '@/src/data/catalog-api';
 import { formatDistanceLabel, placeTypeLabel } from '@/src/domain/place-labels';
+import { resolveEventImageSource, resolvePlaceImageSource } from '@/src/lib/catalog-images';
+import { CATALOG_CACHE_GENERATION } from '@/src/lib/catalog-images';
 import { getUserCoordinatesOrToulouse } from '@/src/lib/location';
 import { MAP_HTML } from '@/src/lib/map-html';
 
@@ -34,7 +37,7 @@ type MapPin = {
   subtitle: string;
   latitude: number;
   longitude: number;
-  imageUrl: string | null;
+  imageSource?: ImageSourcePropType;
   isFree: boolean;
   /** Date de l'événement pour le pin mini-calendrier (jour + mois abrégé). */
   dayLabel?: string;
@@ -73,7 +76,7 @@ function buildPins(
           : 'Événement',
         latitude: eventRow.latitude as number,
         longitude: eventRow.longitude as number,
-        imageUrl: eventRow.image_url ?? null,
+        imageSource: resolveEventImageSource(eventRow.image_url),
         isFree: eventRow.price_type === 'free',
         dayLabel: startDate ? String(startDate.getDate()) : undefined,
         monthLabel: startDate
@@ -92,7 +95,7 @@ function buildPins(
       subtitle: placeTypeLabel(placeRow.place_type),
       latitude: placeRow.latitude as number,
       longitude: placeRow.longitude as number,
-      imageUrl: placeRow.image_url ?? null,
+      imageSource: resolvePlaceImageSource(placeRow.slug, placeRow.image_url),
       isFree: placeRow.price_type === 'free',
     }));
 
@@ -131,11 +134,11 @@ export default function MapScreen() {
   });
 
   const eventsQuery = useQuery({
-    queryKey: ['catalog', 'events', 80],
+    queryKey: ['catalog', `g${CATALOG_CACHE_GENERATION}`, 'events', 80],
     queryFn: () => fetchUpcomingEvents(80),
   });
   const placesQuery = useQuery({
-    queryKey: ['catalog', 'places', 'map'],
+    queryKey: ['catalog', `g${CATALOG_CACHE_GENERATION}`, 'places', 'map'],
     queryFn: () => fetchPublicPlaces({ limitCount: 60, discoveryOnly: true }),
   });
 
@@ -372,9 +375,9 @@ export default function MapScreen() {
                   }}
                 >
                   <View className="h-full w-[76px] bg-garonne-100">
-                    {item.imageUrl ? (
+                    {item.imageSource ? (
                       <Image
-                        source={{ uri: item.imageUrl }}
+                        source={item.imageSource}
                         resizeMode="cover"
                         style={{ width: '100%', height: '100%' }}
                         accessibilityLabel={item.title}

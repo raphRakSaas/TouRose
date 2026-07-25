@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Image,
   Text,
@@ -24,27 +25,13 @@ const GRADIENTS = [
   ['#F5EEE3', '#A88B63'],
 ];
 
-export function ImagePlaceholder({
+function GradientPlaceholder({
   label,
-  source,
-  className = '',
+  className,
   height,
   width,
   style,
-}: ImagePlaceholderProps) {
-  if (source) {
-    return (
-      <View className={`overflow-hidden ${className}`} style={[{ height, width }, style]}>
-        <Image
-          source={source}
-          accessibilityLabel={label}
-          resizeMode="cover"
-          style={{ width: '100%', height: '100%' }}
-        />
-      </View>
-    );
-  }
-
+}: Omit<ImagePlaceholderProps, 'source'>) {
   const hash = label.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
   const [fromColor, toColor] = GRADIENTS[hash % GRADIENTS.length];
 
@@ -62,6 +49,41 @@ export function ImagePlaceholder({
           {label}
         </Text>
       </View>
+    </View>
+  );
+}
+
+export function ImagePlaceholder({
+  label,
+  source,
+  className = '',
+  height,
+  width,
+  style,
+}: ImagePlaceholderProps) {
+  const [hasLoadError, setHasLoadError] = useState(false);
+
+  if (!source || hasLoadError) {
+    return (
+      <GradientPlaceholder
+        label={label}
+        className={className}
+        height={height}
+        width={width}
+        style={style}
+      />
+    );
+  }
+
+  return (
+    <View className={`overflow-hidden ${className}`} style={[{ height, width }, style]}>
+      <Image
+        source={source}
+        accessibilityLabel={label}
+        resizeMode="cover"
+        style={{ width: '100%', height: '100%' }}
+        onError={() => setHasLoadError(true)}
+      />
     </View>
   );
 }

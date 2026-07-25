@@ -26,6 +26,8 @@ import {
 } from '@/src/data/catalog-api';
 import { formatDistanceLabel, placeTypeLabel } from '@/src/domain/place-labels';
 import { getMomentRange, isEventInRange } from '@/src/domain/today-feed';
+import { CATALOG_CACHE_GENERATION } from '@/src/lib/catalog-images';
+import { resolveEventImageSource, resolvePlaceImageSource } from '@/src/lib/catalog-images';
 import { getUserCoordinatesOrToulouse } from '@/src/lib/location';
 import { enterFadeInUp, useReducedMotion } from '@/src/lib/motion';
 
@@ -119,13 +121,14 @@ export default function ExploreScreen() {
   });
 
   const eventsQuery = useQuery({
-    queryKey: ['catalog', 'events', 100],
+    queryKey: ['catalog', `g${CATALOG_CACHE_GENERATION}`, 'events', 100],
     queryFn: () => fetchUpcomingEvents(100),
   });
 
   const placesQuery = useQuery({
     queryKey: [
       'catalog',
+      `g${CATALOG_CACHE_GENERATION}`,
       'places',
       'discovery',
       userLocationQuery.data?.latitude,
@@ -412,7 +415,7 @@ export default function ExploreScreen() {
                     : item.summary ?? 'Événement'
                 }
                 imageLabel={item.title}
-                imageSource={item.image_url ? { uri: item.image_url } : undefined}
+                imageSource={resolveEventImageSource(item.image_url)}
                 imageAttribution={item.image_attribution}
                 showDivider={index < filteredEvents.length - 1}
               />
@@ -448,7 +451,7 @@ export default function ExploreScreen() {
                 title={item.name}
                 subtitle={placeSubtitle(item, userLocationQuery.data)}
                 imageLabel={item.name}
-                imageSource={item.image_url ? { uri: item.image_url } : undefined}
+                imageSource={resolvePlaceImageSource(item.slug, item.image_url)}
                 imageAttribution={item.image_attribution}
                 showDivider={index < filteredPlaces.length - 1}
               />

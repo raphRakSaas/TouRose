@@ -1,4 +1,7 @@
 import { getLocalDatabase } from '@/src/lib/local-db';
+import { CATALOG_CACHE_GENERATION } from '@/src/lib/catalog-images';
+
+export const CATALOG_CACHE_KEY_PREFIX = `catalog:g${CATALOG_CACHE_GENERATION}:`;
 
 export type CatalogCacheEntry<T> = {
   data: T;
@@ -59,16 +62,27 @@ export async function writeCatalogCache<T>(cacheKey: string, data: T): Promise<s
   return cachedAt;
 }
 
+export async function purgeLegacyCatalogCache(): Promise<void> {
+  await ensureCatalogCacheSchema();
+  const database = await getLocalDatabase();
+  await database.runAsync(`DELETE FROM catalog_cache WHERE cache_key NOT LIKE ?`, [
+    `${CATALOG_CACHE_KEY_PREFIX}%`,
+  ]);
+}
+
 export async function withCatalogCache<T>(
   cacheKey: string,
   fetcher: () => Promise<T>,
 ): Promise<{ data: T; fromCache: boolean; cachedAt: string | null }> {
+  const versionedKey = cacheKey.startsWith(CATALOG_CACHE_KEY_PREFIX)
+    ? cacheKey
+    : `${CATALOG_CACHE_KEY_PREFIX}${cacheKey}`;
   try {
     const data = await fetcher();
-    const cachedAt = await writeCatalogCache(cacheKey, data);
+    const cachedAt = await writeCatalogCache(versionedKey, data);
     return { data, fromCache: false, cachedAt };
   } catch (error) {
-    const cached = await readCatalogCache<T>(cacheKey);
+    const cached = await readCatalogCache<T>(versionedKey);
     if (cached) {
       return { data: cached.data, fromCache: true, cachedAt: cached.cachedAt };
     }

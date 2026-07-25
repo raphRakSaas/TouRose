@@ -22,6 +22,7 @@ import {
   logRecommendationImpression,
 } from '@/src/data/catalog-api';
 import { fetchToulouseWeather, formatWeatherLine } from '@/src/data/weather-api';
+import { CATALOG_CACHE_GENERATION } from '@/src/lib/catalog-images';
 import {
   buildTodayFeed,
   EVENT_CATEGORIES,
@@ -95,13 +96,14 @@ export default function TodayScreen() {
   });
 
   const eventsQuery = useQuery({
-    queryKey: ['catalog', 'events', 100],
+    queryKey: ['catalog', `g${CATALOG_CACHE_GENERATION}`, 'events', 100],
     queryFn: () => fetchUpcomingEvents(100),
   });
 
   const recommendationsQuery = useQuery({
     queryKey: [
       'catalog',
+      `g${CATALOG_CACHE_GENERATION}`,
       'recommendations',
       company,
       interests.join('|'),

@@ -29,7 +29,7 @@ export async function fetchUpcomingEventsWithMeta(limitCount = 20): Promise<{
   fromCache: boolean;
   cachedAt: string | null;
 }> {
-  return withCatalogCache(`catalog:events:v2:${limitCount}`, async () => {
+  return withCatalogCache(`events:${limitCount}`, async () => {
     const client = getSupabaseClient();
     if (!client) {
       throw new Error('Supabase non configuré — lance `pnpm dev:up`.');
@@ -74,7 +74,7 @@ export async function fetchPublicPlacesWithMeta(
       ? { limitCount: limitCountOrOptions }
       : limitCountOrOptions;
 
-  const cacheKey = `catalog:places:v2:${JSON.stringify({
+  const cacheKey = `places:${JSON.stringify({
     limit: options.limitCount ?? 50,
     lat: options.latitude ?? null,
     lng: options.longitude ?? null,

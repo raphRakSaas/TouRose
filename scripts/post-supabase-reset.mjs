@@ -11,5 +11,11 @@ spawnSync('node', ['./scripts/openagenda-import-if-needed.mjs'], {
   shell: false,
 });
 
-// Ne jamais faire échouer le reset si l'import OpenAgenda est indisponible (functions pas prêtes, réseau…).
+spawnSync('pnpm', ['import:editorial-photos'], {
+  cwd: rootDirectory,
+  stdio: 'inherit',
+  shell: false,
+});
+
+// Ne jamais faire échouer le reset si l'import est indisponible (functions pas prêtes, réseau…).
 process.exit(0);

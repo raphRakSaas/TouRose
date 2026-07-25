@@ -21,6 +21,7 @@ import '../global.css';
 import { OfflineBanner } from '@/components/ui/OfflineBanner';
 import { syncLocalCatalogWithCloud } from '@/src/data/catalog-sync';
 import { subscribeToAuthChanges } from '@/src/lib/auth';
+import { purgeLegacyCatalogCache } from '@/src/lib/catalog-cache';
 import { parseAuthSessionFromUrl } from '@/src/lib/supabase';
 import { usePreferencesStore } from '@/src/store/preferences-store';
 
@@ -59,6 +60,10 @@ export default function RootLayout() {
   const onboardingCompleted = usePreferencesStore((state) => state.onboardingCompleted);
   const segments = useSegments();
   const router = useRouter();
+
+  useEffect(() => {
+    void purgeLegacyCatalogCache().catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     if (fontsLoaded) {
