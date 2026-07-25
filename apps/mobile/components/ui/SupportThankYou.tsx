@@ -41,7 +41,10 @@ function AnimatedBrick({
       return;
     }
     const delay = 180 + brickIndex * 140;
-    opacity.value = withDelay(delay, withTiming(1, { duration: 320, easing: MOTION_EASING.decelerate }));
+    opacity.value = withDelay(
+      delay,
+      withTiming(1, { duration: 320, easing: MOTION_EASING.decelerate }),
+    );
     translateY.value = withDelay(
       delay,
       withTiming(0, { duration: 460, easing: MOTION_EASING.decelerate }),

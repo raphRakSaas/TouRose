@@ -9,10 +9,7 @@ function websiteOrigin(): string {
   return fromEnv || fromExtra || DEFAULT_WEBSITE_ORIGIN;
 }
 
-export function buildPublicCatalogUrl(
-  entityType: 'event' | 'place',
-  slug: string,
-): string {
+export function buildPublicCatalogUrl(entityType: 'event' | 'place', slug: string): string {
   const origin = websiteOrigin().replace(/\/$/, '');
   if (entityType === 'event') {
     return `${origin}/catalogue/evenements/${slug}`;

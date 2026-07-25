@@ -233,9 +233,7 @@ describe('TodayScreen', () => {
 
     fireEvent.press(listToggle);
     await waitFor(() => {
-      expect(screen.getByTestId('display-mode-list').props.accessibilityState?.selected).toBe(
-        true,
-      );
+      expect(screen.getByTestId('display-mode-list').props.accessibilityState?.selected).toBe(true);
     });
     expect(screen.getAllByText('Concert OpenAgenda').length).toBeGreaterThan(0);
 

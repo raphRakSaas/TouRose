@@ -15,6 +15,7 @@ export default defineConfig([
       '**/coverage/**',
       'supabase/functions/**/.deno/**',
       '**/jest.setup.js',
+      '**/__mocks__/**',
     ],
   },
   js.configs.recommended,

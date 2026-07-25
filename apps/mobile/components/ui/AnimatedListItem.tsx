@@ -11,7 +11,5 @@ type AnimatedListItemProps = {
 export function AnimatedListItem({ index, children }: AnimatedListItemProps) {
   const reduceMotion = useReducedMotion();
 
-  return (
-    <Animated.View entering={enterFadeInUp(index, reduceMotion)}>{children}</Animated.View>
-  );
+  return <Animated.View entering={enterFadeInUp(index, reduceMotion)}>{children}</Animated.View>;
 }

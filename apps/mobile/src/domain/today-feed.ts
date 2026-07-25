@@ -291,25 +291,14 @@ export function pickForYouEvents(events: PublicEventRow[], now: Date): PublicEve
 }
 
 /** Convertit les picks scorés (RPC Phase 4) en FeedItem avec raison structurée. */
-export function recommendationPicksToFeedItems(
-  picks: RecommendationPick[],
-  now: Date,
-): FeedItem[] {
+export function recommendationPicksToFeedItems(picks: RecommendationPick[], now: Date): FeedItem[] {
   const forYouMeta = CURATED_SECTION_META.forYou;
   return picks.map((pick, index) => {
     const primaryReason = pick.reasons[0]?.label;
-    const item = toFeedItem(
-      pick.event,
-      now,
-      forYouMeta.badge,
-      forYouMeta.badgeColor,
-      index,
-    );
+    const item = toFeedItem(pick.event, now, forYouMeta.badge, forYouMeta.badgeColor, index);
     return {
       ...item,
-      reason: primaryReason
-        ? `${primaryReason} · ${item.reason}`
-        : item.reason,
+      reason: primaryReason ? `${primaryReason} · ${item.reason}` : item.reason,
     };
   });
 }
@@ -373,9 +362,7 @@ export function buildTodayFeed(
 
     const categorySections = EVENT_CATEGORIES.map((category) => ({
       category,
-      events: upcoming.filter((eventRow) =>
-        eventCategorySlugs(eventRow).includes(category.slug),
-      ),
+      events: upcoming.filter((eventRow) => eventCategorySlugs(eventRow).includes(category.slug)),
     }))
       .filter((entry) => entry.events.length > 0)
       .sort((first, second) => second.events.length - first.events.length)

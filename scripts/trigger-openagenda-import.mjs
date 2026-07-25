@@ -39,7 +39,8 @@ function parseStatusEnv(output) {
 
 function resolveSupabaseConfig() {
   const explicitUrl = process.env.SUPABASE_URL;
-  const explicitAnonKey = process.env.SUPABASE_ANON_KEY ?? process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+  const explicitAnonKey =
+    process.env.SUPABASE_ANON_KEY ?? process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
   if (explicitUrl && explicitAnonKey) {
     return { apiUrl: explicitUrl.replace(/\/$/, ''), anonKey: explicitAnonKey, isLocal: false };
@@ -51,7 +52,9 @@ function resolveSupabaseConfig() {
   });
 
   if (status.status !== 0) {
-    fail('Supabase inaccessible. Lance `pnpm supabase:start` ou définis SUPABASE_URL + SUPABASE_ANON_KEY.');
+    fail(
+      'Supabase inaccessible. Lance `pnpm supabase:start` ou définis SUPABASE_URL + SUPABASE_ANON_KEY.',
+    );
   }
 
   const env = parseStatusEnv(status.stdout);

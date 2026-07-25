@@ -1,6 +1,11 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { loadPublicPlaceBySlug } from '../../../lib/catalog';
+import { loadPublicPlaceBySlug, loadPublicPlaceSlugs } from '../../../lib/catalog';
+
+export async function getStaticPaths() {
+  const slugs = await loadPublicPlaceSlugs();
+  return slugs.map((slug) => ({ params: { slug } }));
+}
 
 const { slug } = Astro.params;
 const placeRow = slug ? await loadPublicPlaceBySlug(slug) : null;

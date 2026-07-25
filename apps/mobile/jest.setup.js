@@ -83,9 +83,7 @@ jest.mock('@react-native-async-storage/async-storage', () =>
       const normalized = sql.replace(/\s+/g, ' ').trim();
       const listMatch = normalized.match(/FROM (local_favorites|local_discover|local_visited)/);
       if (listMatch && normalized.includes('COUNT(*)')) {
-        const exists = listTables[listMatch[1]].has(
-          rowKey(String(params[0]), String(params[1])),
-        );
+        const exists = listTables[listMatch[1]].has(rowKey(String(params[0]), String(params[1])));
         return { count: exists ? 1 : 0 };
       }
       return null;
@@ -131,7 +129,7 @@ jest.mock('@react-native-community/netinfo', () => ({
 }));
 
 jest.mock('expo-linking', () => ({
-  createURL: jest.fn((path: string) => `tourose://${path.replace(/^\//, '')}`),
+  createURL: jest.fn((path) => `tourose://${path.replace(/^\//, '')}`),
   parse: jest.fn(() => ({ queryParams: {} })),
   getInitialURL: jest.fn(async () => null),
   addEventListener: jest.fn(() => ({ remove: jest.fn() })),

@@ -14,16 +14,16 @@ Détails et vérifications : voir le **README racine**.
 
 Dans le terminal `dev:up`, **une touche** filtre les logs (pas besoin d’Entrée) :
 
-| Touche | Effet |
-|--------|--------|
-| `m` | mobile |
-| `a` | admin |
-| `s` | site (website) |
-| `f` | functions (si démarrées avec `--functions`) |
-| `t` | tout (mélange coloré) |
-| `c` | clear |
-| `h` | aide |
-| `q` | quitter |
+| Touche | Effet                                       |
+| ------ | ------------------------------------------- |
+| `m`    | mobile                                      |
+| `a`    | admin                                       |
+| `s`    | site (website)                              |
+| `f`    | functions (si démarrées avec `--functions`) |
+| `t`    | tout (mélange coloré)                       |
+| `c`    | clear                                       |
+| `h`    | aide                                        |
+| `q`    | quitter                                     |
 
 ## Arrêt
 

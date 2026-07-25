@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { enterCenterDialog, enterFadeIn, enterSlideUpSheet, MOTION, useReducedMotion } from '@/src/lib/motion';
+import { enterCenterDialog, enterSlideUpSheet, MOTION, useReducedMotion } from '@/src/lib/motion';
 
 type AnimatedOverlayProps = {
   visible: boolean;
@@ -30,9 +30,7 @@ export function AnimatedOverlay({
   }
 
   const sheetEntering =
-    variant === 'bottom-sheet'
-      ? enterSlideUpSheet(reduceMotion)
-      : enterCenterDialog(reduceMotion);
+    variant === 'bottom-sheet' ? enterSlideUpSheet(reduceMotion) : enterCenterDialog(reduceMotion);
 
   return (
     <View className="absolute inset-0 z-40">
@@ -53,7 +51,10 @@ export function AnimatedOverlay({
           {children}
         </Animated.View>
       ) : (
-        <View className="absolute inset-0 items-center justify-center px-7" pointerEvents="box-none">
+        <View
+          className="absolute inset-0 items-center justify-center px-7"
+          pointerEvents="box-none"
+        >
           <Animated.View entering={sheetEntering} className={sheetClassName}>
             {children}
           </Animated.View>

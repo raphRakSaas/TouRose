@@ -80,7 +80,9 @@ describe('ForMeScreen menu', () => {
 
     fireEvent.press(screen.getByTestId('support-amount-100'));
     await waitFor(() => {
-      expect(WebBrowser.openBrowserAsync).toHaveBeenCalledWith('https://checkout.stripe.test/session');
+      expect(WebBrowser.openBrowserAsync).toHaveBeenCalledWith(
+        'https://checkout.stripe.test/session',
+      );
     });
   });
 
@@ -92,7 +94,9 @@ describe('ForMeScreen menu', () => {
     });
 
     fireEvent.press(screen.getByTestId('support-learn-more'));
-    expect(screen.getByText('Une brique symbolique pour construire la prochaine fonctionnalité.')).toBeTruthy();
+    expect(
+      screen.getByText('Une brique symbolique pour construire la prochaine fonctionnalité.'),
+    ).toBeTruthy();
   });
 });
 

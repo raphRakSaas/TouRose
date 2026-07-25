@@ -40,7 +40,8 @@ import {
           Santé OpenAgenda :
           <strong>{{ healthSummary()?.status }}</strong>
           @if (healthSummary()?.hours_since_success !== null) {
-            · dernière réussite il y a {{ healthSummary()?.hours_since_success | number: '1.0-1' }} h
+            · dernière réussite il y a
+            {{ healthSummary()?.hours_since_success | number: '1.0-1' }} h
           }
           @if ((healthSummary()?.open_alerts ?? 0) > 0) {
             · {{ healthSummary()?.open_alerts }} alerte(s) ouverte(s)
@@ -66,9 +67,10 @@ import {
                 (click)="onSelectRun(runRow.id)"
               >
                 <span class="font-semibold">{{ runRow.status }}</span>
-                · {{ runRow.started_at | date: 'short' }}
-                · fetch {{ runRow.fetched_count }}
-                · +{{ runRow.created_count }} / ~{{ runRow.updated_count }} / skip
+                · {{ runRow.started_at | date: 'short' }} · fetch {{ runRow.fetched_count }} · +{{
+                  runRow.created_count
+                }}
+                / ~{{ runRow.updated_count }} / skip
                 {{ runRow.skipped_count }}
                 · err {{ runRow.error_count }}
                 <span class="mt-1 block text-xs text-[var(--tourose-color-ink-500)]">
@@ -124,7 +126,9 @@ export class ImportsPage {
     try {
       this.errors.set(await this.importAdmin.listErrorsForRun(runId));
     } catch (error) {
-      this.errorMessage.set(error instanceof Error ? error.message : 'Chargement erreurs impossible');
+      this.errorMessage.set(
+        error instanceof Error ? error.message : 'Chargement erreurs impossible',
+      );
     }
   }
 

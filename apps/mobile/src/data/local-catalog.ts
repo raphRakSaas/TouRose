@@ -13,12 +13,7 @@ export type LocalCatalogItem = {
 };
 
 export type LocalOp =
-  | 'favorite_add'
-  | 'favorite_remove'
-  | 'visit'
-  | 'unvisit'
-  | 'discover_add'
-  | 'discover_remove';
+  'favorite_add' | 'favorite_remove' | 'visit' | 'unvisit' | 'discover_add' | 'discover_remove';
 
 type ListTable = 'local_favorites' | 'local_discover' | 'local_visited';
 
@@ -73,10 +68,7 @@ async function listFromTable(tableName: ListTable): Promise<LocalCatalogItem[]> 
   return rows.map(mapRow);
 }
 
-async function enqueueOp(
-  op: LocalOp,
-  item: CatalogItemInput,
-): Promise<void> {
+async function enqueueOp(op: LocalOp, item: CatalogItemInput): Promise<void> {
   const database = await getLocalDatabase();
   await database.runAsync(
     `INSERT INTO local_ops_queue (op, entity_type, entity_id, slug, title, payload, created_at)
@@ -152,24 +144,15 @@ export async function listVisited(): Promise<LocalCatalogItem[]> {
   return listFromTable('local_visited');
 }
 
-export async function isFavorite(
-  entityType: LocalEntityType,
-  entityId: string,
-): Promise<boolean> {
+export async function isFavorite(entityType: LocalEntityType, entityId: string): Promise<boolean> {
   return existsInTable('local_favorites', entityType, entityId);
 }
 
-export async function isVisited(
-  entityType: LocalEntityType,
-  entityId: string,
-): Promise<boolean> {
+export async function isVisited(entityType: LocalEntityType, entityId: string): Promise<boolean> {
   return existsInTable('local_visited', entityType, entityId);
 }
 
-export async function isDiscover(
-  entityType: LocalEntityType,
-  entityId: string,
-): Promise<boolean> {
+export async function isDiscover(entityType: LocalEntityType, entityId: string): Promise<boolean> {
   return existsInTable('local_discover', entityType, entityId);
 }
 

@@ -83,7 +83,9 @@ if (!apiUrl || !anonKey) {
     encoding: 'utf8',
   });
   if (status.status !== 0) {
-    fail('Supabase inaccessible. Définis SUPABASE_URL + SUPABASE_ANON_KEY ou lance supabase local.');
+    fail(
+      'Supabase inaccessible. Définis SUPABASE_URL + SUPABASE_ANON_KEY ou lance supabase local.',
+    );
   }
   const env = parseStatusEnv(status.stdout);
   apiUrl = (env.API_URL ?? 'http://127.0.0.1:54321').replace(/\/$/, '');
@@ -113,7 +115,9 @@ if (!skipImport) {
 ok = (await callFunction(apiUrl, anonKey, 'import-health', { trigger: 'cron-tick' })) && ok;
 
 if (withPush || new Date().getUTCDay() === 5) {
-  ok = (await callFunction(apiUrl, anonKey, 'send-push-notifications', { trigger: 'cron-tick' })) && ok;
+  ok =
+    (await callFunction(apiUrl, anonKey, 'send-push-notifications', { trigger: 'cron-tick' })) &&
+    ok;
 }
 
 process.exit(ok ? 0 : 1);

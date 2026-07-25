@@ -78,6 +78,24 @@ export async function loadCatalogSearch(
   return z.array(catalogSearchHitSchema).parse(data ?? []);
 }
 
+export async function loadPublicEventSlugs(limitCount = 200): Promise<string[]> {
+  try {
+    const events = await loadUpcomingEvents(limitCount);
+    return events.map((eventRow) => eventRow.slug).filter((slug) => slug.length > 0);
+  } catch {
+    return [];
+  }
+}
+
+export async function loadPublicPlaceSlugs(limitCount = 200): Promise<string[]> {
+  try {
+    const places = await loadPublicPlaces(limitCount);
+    return places.map((placeRow) => placeRow.slug).filter((slug) => slug.length > 0);
+  } catch {
+    return [];
+  }
+}
+
 export async function loadPublicPlaceBySlug(placeSlug: string): Promise<PublicPlaceRow | null> {
   const client = createBrowserOrBuildClient();
   if (!client) {

@@ -76,7 +76,10 @@ export function MarkdownLite({ content }: MarkdownLiteProps) {
   return (
     <View className="gap-3">
       {blocks.map((block, blockIndex) => {
-        const lines = block.split('\n').map((line) => line.trim()).filter(Boolean);
+        const lines = block
+          .split('\n')
+          .map((line) => line.trim())
+          .filter(Boolean);
         const isBulletList = lines.every((line) => /^[-*•]\s+/.test(line));
 
         if (isBulletList) {

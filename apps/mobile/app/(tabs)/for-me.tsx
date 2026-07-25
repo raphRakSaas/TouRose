@@ -175,10 +175,7 @@ export default function ForMeScreen() {
                 <Link href={hrefForLocalItem(item) as never} asChild>
                   <CatalogListRow
                     title={item.title}
-                    subtitle={
-                      item.subtitle ??
-                      (item.entityType === 'event' ? 'Événement' : 'Lieu')
-                    }
+                    subtitle={item.subtitle ?? (item.entityType === 'event' ? 'Événement' : 'Lieu')}
                     imageLabel={item.title}
                     thumbSize={56}
                     showDivider={index < segmentItems.length - 1}
@@ -207,9 +204,7 @@ export default function ForMeScreen() {
               >
                 <Text
                   className={`text-[13px] capitalize ${
-                    company === option
-                      ? 'font-body-semibold text-white'
-                      : 'font-body text-ink-800'
+                    company === option ? 'font-body-semibold text-white' : 'font-body text-ink-800'
                   }`}
                 >
                   {option}

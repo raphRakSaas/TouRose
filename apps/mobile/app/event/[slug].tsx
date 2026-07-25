@@ -105,7 +105,10 @@ function capitalizeFirst(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-function formatEventSchedule(startsAt: string | null, endsAt: string | null): {
+function formatEventSchedule(
+  startsAt: string | null,
+  endsAt: string | null,
+): {
   dateLabel: string;
   timeLabel: string;
 } | null {
@@ -219,7 +222,9 @@ export default function EventDetailScreen() {
     .join(', ');
 
   const categoryBadges = (eventRow?.categories ?? [])
-    .map((categorySlug) => CATEGORY_META.get(categorySlug as (typeof EVENT_CATEGORIES)[number]['slug']))
+    .map((categorySlug) =>
+      CATEGORY_META.get(categorySlug as (typeof EVENT_CATEGORIES)[number]['slug']),
+    )
     .filter((category): category is NonNullable<typeof category> => Boolean(category));
 
   const description = eventRow?.description?.trim() || eventRow?.summary?.trim() || null;
@@ -264,8 +269,8 @@ export default function EventDetailScreen() {
       });
       setIsFavoriteState(nextValue);
 
-      const favoriteRemindersEnabled = usePreferencesStore.getState().notificationSettings
-        .favoriteReminders;
+      const favoriteRemindersEnabled =
+        usePreferencesStore.getState().notificationSettings.favoriteReminders;
       if (nextValue && favoriteRemindersEnabled && eventRow.next_starts_at) {
         await scheduleFavoriteReminder({
           eventTitle: eventRow.title,
@@ -316,7 +321,9 @@ export default function EventDetailScreen() {
     } catch (calendarError) {
       Alert.alert(
         'Calendrier',
-        calendarError instanceof Error ? calendarError.message : 'Impossible d’ajouter au calendrier.',
+        calendarError instanceof Error
+          ? calendarError.message
+          : 'Impossible d’ajouter au calendrier.',
       );
     }
   }
@@ -619,7 +626,10 @@ export default function EventDetailScreen() {
               ) : null}
 
               {/* Infos pratiques */}
-              {eventDetails.conditions || ageLabel || accessibilityLabels.length > 0 || onlineLabel ? (
+              {eventDetails.conditions ||
+              ageLabel ||
+              accessibilityLabels.length > 0 ||
+              onlineLabel ? (
                 <View className="mt-6">
                   <Text className="mb-2 font-display text-[17px] text-ink-800">
                     Infos pratiques
@@ -627,7 +637,12 @@ export default function EventDetailScreen() {
                   <View className="gap-3 rounded-[18px] bg-white p-4">
                     {eventDetails.conditions ? (
                       <View className="flex-row gap-3">
-                        <FontAwesome name="tag" size={15} color="#A94A30" style={{ marginTop: 3 }} />
+                        <FontAwesome
+                          name="tag"
+                          size={15}
+                          color="#A94A30"
+                          style={{ marginTop: 3 }}
+                        />
                         <View className="flex-1">
                           <Text className="mb-0.5 text-[13px] font-body-semibold text-ink-500">
                             Tarifs & conditions
@@ -641,7 +656,9 @@ export default function EventDetailScreen() {
                     {ageLabel ? (
                       <View className="flex-row items-center gap-3">
                         <FontAwesome name="child" size={16} color="#26525C" />
-                        <Text className="flex-1 text-[14px] font-body text-ink-800">{ageLabel}</Text>
+                        <Text className="flex-1 text-[14px] font-body text-ink-800">
+                          {ageLabel}
+                        </Text>
                       </View>
                     ) : null}
                     {onlineLabel ? (

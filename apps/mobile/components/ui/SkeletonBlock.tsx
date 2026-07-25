@@ -33,7 +33,5 @@ export function SkeletonBlock({ className, style, ...viewProps }: SkeletonBlockP
     opacity: reduceMotion ? 0.7 : opacity.value,
   }));
 
-  return (
-    <Animated.View className={className} style={[style, animatedStyle]} {...viewProps} />
-  );
+  return <Animated.View className={className} style={[style, animatedStyle]} {...viewProps} />;
 }

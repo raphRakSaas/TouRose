@@ -15,7 +15,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const rootDirectory = join(dirname(fileURLToPath(import.meta.url)), '..');
-const maxPlaces = Number(process.argv.find((argument) => argument.startsWith('--limit='))?.split('=')[1] ?? 250);
+const maxPlaces = Number(
+  process.argv.find((argument) => argument.startsWith('--limit='))?.split('=')[1] ?? 250,
+);
 const maximumPhotosPerPlace = 3;
 const stopWords = new Set([
   'de',

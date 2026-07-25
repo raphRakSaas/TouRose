@@ -2,14 +2,8 @@ import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
 
-import {
-  arePushNotificationsEnabled,
-  syncPushSubscription,
-} from '@/src/lib/push-notifications';
-import {
-  usePreferencesStore,
-  type NotificationSettings,
-} from '@/src/store/preferences-store';
+import { arePushNotificationsEnabled, syncPushSubscription } from '@/src/lib/push-notifications';
+import { usePreferencesStore, type NotificationSettings } from '@/src/store/preferences-store';
 
 const NOTIFICATION_ROWS: ReadonlyArray<{
   settingKey: keyof NotificationSettings;

@@ -1,13 +1,16 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
-import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
+import { z } from 'https://deno.land/x/zod@v3.23.8/mod.ts';
 
-import { corsHeaders } from "../_shared/cron-auth.ts";
+import { corsHeaders } from '../_shared/cron-auth.ts';
 
 const registerSchema = z
   .object({
     installationId: z.string().min(8).max(128),
-    expoPushToken: z.string().regex(/^ExponentPushToken\[[^\]]+\]$/).optional(),
-    platform: z.enum(["ios", "android", "web", "unknown"]),
+    expoPushToken: z
+      .string()
+      .regex(/^ExponentPushToken\[[^\]]+\]$/)
+      .optional(),
+    platform: z.enum(['ios', 'android', 'web', 'unknown']),
     notificationPrefs: z
       .object({
         weekendIdeas: z.boolean().optional(),
@@ -21,43 +24,46 @@ const registerSchema = z
     if (!value.optedOut && !value.expoPushToken) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "expoPushToken is required when not opted out",
-        path: ["expoPushToken"],
+        message: 'expoPushToken is required when not opted out',
+        path: ['expoPushToken'],
       });
     }
   });
 
 Deno.serve(async (request) => {
-  if (request.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (request.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
-  if (request.method !== "POST") {
-    return jsonResponse({ error: "Method not allowed", code: "method_not_allowed" }, 405);
+  if (request.method !== 'POST') {
+    return jsonResponse({ error: 'Method not allowed', code: 'method_not_allowed' }, 405);
   }
 
   let jsonBody: unknown;
   try {
     jsonBody = await request.json();
   } catch {
-    return jsonResponse({ error: "Invalid JSON body", code: "invalid_json" }, 400);
+    return jsonResponse({ error: 'Invalid JSON body', code: 'invalid_json' }, 400);
   }
 
   const parsed = registerSchema.safeParse(jsonBody);
   if (!parsed.success) {
     return jsonResponse(
       {
-        error: parsed.error.issues.map((issue) => issue.message).join("; "),
-        code: "validation_error",
+        error: parsed.error.issues.map((issue) => issue.message).join('; '),
+        code: 'validation_error',
       },
       400,
     );
   }
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const supabaseUrl = Deno.env.get('SUPABASE_URL');
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
   if (!supabaseUrl || !serviceRoleKey) {
-    return jsonResponse({ error: "Missing Supabase service configuration", code: "misconfigured" }, 500);
+    return jsonResponse(
+      { error: 'Missing Supabase service configuration', code: 'misconfigured' },
+      500,
+    );
   }
 
   const client = createClient(supabaseUrl, serviceRoleKey, {
@@ -66,7 +72,7 @@ Deno.serve(async (request) => {
 
   const { installationId, expoPushToken, platform, notificationPrefs, optedOut } = parsed.data;
 
-  const { error } = await client.from("push_subscriptions").upsert(
+  const { error } = await client.from('push_subscriptions').upsert(
     {
       installation_id: installationId,
       expo_push_token: expoPushToken ?? `opted-out:${installationId}`,
@@ -75,11 +81,11 @@ Deno.serve(async (request) => {
       opted_out_at: optedOut ? new Date().toISOString() : null,
       updated_at: new Date().toISOString(),
     },
-    { onConflict: "installation_id" },
+    { onConflict: 'installation_id' },
   );
 
   if (error) {
-    return jsonResponse({ error: error.message, code: "upsert_failed" }, 500);
+    return jsonResponse({ error: error.message, code: 'upsert_failed' }, 500);
   }
 
   return jsonResponse({ ok: true, installationId });

@@ -39,7 +39,10 @@ const COMMONS_CATEGORIES_BY_SLUG = {
   'cite-de-lespace': ["Cité de l'espace"],
   'halle-de-la-machine': ['Halle de La Machine'],
   'belvedere-pech-david': ['Pech David', 'Belvédère de Pech David'],
-  'canal-du-midi-port-saint-sauveur': ['Port Saint-Sauveur (Toulouse)', 'Canal du Midi in Toulouse'],
+  'canal-du-midi-port-saint-sauveur': [
+    'Port Saint-Sauveur (Toulouse)',
+    'Canal du Midi in Toulouse',
+  ],
   'parc-de-la-maourine': ['Parc de la Maourine'],
   'marche-victor-hugo': ['Marché Victor Hugo (Toulouse)'],
   'place-saint-georges': ['Place Saint-Georges (Toulouse)'],

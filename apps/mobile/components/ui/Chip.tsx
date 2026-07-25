@@ -8,11 +8,7 @@ type ChipProps = PressableProps & {
 
 export function Chip({ label, selected = false, tone = 'cream', ...pressableProps }: ChipProps) {
   const baseClass =
-    tone === 'white'
-      ? 'bg-white'
-      : selected || tone === 'solid'
-        ? 'bg-brick-500'
-        : 'bg-sand-100';
+    tone === 'white' ? 'bg-white' : selected || tone === 'solid' ? 'bg-brick-500' : 'bg-sand-100';
   const textClass =
     selected || tone === 'solid' ? 'text-white font-body-semibold' : 'text-ink-800 font-body';
 

@@ -12,11 +12,7 @@ type FavoriteActionButtonProps = {
   testID?: string;
 };
 
-export function FavoriteActionButton({
-  isFavorite,
-  onPress,
-  testID,
-}: FavoriteActionButtonProps) {
+export function FavoriteActionButton({ isFavorite, onPress, testID }: FavoriteActionButtonProps) {
   const reduceMotion = useReducedMotion();
   const buttonScale = useSharedValue(1);
 
@@ -41,10 +37,7 @@ export function FavoriteActionButton({
         }
       }}
       className="flex-1 flex-row items-center justify-center gap-2 rounded-[14px] border-[1.5px] border-brick-500 py-2.5"
-      style={[
-        buttonAnimatedStyle,
-        { backgroundColor: isFavorite ? '#C45C3E' : 'transparent' },
-      ]}
+      style={[buttonAnimatedStyle, { backgroundColor: isFavorite ? '#C45C3E' : 'transparent' }]}
     >
       <FontAwesome
         name={isFavorite ? 'heart' : 'heart-o'}

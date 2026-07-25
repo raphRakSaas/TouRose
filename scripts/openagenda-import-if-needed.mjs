@@ -90,15 +90,12 @@ async function runImportWithRetries() {
 }
 
 async function countPublishedEvents(apiUrl, anonKey) {
-  const response = await fetch(
-    `${apiUrl}/rest/v1/events?status=eq.published&select=id&limit=1`,
-    {
-      headers: {
-        apikey: anonKey,
-        Authorization: `Bearer ${anonKey}`,
-      },
+  const response = await fetch(`${apiUrl}/rest/v1/events?status=eq.published&select=id&limit=1`, {
+    headers: {
+      apikey: anonKey,
+      Authorization: `Bearer ${anonKey}`,
     },
-  );
+  });
   if (!response.ok) {
     return null;
   }
@@ -113,7 +110,9 @@ if (!openAgendaKey) {
   console.warn(
     '[openagenda] OPENAGENDA_PUBLIC_KEY absent dans supabase/functions/.env — pas d’import automatique.',
   );
-  console.warn('[openagenda] Lieux découverte OK ; lance `pnpm import:openagenda` après avoir configuré la clé.');
+  console.warn(
+    '[openagenda] Lieux découverte OK ; lance `pnpm import:openagenda` après avoir configuré la clé.',
+  );
   process.exit(0);
 }
 

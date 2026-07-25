@@ -59,33 +59,33 @@ Repo → **Settings → Environments → New environment** → `production`
 
 ### 2.3 Secrets GitHub (Settings → Secrets and variables → Actions)
 
-| Secret | Obligatoire | Description |
-| --- | --- | --- |
-| `SUPABASE_ACCESS_TOKEN` | oui | Token personnel Supabase (Account → Access Tokens) |
-| `SUPABASE_PROJECT_REF` | oui | Ref du projet cloud |
-| `SUPABASE_DB_PASSWORD` | oui | Mot de passe Postgres du projet |
-| `SUPABASE_URL` | oui | `https://<ref>.supabase.co` |
-| `SUPABASE_ANON_KEY` | oui | Clé anon / publishable |
-| `IMPORT_CRON_SECRET` | oui | Secret partagé imports (`x-tourose-import-secret`) |
-| `OPENAGENDA_PUBLIC_KEY` | recommandé | Clé lecture OpenAgenda |
-| `OPENAGENDA_AGENDA_UID` | recommandé | UID agenda Toulouse |
-| `STRIPE_SECRET_KEY` | si soutien | Clé secrète Stripe live/test |
-| `STRIPE_WEBHOOK_SECRET` | si soutien | Secret webhook Stripe cloud |
-| `PUBLIC_STRIPE_PUBLISHABLE_KEY` | si soutien | Clé publishable pour le site |
-| `CLOUDFLARE_API_TOKEN` | si hébergement | Token Pages (optionnel) |
-| `CLOUDFLARE_ACCOUNT_ID` | si hébergement | ID compte Cloudflare |
+| Secret                          | Obligatoire    | Description                                        |
+| ------------------------------- | -------------- | -------------------------------------------------- |
+| `SUPABASE_ACCESS_TOKEN`         | oui            | Token personnel Supabase (Account → Access Tokens) |
+| `SUPABASE_PROJECT_REF`          | oui            | Ref du projet cloud                                |
+| `SUPABASE_DB_PASSWORD`          | oui            | Mot de passe Postgres du projet                    |
+| `SUPABASE_URL`                  | oui            | `https://<ref>.supabase.co`                        |
+| `SUPABASE_ANON_KEY`             | oui            | Clé anon / publishable                             |
+| `IMPORT_CRON_SECRET`            | oui            | Secret partagé imports (`x-tourose-import-secret`) |
+| `OPENAGENDA_PUBLIC_KEY`         | recommandé     | Clé lecture OpenAgenda                             |
+| `OPENAGENDA_AGENDA_UID`         | recommandé     | UID agenda Toulouse                                |
+| `STRIPE_SECRET_KEY`             | si soutien     | Clé secrète Stripe live/test                       |
+| `STRIPE_WEBHOOK_SECRET`         | si soutien     | Secret webhook Stripe cloud                        |
+| `PUBLIC_STRIPE_PUBLISHABLE_KEY` | si soutien     | Clé publishable pour le site                       |
+| `CLOUDFLARE_API_TOKEN`          | si hébergement | Token Pages (optionnel)                            |
+| `CLOUDFLARE_ACCOUNT_ID`         | si hébergement | ID compte Cloudflare                               |
 
 ### 2.4 Variables GitHub (Settings → Variables)
 
-| Variable | Valeur | Effet |
-| --- | --- | --- |
-| `SUPABASE_DEPLOY_ENABLED` | `true` | Active le déploiement Supabase au tag |
-| `PUBLIC_SITE_URL` | `https://tourose.app` | URL canonique du site |
-| `OPENAGENDA_CRON_ENABLED` | `true` | Active le cron GitHub OpenAgenda |
-| `WEBSITE_DEPLOY_ENABLED` | `true` | Publie le site sur Cloudflare Pages |
-| `ADMIN_DEPLOY_ENABLED` | `false` | Publie l’admin (souvent restreint / interne) |
-| `CLOUDFLARE_PAGES_PROJECT_WEBSITE` | nom projet | Projet Pages pour le site |
-| `CLOUDFLARE_PAGES_PROJECT_ADMIN` | nom projet | Projet Pages pour l’admin |
+| Variable                           | Valeur                | Effet                                        |
+| ---------------------------------- | --------------------- | -------------------------------------------- |
+| `SUPABASE_DEPLOY_ENABLED`          | `true`                | Active le déploiement Supabase au tag        |
+| `PUBLIC_SITE_URL`                  | `https://tourose.app` | URL canonique du site                        |
+| `OPENAGENDA_CRON_ENABLED`          | `true`                | Active le cron GitHub OpenAgenda             |
+| `WEBSITE_DEPLOY_ENABLED`           | `true`                | Publie le site sur Cloudflare Pages          |
+| `ADMIN_DEPLOY_ENABLED`             | `false`               | Publie l’admin (souvent restreint / interne) |
+| `CLOUDFLARE_PAGES_PROJECT_WEBSITE` | nom projet            | Projet Pages pour le site                    |
+| `CLOUDFLARE_PAGES_PROJECT_ADMIN`   | nom projet            | Projet Pages pour l’admin                    |
 
 Sans `SUPABASE_DEPLOY_ENABLED=true`, le workflow release ne déploie rien (quality gate seulement).
 
@@ -149,12 +149,12 @@ where email = 'ton-email@example.com';
 
 ## 6. Dépannage
 
-| Symptôme | Piste |
-| --- | --- |
-| Job Supabase ignoré | `SUPABASE_DEPLOY_ENABLED` ≠ `true` |
-| `db push` échoue | Vérifier `SUPABASE_DB_PASSWORD`, drift schéma |
-| Health check KO | Functions pas déployées ou projet en pause |
-| Site build OK mais pas en ligne | `WEBSITE_DEPLOY_ENABLED` ou secrets Cloudflare manquants |
-| Cron import inactif | `OPENAGENDA_CRON_ENABLED=true` + secrets `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `IMPORT_CRON_SECRET` |
+| Symptôme                        | Piste                                                                                              |
+| ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Job Supabase ignoré             | `SUPABASE_DEPLOY_ENABLED` ≠ `true`                                                                 |
+| `db push` échoue                | Vérifier `SUPABASE_DB_PASSWORD`, drift schéma                                                      |
+| Health check KO                 | Functions pas déployées ou projet en pause                                                         |
+| Site build OK mais pas en ligne | `WEBSITE_DEPLOY_ENABLED` ou secrets Cloudflare manquants                                           |
+| Cron import inactif             | `OPENAGENDA_CRON_ENABLED=true` + secrets `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `IMPORT_CRON_SECRET` |
 
 Voir aussi : [`ENV-VARS.md`](./ENV-VARS.md), [`SUPABASE-LOCAL.md`](./SUPABASE-LOCAL.md), [`ADMIN-AUTH-AND-SECURITY.md`](./ADMIN-AUTH-AND-SECURITY.md).

@@ -24,9 +24,7 @@ export function PrimaryButton({
       {...pressableProps}
     >
       <Text
-        className={`text-[15px] font-body-semibold ${
-          isOutline ? 'text-brick-700' : 'text-white'
-        }`}
+        className={`text-[15px] font-body-semibold ${isOutline ? 'text-brick-700' : 'text-white'}`}
       >
         {label}
       </Text>

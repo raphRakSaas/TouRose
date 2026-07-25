@@ -20,10 +20,7 @@ import '../global.css';
 
 import { OfflineBanner } from '@/components/ui/OfflineBanner';
 import { purgeLegacyCatalogCache } from '@/src/lib/catalog-cache';
-import {
-  arePushNotificationsEnabled,
-  syncPushSubscription,
-} from '@/src/lib/push-notifications';
+import { arePushNotificationsEnabled, syncPushSubscription } from '@/src/lib/push-notifications';
 import { routeForSupportDeepLink } from '@/src/lib/support-deeplink';
 import { usePreferencesStore } from '@/src/store/preferences-store';
 

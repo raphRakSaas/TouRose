@@ -1,7 +1,7 @@
 {
   "name": "tourose",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "TouRose monorepo — Toulouse à voir, à vivre, à aimer.",
   "packageManager": "pnpm@10.14.0",
@@ -29,6 +29,7 @@
     "import:openagenda:cloud": "node ./scripts/trigger-openagenda-import.mjs",
     "cron:tick": "node ./scripts/cron-tick.mjs",
     "cron:sync-runtime": "node ./scripts/sync-cron-runtime.mjs",
+    "release": "node ./scripts/deploy.mjs",
     "deploy:supabase": "node ./scripts/deploy-supabase.mjs",
     "deploy:production": "node ./scripts/deploy-production.mjs",
     "import:wikimedia-places": "node ./scripts/import-wikimedia-places.mjs",

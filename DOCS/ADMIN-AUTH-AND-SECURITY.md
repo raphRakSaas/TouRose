@@ -41,8 +41,8 @@ L’écran Angular et le guard ne sont que de l’**UX**. La vraie porte, c’es
 
 1. `pnpm supabase:reset` (ou seed déjà appliqué)
 2. `pnpm dev:up`
-3. http://localhost:4200/login  
-   - Email : `admin@tourose.local`  
+3. http://localhost:4200/login
+   - Email : `admin@tourose.local`
    - Mot de passe : `tourose-admin-local` (**local Docker uniquement**)
 
 Le seed place déjà `raw_app_meta_data.role = admin` sur cet utilisateur. Au login, le JWT contient ce claim.
@@ -74,7 +74,7 @@ Le script :
 
 ### Option B — Studio (cloud ou local)
 
-1. Authentication → Users → créer / sélectionner l’utilisateur  
+1. Authentication → Users → créer / sélectionner l’utilisateur
 2. **Raw App Meta Data** / App Metadata :
 
 ```json
@@ -89,7 +89,7 @@ Le script :
 
 ### Option C — Production (plus tard)
 
-- Compte déjà créé (magic link / invite).  
+- Compte déjà créé (magic link / invite).
 - Depuis un poste sécurisé ou une Edge Function **réservée aux super-admins** :
 
 ```ts
@@ -98,7 +98,7 @@ await supabaseAdmin.auth.admin.updateUserById(userId, {
 });
 ```
 
-- Secrets : `SUPABASE_SERVICE_ROLE_KEY` uniquement en CI / vault / fonction serveur.  
+- Secrets : `SUPABASE_SERVICE_ROLE_KEY` uniquement en CI / vault / fonction serveur.
 - Après promotion : l’utilisateur **rafraîchit sa session**.
 
 ### Révoquer un admin
@@ -111,25 +111,25 @@ Même API avec `app_metadata: { role: 'user' }` (ou suppression de la clé `role
 
 ### Ce qui est déjà solide
 
-| Zone | Pourquoi c’est OK |
-| --- | --- |
-| `admin_save_place` / `admin_save_event` | `INSERT ... VALUES ($vars)` — **pas** de SQL dynamique concaténé avec le texte utilisateur |
-| Payload JSON | Valeurs lues via `payload ->> 'champ'` puis typées (`::uuid`, `::double precision`) |
-| Contraintes CHECK | `place_type`, `status`, `price_type`, etc. rejettent les valeurs hors enum |
-| Recherche `search_public_catalog` | `search_query` est un **paramètre** de fonction, pas interpolé dans une chaîne SQL exécutée |
-| Clients (mobile/web/admin) | Supabase JS / PostgREST = requêtes paramétrées |
-| Lecture publique | RLS : anon ne voit que `published` |
+| Zone                                    | Pourquoi c’est OK                                                                           |
+| --------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `admin_save_place` / `admin_save_event` | `INSERT ... VALUES ($vars)` — **pas** de SQL dynamique concaténé avec le texte utilisateur  |
+| Payload JSON                            | Valeurs lues via `payload ->> 'champ'` puis typées (`::uuid`, `::double precision`)         |
+| Contraintes CHECK                       | `place_type`, `status`, `price_type`, etc. rejettent les valeurs hors enum                  |
+| Recherche `search_public_catalog`       | `search_query` est un **paramètre** de fonction, pas interpolé dans une chaîne SQL exécutée |
+| Clients (mobile/web/admin)              | Supabase JS / PostgREST = requêtes paramétrées                                              |
+| Lecture publique                        | RLS : anon ne voit que `published`                                                          |
 
 ### Ce qui n’est **pas** une injection SQL mais reste un risque
 
-| Risque | Mitigation actuelle / à faire |
-| --- | --- |
-| Contourner l’UI admin | Déjà bloqué par RLS si JWT sans `role=admin` |
-| Vol de session admin | HTTPS prod, cookies/storage soignés, MFA plus tard |
-| Fuite **service role** | Interdite dans les apps clientes (documenté) |
+| Risque                     | Mitigation actuelle / à faire                                         |
+| -------------------------- | --------------------------------------------------------------------- |
+| Contourner l’UI admin      | Déjà bloqué par RLS si JWT sans `role=admin`                          |
+| Vol de session admin       | HTTPS prod, cookies/storage soignés, MFA plus tard                    |
+| Fuite **service role**     | Interdite dans les apps clientes (documenté)                          |
 | Validation Zod côté client | Confort UX seulement — le serveur (contraintes + `is_admin`) fait foi |
-| XSS dans l’admin | Angular échappe par défaut ; éviter `innerHTML` non sanitisé |
-| Mass assignment | RPC n’accepte qu’un JSON contrôlé ; colonnes listées explicitement |
+| XSS dans l’admin           | Angular échappe par défaut ; éviter `innerHTML` non sanitisé          |
+| Mass assignment            | RPC n’accepte qu’un JSON contrôlé ; colonnes listées explicitement    |
 
 ### Tests automatisés utiles
 

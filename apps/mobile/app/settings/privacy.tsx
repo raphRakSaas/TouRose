@@ -50,7 +50,10 @@ export default function PrivacySettingsScreen() {
         >
           {(
             [
-              ['lock', 'Pas de compte requis, pas de profil publicitaire, pas de revente de données.'],
+              [
+                'lock',
+                'Pas de compte requis, pas de profil publicitaire, pas de revente de données.',
+              ],
               ['mobile', 'Favoris, découvertes et préférences restent stockés sur ton téléphone.'],
               [
                 'map-marker',

@@ -6,7 +6,9 @@ export function isSupportCancelUrl(url: string): boolean {
   return url.includes('support/cancel');
 }
 
-export function routeForSupportDeepLink(url: string): '/support/success' | '/support/cancel' | null {
+export function routeForSupportDeepLink(
+  url: string,
+): '/support/success' | '/support/cancel' | null {
   if (isSupportSuccessUrl(url)) {
     return '/support/success';
   }

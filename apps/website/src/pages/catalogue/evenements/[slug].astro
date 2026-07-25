@@ -1,6 +1,11 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { loadPublicEventBySlug } from '../../../lib/catalog';
+import { loadPublicEventBySlug, loadPublicEventSlugs } from '../../../lib/catalog';
+
+export async function getStaticPaths() {
+  const slugs = await loadPublicEventSlugs();
+  return slugs.map((slug) => ({ params: { slug } }));
+}
 
 const { slug } = Astro.params;
 const eventRow = slug ? await loadPublicEventBySlug(slug) : null;

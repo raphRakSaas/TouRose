@@ -72,11 +72,10 @@ on conflict (key) do update set
   updated_at = excluded.updated_at;
 `;
 
-const apply = spawnSync(
-  'pnpm',
-  ['exec', 'supabase', 'db', 'query', '--local', sql],
-  { cwd: rootDirectory, encoding: 'utf8' },
-);
+const apply = spawnSync('pnpm', ['exec', 'supabase', 'db', 'query', '--local', sql], {
+  cwd: rootDirectory,
+  encoding: 'utf8',
+});
 
 if (apply.status !== 0) {
   console.warn('[sync-cron-runtime] Échec sync cron_runtime:', apply.stderr || apply.stdout);

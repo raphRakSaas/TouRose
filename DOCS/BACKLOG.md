@@ -11,13 +11,13 @@ Dernière mise à jour : **2026-07-25** (Phase 2 cron + Phase 6 push/Stripe MVP)
 
 ### Statuts
 
-| Marque | Signification |
-| --- | --- |
-| `[x]` | Fait (vérifiable dans le repo / local) |
-| `[~]` | Partiel / squelette (usable mais incomplet vs MVP) |
-| `[ ]` | À faire |
-| `[!]` | Bloqué / dépend d’un compte externe ou d’une décision |
-| `[-]` | Annulé / hors périmètre volontaire |
+| Marque | Signification                                         |
+| ------ | ----------------------------------------------------- |
+| `[x]`  | Fait (vérifiable dans le repo / local)                |
+| `[~]`  | Partiel / squelette (usable mais incomplet vs MVP)    |
+| `[ ]`  | À faire                                               |
+| `[!]`  | Bloqué / dépend d’un compte externe ou d’une décision |
+| `[-]`  | Annulé / hors périmètre volontaire                    |
 
 En Markdown pur, seuls `[x]` et `[ ]` sont des cases à cocher natives.  
 Utilise `[~]` / `[!]` / `[-]` comme **préfixe texte** dans le libellé, ex. :
@@ -43,23 +43,23 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 
 ## Résumé exécutif
 
-| Phase | Statut | Critère de sortie | Avancement |
-| --- | --- | --- | --- |
-| **0 — Fondations** | Fait | Apps démarrent, CI, migration locale | ~100 % |
-| **1 — Catalogue admin** | Fait | Admin publie → visible mobile/web | ~100 % (doublons / MFA / médias upload / SSR reportés) |
-| **Design** | En cours | Brief + maquette mobile intégrée | Mobile UI + motion OK ; site/admin maquettes ouvertes |
-| **2 — Imports** | Partiel | OpenAgenda idempotent | ~90 % (cron pg_cron + GitHub Actions + alertes ; DATAtourisme / doublons UI ouverts) |
-| **3 — Cœur mobile** | En cours | Onboarding, fiches, favoris, carte | ~95 % (hors-ligne + clustering OK ; MapLibre natif / cache Query→SQLite ouverts) |
-| **4 — Recommandations** | Fait | 3 suggestions scorées | ~95 % (RPC + impressions + ADR 0005) |
-| **5 — Comptes / sync** | En pause (UI) | Magic link + fusion locale | Backend ~60 % ; UI mobile retirée (compte = argument de vente futur) |
-| **6 — Notifs / soutien** | En cours | Push + Stripe + IAP | ~55 % (push weekend + rappels locaux favoris + Stripe Checkout mobile ; IAP / site ouverts) |
-| **7 — Boutiques** | À faire | Store-ready | 0 % |
+| Phase                    | Statut        | Critère de sortie                    | Avancement                                                                                  |
+| ------------------------ | ------------- | ------------------------------------ | ------------------------------------------------------------------------------------------- |
+| **0 — Fondations**       | Fait          | Apps démarrent, CI, migration locale | ~100 %                                                                                      |
+| **1 — Catalogue admin**  | Fait          | Admin publie → visible mobile/web    | ~100 % (doublons / MFA / médias upload / SSR reportés)                                      |
+| **Design**               | En cours      | Brief + maquette mobile intégrée     | Mobile UI + motion OK ; site/admin maquettes ouvertes                                       |
+| **2 — Imports**          | Partiel       | OpenAgenda idempotent                | ~90 % (cron pg_cron + GitHub Actions + alertes ; DATAtourisme / doublons UI ouverts)        |
+| **3 — Cœur mobile**      | En cours      | Onboarding, fiches, favoris, carte   | ~95 % (hors-ligne + clustering OK ; MapLibre natif / cache Query→SQLite ouverts)            |
+| **4 — Recommandations**  | Fait          | 3 suggestions scorées                | ~95 % (RPC + impressions + ADR 0005)                                                        |
+| **5 — Comptes / sync**   | En pause (UI) | Magic link + fusion locale           | Backend ~60 % ; UI mobile retirée (compte = argument de vente futur)                        |
+| **6 — Notifs / soutien** | En cours      | Push + Stripe + IAP                  | ~55 % (push weekend + rappels locaux favoris + Stripe Checkout mobile ; IAP / site ouverts) |
+| **7 — Boutiques**        | À faire       | Store-ready                          | 0 %                                                                                         |
 
 **Prochaine priorité (mobile / backend uniquement — site web en pause) :**
 
-1. **Phase 6** — credentials EAS push + Stripe prod + IAP mobile  
-2. **Phase 3** — MapLibre natif (dev build) + cache TanStack Query→SQLite complet  
-3. **Design mobile** — logo / assets (pas de maquettes site)  
+1. **Phase 6** — credentials EAS push + Stripe prod + IAP mobile
+2. **Phase 3** — MapLibre natif (dev build) + cache TanStack Query→SQLite complet
+3. **Design mobile** — logo / assets (pas de maquettes site)
 4. **Phase 5** — réactiver compte mobile quand argument de vente prêt ; RGPD export/suppression
 
 > **Site web (`apps/website`) — en pause** : pas de SSR/ISR, polish catalogue, page soutien Stripe, ni maquettes site pour l’instant. Le catalogue web actuel reste tel quel.
@@ -236,6 +236,7 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [x] Cron d’import OpenAgenda (`pg_cron` + `pg_net` local, `pnpm cron:tick`, workflow GitHub cloud)
 - [x] Alertes import échoué / source trop ancienne (`import-health` + `import_alerts` + badge admin)
 - [ ] UI admin de résolution de doublons (au-delà du journal)
+
 ---
 
 ## Phase 3 — Cœur mobile
@@ -372,7 +373,7 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 ## Hors phase / idées / dette
 
-*(Ajoute ici librement.)*
+_(Ajoute ici librement.)_
 
 - [ ] Remplacer heuristique fallback « Pour toi » uniquement si RPC scoring indisponible (déjà en place)
 - [ ] Nettoyer composants template Expo inutilisés (`EditScreenInfo`, etc.)
@@ -394,16 +395,16 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 ## Journal des ajouts
 
-| Date | Ajout |
-| --- | --- |
-| 2026-07-18 | Création du backlog initial (Phases 0–7 + design + transversal) |
-| 2026-07-18 | Auth JWT admin + sécu injection SQL documentées / testées |
+| Date       | Ajout                                                                                                                     |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-18 | Création du backlog initial (Phases 0–7 + design + transversal)                                                           |
+| 2026-07-18 | Auth JWT admin + sécu injection SQL documentées / testées                                                                 |
 | 2026-07-19 | Sync backlog : Aujourd’hui réel, images OA (ADR 0004), catégories `types-devenements`, prix `participation`/`billetterie` |
-| 2026-07-19 | Phase 3 (SQLite favoris, partage, calendrier, Explorer) + Phase 4 scoring (ADR 0005) |
-| 2026-07-25 | Audit backlog vs code ; motion mobile ; filtre date « Tout » ; fix navigation modal 3 idées |
-| 2026-07-25 | Site web mis en pause ; priorité mobile Phase 3 finition → Phase 5 → Phase 2 cron |
-| 2026-07-25 | Mobile : cache catalogue hors-ligne, clustering carte, Phase 5 (profiles, magic link, sync favoris) |
-| 2026-07-25 | Compte mobile retiré de l’UI (backend Phase 5 conservé pour réactivation future) |
-| 2026-07-25 | Phase 2 cron OpenAgenda (pg_cron, import-health, GitHub Actions) + Phase 6 push/Stripe MVP |
+| 2026-07-19 | Phase 3 (SQLite favoris, partage, calendrier, Explorer) + Phase 4 scoring (ADR 0005)                                      |
+| 2026-07-25 | Audit backlog vs code ; motion mobile ; filtre date « Tout » ; fix navigation modal 3 idées                               |
+| 2026-07-25 | Site web mis en pause ; priorité mobile Phase 3 finition → Phase 5 → Phase 2 cron                                         |
+| 2026-07-25 | Mobile : cache catalogue hors-ligne, clustering carte, Phase 5 (profiles, magic link, sync favoris)                       |
+| 2026-07-25 | Compte mobile retiré de l’UI (backend Phase 5 conservé pour réactivation future)                                          |
+| 2026-07-25 | Phase 2 cron OpenAgenda (pg_cron, import-health, GitHub Actions) + Phase 6 push/Stripe MVP                                |
 
-*(Ajoute une ligne ici quand tu modifies significativement le backlog.)*
+_(Ajoute une ligne ici quand tu modifies significativement le backlog.)_

@@ -270,9 +270,7 @@ export default function ExploreScreen() {
                 key={segmentKey}
                 accessibilityRole="button"
                 onPress={() => setSegment(segmentKey)}
-                className={`rounded-full px-3.5 py-2 ${
-                  isActive ? 'bg-brick-500' : 'bg-white'
-                }`}
+                className={`rounded-full px-3.5 py-2 ${isActive ? 'bg-brick-500' : 'bg-white'}`}
               >
                 <Text
                   className={`text-[13px] font-body-semibold ${
@@ -335,128 +333,112 @@ export default function ExploreScreen() {
       ) : null}
 
       {!isLoading && !errorMessage && isSearching ? (
-        <Animated.View
-          key="search"
-          entering={enterFadeInUp(0, reduceMotion)}
-          className="flex-1"
-        >
+        <Animated.View key="search" entering={enterFadeInUp(0, reduceMotion)} className="flex-1">
           <FlatList
-          data={searchQuery.data ?? []}
-          keyExtractor={(item) => `${item.entity_type}-${item.id}`}
-          contentContainerClassName="px-5 pb-8"
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={() => void onRefresh()}
-              tintColor="#C45C3E"
-            />
-          }
-          ListEmptyComponent={
-            <Text className="text-sm font-body text-ink-500">Aucun résultat.</Text>
-          }
-          renderItem={({ item, index }) => (
-            <Link
-              href={
-                item.entity_type === 'place'
-                  ? `/place/${item.slug}`
-                  : `/event/${item.slug}`
-              }
-              asChild
-            >
-              <CatalogListRow
-                title={item.title}
-                subtitle={
-                  item.entity_type === 'place'
-                    ? item.summary ?? 'Lieu'
-                    : item.summary ?? 'Événement'
-                }
-                imageLabel={item.title}
-                showDivider={index < (searchQuery.data?.length ?? 0) - 1}
+            data={searchQuery.data ?? []}
+            keyExtractor={(item) => `${item.entity_type}-${item.id}`}
+            contentContainerClassName="px-5 pb-8"
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={() => void onRefresh()}
+                tintColor="#C45C3E"
               />
-            </Link>
-          )}
+            }
+            ListEmptyComponent={
+              <Text className="text-sm font-body text-ink-500">Aucun résultat.</Text>
+            }
+            renderItem={({ item, index }) => (
+              <Link
+                href={item.entity_type === 'place' ? `/place/${item.slug}` : `/event/${item.slug}`}
+                asChild
+              >
+                <CatalogListRow
+                  title={item.title}
+                  subtitle={
+                    item.entity_type === 'place'
+                      ? (item.summary ?? 'Lieu')
+                      : (item.summary ?? 'Événement')
+                  }
+                  imageLabel={item.title}
+                  showDivider={index < (searchQuery.data?.length ?? 0) - 1}
+                />
+              </Link>
+            )}
           />
         </Animated.View>
       ) : null}
 
       {!isLoading && !errorMessage && !isSearching && segment === 'events' ? (
-        <Animated.View
-          key="events"
-          entering={enterFadeInUp(0, reduceMotion)}
-          className="flex-1"
-        >
+        <Animated.View key="events" entering={enterFadeInUp(0, reduceMotion)} className="flex-1">
           <FlatList
-          data={filteredEvents}
-          keyExtractor={(item) => item.id}
-          contentContainerClassName="px-5 pb-8"
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={() => void onRefresh()}
-              tintColor="#C45C3E"
-            />
-          }
-          ListEmptyComponent={
-            <Text className="text-sm font-body text-ink-500">
-              Aucun événement pour ces filtres.
-            </Text>
-          }
-          renderItem={({ item, index }) => (
-            <Link href={`/event/${item.slug}`} asChild>
-              <CatalogListRow
-                title={item.title}
-                subtitle={
-                  item.next_starts_at
-                    ? new Date(item.next_starts_at).toLocaleString('fr-FR', {
-                        weekday: 'short',
-                        day: 'numeric',
-                        month: 'long',
-                      })
-                    : item.summary ?? 'Événement'
-                }
-                imageLabel={item.title}
-                imageSource={resolveEventImageSource(item.image_url)}
-                imageAttribution={item.image_attribution}
-                showDivider={index < filteredEvents.length - 1}
+            data={filteredEvents}
+            keyExtractor={(item) => item.id}
+            contentContainerClassName="px-5 pb-8"
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={() => void onRefresh()}
+                tintColor="#C45C3E"
               />
-            </Link>
-          )}
+            }
+            ListEmptyComponent={
+              <Text className="text-sm font-body text-ink-500">
+                Aucun événement pour ces filtres.
+              </Text>
+            }
+            renderItem={({ item, index }) => (
+              <Link href={`/event/${item.slug}`} asChild>
+                <CatalogListRow
+                  title={item.title}
+                  subtitle={
+                    item.next_starts_at
+                      ? new Date(item.next_starts_at).toLocaleString('fr-FR', {
+                          weekday: 'short',
+                          day: 'numeric',
+                          month: 'long',
+                        })
+                      : (item.summary ?? 'Événement')
+                  }
+                  imageLabel={item.title}
+                  imageSource={resolveEventImageSource(item.image_url)}
+                  imageAttribution={item.image_attribution}
+                  showDivider={index < filteredEvents.length - 1}
+                />
+              </Link>
+            )}
           />
         </Animated.View>
       ) : null}
 
       {!isLoading && !errorMessage && !isSearching && segment === 'places' ? (
-        <Animated.View
-          key="places"
-          entering={enterFadeInUp(0, reduceMotion)}
-          className="flex-1"
-        >
+        <Animated.View key="places" entering={enterFadeInUp(0, reduceMotion)} className="flex-1">
           <FlatList
-          data={filteredPlaces}
-          keyExtractor={(item) => item.id}
-          contentContainerClassName="px-5 pb-8"
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={() => void onRefresh()}
-              tintColor="#C45C3E"
-            />
-          }
-          ListEmptyComponent={
-            <Text className="text-sm font-body text-ink-500">Aucun lieu pour ces filtres.</Text>
-          }
-          renderItem={({ item, index }) => (
-            <Link href={`/place/${item.slug}`} asChild>
-              <CatalogListRow
-                title={item.name}
-                subtitle={placeSubtitle(item, userLocationQuery.data)}
-                imageLabel={item.name}
-                imageSource={resolvePlaceImageSource(item.slug, item.image_url)}
-                imageAttribution={item.image_attribution}
-                showDivider={index < filteredPlaces.length - 1}
+            data={filteredPlaces}
+            keyExtractor={(item) => item.id}
+            contentContainerClassName="px-5 pb-8"
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={() => void onRefresh()}
+                tintColor="#C45C3E"
               />
-            </Link>
-          )}
+            }
+            ListEmptyComponent={
+              <Text className="text-sm font-body text-ink-500">Aucun lieu pour ces filtres.</Text>
+            }
+            renderItem={({ item, index }) => (
+              <Link href={`/place/${item.slug}`} asChild>
+                <CatalogListRow
+                  title={item.name}
+                  subtitle={placeSubtitle(item, userLocationQuery.data)}
+                  imageLabel={item.name}
+                  imageSource={resolvePlaceImageSource(item.slug, item.image_url)}
+                  imageAttribution={item.image_attribution}
+                  showDivider={index < filteredPlaces.length - 1}
+                />
+              </Link>
+            )}
           />
         </Animated.View>
       ) : null}
@@ -468,26 +450,26 @@ export default function ExploreScreen() {
           className="flex-1"
         >
           <FlatList
-          data={collectionsQuery.data ?? []}
-          keyExtractor={(item) => item.id}
-          contentContainerClassName="px-5 pb-8"
-          ListEmptyComponent={
-            collectionsQuery.isLoading ? (
-              <ActivityIndicator color="#C45C3E" />
-            ) : (
-              <Text className="text-sm font-body text-ink-500">
-                Aucune sélection pour le moment.
-              </Text>
-            )
-          }
-          renderItem={({ item, index }) => (
-            <CatalogListRow
-              title={item.title}
-              subtitle={item.summary ?? 'Sélection éditoriale'}
-              imageLabel={item.title}
-              showDivider={index < (collectionsQuery.data?.length ?? 0) - 1}
-            />
-          )}
+            data={collectionsQuery.data ?? []}
+            keyExtractor={(item) => item.id}
+            contentContainerClassName="px-5 pb-8"
+            ListEmptyComponent={
+              collectionsQuery.isLoading ? (
+                <ActivityIndicator color="#C45C3E" />
+              ) : (
+                <Text className="text-sm font-body text-ink-500">
+                  Aucune sélection pour le moment.
+                </Text>
+              )
+            }
+            renderItem={({ item, index }) => (
+              <CatalogListRow
+                title={item.title}
+                subtitle={item.summary ?? 'Sélection éditoriale'}
+                imageLabel={item.title}
+                showDivider={index < (collectionsQuery.data?.length ?? 0) - 1}
+              />
+            )}
           />
         </Animated.View>
       ) : null}

@@ -304,10 +304,7 @@ export default function TodayScreen() {
         {isLoading ? (
           <View className="gap-3 px-5">
             {[0, 1].map((skeletonIndex) => (
-              <SkeletonBlock
-                key={skeletonIndex}
-                className="h-[140px] rounded-2xl bg-sand-100"
-              />
+              <SkeletonBlock key={skeletonIndex} className="h-[140px] rounded-2xl bg-sand-100" />
             ))}
           </View>
         ) : null}

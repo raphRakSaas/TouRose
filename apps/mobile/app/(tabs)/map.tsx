@@ -196,8 +196,7 @@ export default function MapScreen() {
     (event: WebViewMessageEvent) => {
       try {
         const message = JSON.parse(event.nativeEvent.data) as
-          | { type: 'ready' }
-          | { type: 'pinPress'; id: string };
+          { type: 'ready' } | { type: 'pinPress'; id: string };
         if (message.type === 'ready') {
           setIsMapReady(true);
           return;
@@ -292,10 +291,7 @@ export default function MapScreen() {
       </SafeAreaView>
 
       {/* UI ancrée en bas de l'écran, superposée à la carte */}
-      <View
-        pointerEvents="box-none"
-        style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}
-      >
+      <View pointerEvents="box-none" style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
         {/* Bouton recentrage */}
         <Pressable
           testID="map-recenter"
@@ -393,10 +389,7 @@ export default function MapScreen() {
                     )}
                   </View>
                   <View className="flex-1 justify-center px-3 py-2">
-                    <Text
-                      numberOfLines={1}
-                      className="text-[14px] font-body-semibold text-ink-800"
-                    >
+                    <Text numberOfLines={1} className="text-[14px] font-body-semibold text-ink-800">
                       {item.title}
                     </Text>
                     <Text numberOfLines={1} className="mt-0.5 text-[12px] font-body text-ink-500">

@@ -43,7 +43,12 @@ export function SupportPromoCard({
         colors={['#F3D5C8', '#FBF1EC', '#FBF8F4']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={{ borderRadius: CARD_RADIUS, paddingHorizontal: 20, paddingTop: 20, paddingBottom: 18 }}
+        style={{
+          borderRadius: CARD_RADIUS,
+          paddingHorizontal: 20,
+          paddingTop: 20,
+          paddingBottom: 18,
+        }}
       >
         <View className="mb-4 flex-row items-start gap-3.5">
           <Animated.View

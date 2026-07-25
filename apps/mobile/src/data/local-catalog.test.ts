@@ -51,15 +51,15 @@ describe('local-catalog', () => {
       slug: 'jardin',
       title: 'Jardin',
     });
+    expect(await isVisited('place', '66666666-6666-6666-6666-666666666601')).toBe(true);
     expect(
-      await isVisited('place', '66666666-6666-6666-6666-666666666601'),
-    ).toBe(true);
-    expect(await toggleVisited({
-      entityType: 'place',
-      entityId: '66666666-6666-6666-6666-666666666601',
-      slug: 'jardin',
-      title: 'Jardin',
-    })).toBe(false);
+      await toggleVisited({
+        entityType: 'place',
+        entityId: '66666666-6666-6666-6666-666666666601',
+        slug: 'jardin',
+        title: 'Jardin',
+      }),
+    ).toBe(false);
 
     await addDiscover(eventItem);
     await removeFavorite(eventItem.entityType, eventItem.entityId, {

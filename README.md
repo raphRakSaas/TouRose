@@ -35,16 +35,16 @@ Ce script :
 
 Dans le terminal `dev:up`, appuie sur une touche (sans Entrée) :
 
-| Touche | Effet |
-|--------|--------|
-| `m` | logs **mobile** seulement |
-| `a` | logs **admin** seulement |
-| `s` | logs **site** (website) seulement |
-| `f` | logs **functions** (si `--functions`) |
-| `t` | **tout** (mélange coloré) |
-| `c` | clear l’écran |
-| `h` | réaffiche l’aide |
-| `q` | quitter (comme Ctrl+C) |
+| Touche | Effet                                 |
+| ------ | ------------------------------------- |
+| `m`    | logs **mobile** seulement             |
+| `a`    | logs **admin** seulement              |
+| `s`    | logs **site** (website) seulement     |
+| `f`    | logs **functions** (si `--functions`) |
+| `t`    | **tout** (mélange coloré)             |
+| `c`    | clear l’écran                         |
+| `h`    | réaffiche l’aide                      |
+| `q`    | quitter (comme Ctrl+C)                |
 
 Les fichiers `.logs/*.log` restent disponibles en parallèle si besoin (`tail -f .logs/mobile.log`).
 
@@ -112,22 +112,23 @@ pnpm test:supabase  # skip si Docker/Supabase absents
 
 ## Scripts racine
 
-| Script                         | Rôle                                                 |
-| ------------------------------ | ---------------------------------------------------- |
+| Script                         | Rôle                                                          |
+| ------------------------------ | ------------------------------------------------------------- |
 | `pnpm dev:up`                  | **Tout démarrer** (Supabase + env + website + admin + mobile) |
-| `pnpm dev:down`                | Arrêter Supabase                                     |
-| `pnpm format` / `format:check` | Prettier                                             |
-| `pnpm lint`                    | ESLint                                               |
-| `pnpm typecheck`               | TypeScript / Astro                                   |
-| `pnpm test`                    | Tests unitaires                                      |
-| `pnpm build`                   | Builds                                               |
-| `pnpm check`                   | Pipeline qualité complète                            |
-| `pnpm grant:admin`             | Promouvoir un user local en admin JWT                |
-| `pnpm import:openagenda`       | Lancer l’import OpenAgenda (API réelle)              |
-| `pnpm import:wikimedia-places` | Importer des galeries libres pour les lieux locaux   |
-| `pnpm import:editorial-photos` | Photos Commons (catégorie curée) pour lieux éditoriaux |
-| `pnpm deploy:supabase`         | Déployer migrations + Edge Functions Supabase cloud |
-| `pnpm deploy:production`       | Déploiement production complet (Supabase + builds)  |
+| `pnpm dev:down`                | Arrêter Supabase                                              |
+| `pnpm format` / `format:check` | Prettier                                                      |
+| `pnpm lint`                    | ESLint                                                        |
+| `pnpm typecheck`               | TypeScript / Astro                                            |
+| `pnpm test`                    | Tests unitaires                                               |
+| `pnpm build`                   | Builds                                                        |
+| `pnpm check`                   | Pipeline qualité complète                                     |
+| `pnpm grant:admin`             | Promouvoir un user local en admin JWT                         |
+| `pnpm import:openagenda`       | Lancer l’import OpenAgenda (API réelle)                       |
+| `pnpm import:wikimedia-places` | Importer des galeries libres pour les lieux locaux            |
+| `pnpm import:editorial-photos` | Photos Commons (catégorie curée) pour lieux éditoriaux        |
+| `pnpm release`                 | **Assistant release** (type, version, tag, push)              |
+| `pnpm deploy:supabase`         | Déployer migrations + Edge Functions Supabase cloud           |
+| `pnpm deploy:production`       | Déploiement production complet (Supabase + builds)            |
 
 ## Structure
 

@@ -60,10 +60,7 @@ export function useReducedMotion(): boolean {
 }
 
 /** Entrée discrète pour listes et blocs de contenu. */
-export function enterFadeInUp(
-  index = 0,
-  reduceMotion = false,
-): BaseAnimationBuilder | undefined {
+export function enterFadeInUp(index = 0, reduceMotion = false): BaseAnimationBuilder | undefined {
   if (reduceMotion) {
     return undefined;
   }
@@ -72,16 +69,11 @@ export function enterFadeInUp(
     .easing(MOTION_EASING.decelerate);
 }
 
-export function enterFadeIn(
-  index = 0,
-  reduceMotion = false,
-): BaseAnimationBuilder | undefined {
+export function enterFadeIn(index = 0, reduceMotion = false): BaseAnimationBuilder | undefined {
   if (reduceMotion) {
     return undefined;
   }
-  return FadeIn.duration(MOTION.fast)
-    .delay(staggerDelay(index))
-    .easing(MOTION_EASING.decelerate);
+  return FadeIn.duration(MOTION.fast).delay(staggerDelay(index)).easing(MOTION_EASING.decelerate);
 }
 
 /** Bottom sheet : monte depuis le bas et s’arrête net (pas de spring). */

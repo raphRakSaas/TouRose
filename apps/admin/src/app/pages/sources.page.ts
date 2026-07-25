@@ -9,7 +9,11 @@ import { CatalogAdminService, type AdminSourceRow } from '../core/catalog-admin.
   template: `
     <section class="mt-6 grid gap-4">
       <h1 class="text-3xl font-semibold">Sources</h1>
-      <form class="grid max-w-xl gap-3 rounded-xl bg-white/70 p-4" [formGroup]="sourceForm" (ngSubmit)="onSubmit()">
+      <form
+        class="grid max-w-xl gap-3 rounded-xl bg-white/70 p-4"
+        [formGroup]="sourceForm"
+        (ngSubmit)="onSubmit()"
+      >
         <label class="grid gap-1 text-sm"
           >Nom <input class="rounded-md border border-black/10 px-3 py-2" formControlName="name"
         /></label>
@@ -32,7 +36,10 @@ import { CatalogAdminService, type AdminSourceRow } from '../core/catalog-admin.
         @if (errorMessage()) {
           <p class="text-sm text-[var(--tourose-color-danger)]">{{ errorMessage() }}</p>
         }
-        <button class="rounded-md bg-[var(--tourose-color-garonne-500)] px-4 py-2 text-white" type="submit">
+        <button
+          class="rounded-md bg-[var(--tourose-color-garonne-500)] px-4 py-2 text-white"
+          type="submit"
+        >
           Ajouter
         </button>
       </form>

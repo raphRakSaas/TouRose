@@ -15,9 +15,9 @@ describe('weatherCodeToLabel', () => {
 
 describe('formatWeatherLine', () => {
   it('arrondit la température et compose la phrase', () => {
-    expect(formatWeatherLine({ temperatureCelsius: 17.6, label: 'Ensoleillé', weatherCode: 1 })).toBe(
-      '18° · Ensoleillé à Toulouse',
-    );
+    expect(
+      formatWeatherLine({ temperatureCelsius: 17.6, label: 'Ensoleillé', weatherCode: 1 }),
+    ).toBe('18° · Ensoleillé à Toulouse');
   });
 });
 

@@ -37,9 +37,7 @@ function makeEvent(overrides: Partial<PublicEventRow>): PublicEventRow {
 describe('getMomentRange', () => {
   it('all couvre les événements à venir sur une longue période', () => {
     const range = getMomentRange('all', NOW);
-    expect(isEventInRange(makeEvent({ next_starts_at: '2026-08-01T19:00:00' }), range)).toBe(
-      true,
-    );
+    expect(isEventInRange(makeEvent({ next_starts_at: '2026-08-01T19:00:00' }), range)).toBe(true);
   });
 
   it('tonight couvre 18h à minuit', () => {
@@ -66,16 +64,12 @@ describe('getMomentRange', () => {
 describe('isEventInRange', () => {
   it('accepte un événement dans la fenêtre', () => {
     const range = getMomentRange('today', NOW);
-    expect(isEventInRange(makeEvent({ next_starts_at: '2026-07-18T19:00:00' }), range)).toBe(
-      true,
-    );
+    expect(isEventInRange(makeEvent({ next_starts_at: '2026-07-18T19:00:00' }), range)).toBe(true);
   });
 
   it('rejette un événement hors fenêtre', () => {
     const range = getMomentRange('today', NOW);
-    expect(isEventInRange(makeEvent({ next_starts_at: '2026-08-01T19:00:00' }), range)).toBe(
-      false,
-    );
+    expect(isEventInRange(makeEvent({ next_starts_at: '2026-08-01T19:00:00' }), range)).toBe(false);
   });
 });
 
@@ -131,13 +125,10 @@ describe('pickForYouEvents / buildTodayFeed', () => {
   });
 
   it('construit les sections et masque les vides', () => {
-    const { sections, allEvents, forYouPicks } = buildTodayFeed(
-      [concert, balade, musee, visite],
-      {
-        now: NOW,
-        filters: { moment: 'weekend', price: 'all', category: 'all' },
-      },
-    );
+    const { sections, allEvents, forYouPicks } = buildTodayFeed([concert, balade, musee, visite], {
+      now: NOW,
+      filters: { moment: 'weekend', price: 'all', category: 'all' },
+    });
 
     expect(forYouPicks.length).toBeGreaterThan(0);
     expect(sections.some((section) => section.key === 'forYou')).toBe(true);

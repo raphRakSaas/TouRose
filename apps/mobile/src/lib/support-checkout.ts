@@ -8,8 +8,7 @@ import type { SupportAmountCents } from '@/src/lib/support-amounts';
 export type { SupportAmountCents } from '@/src/lib/support-amounts';
 
 export type SupportCheckoutResult =
-  | { ok: true; checkoutUrl: string }
-  | { ok: false; errorMessage: string };
+  { ok: true; checkoutUrl: string } | { ok: false; errorMessage: string };
 
 export async function createSupportCheckoutSession(
   amountCents: SupportAmountCents,
@@ -19,7 +18,10 @@ export async function createSupportCheckoutSession(
   const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseClient || !supabaseUrl || !anonKey) {
-    return { ok: false, errorMessage: 'Supabase mobile non configuré (URL ou clé anon manquante).' };
+    return {
+      ok: false,
+      errorMessage: 'Supabase mobile non configuré (URL ou clé anon manquante).',
+    };
   }
 
   const installationId = await getOrCreateInstallationId();

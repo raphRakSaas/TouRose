@@ -1,5 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CATALOG_CACHE_KEY_PREFIX, readCatalogCache, writeCatalogCache, withCatalogCache } from '@/src/lib/catalog-cache';
+import {
+  CATALOG_CACHE_KEY_PREFIX,
+  readCatalogCache,
+  writeCatalogCache,
+  withCatalogCache,
+} from '@/src/lib/catalog-cache';
 
 jest.mock('@/src/lib/local-db', () => ({
   getLocalDatabase: jest.fn(),
@@ -15,11 +20,13 @@ describe('catalog-cache', () => {
     await AsyncStorage.clear();
     (getLocalDatabase as jest.Mock).mockResolvedValue({
       execAsync: jest.fn(async () => undefined),
-      runAsync: jest.fn(async (sql: string, cacheKey: string, payload: string, cachedAt: string) => {
-        if (sql.includes('INSERT INTO catalog_cache')) {
-          catalogRows.set(cacheKey, { payload, cached_at: cachedAt });
-        }
-      }),
+      runAsync: jest.fn(
+        async (sql: string, cacheKey: string, payload: string, cachedAt: string) => {
+          if (sql.includes('INSERT INTO catalog_cache')) {
+            catalogRows.set(cacheKey, { payload, cached_at: cachedAt });
+          }
+        },
+      ),
       getFirstAsync: jest.fn(async (sql: string, cacheKey: string) => {
         if (sql.includes('FROM catalog_cache')) {
           return catalogRows.get(cacheKey) ?? null;

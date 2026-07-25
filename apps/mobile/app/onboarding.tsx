@@ -148,8 +148,8 @@ function HeroCarouselStep({ onSkip, onContinue }: { onSkip: () => void; onContin
             entering={FadeInUp.duration(600).delay(450)}
             className="mb-6 text-[15px] leading-[1.6] font-body text-white/85"
           >
-            Chaque jour, trois idées de sorties choisies pour toi. Le reste de la ville est à
-            portée de main.
+            Chaque jour, trois idées de sorties choisies pour toi. Le reste de la ville est à portée
+            de main.
           </Animated.Text>
 
           <Animated.View

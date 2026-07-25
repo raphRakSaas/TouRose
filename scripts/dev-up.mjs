@@ -15,13 +15,7 @@
  *   --no-functions  skip Edge Functions (import OpenAgenda désactivé)
  */
 import { spawn, spawnSync } from 'node:child_process';
-import {
-  createWriteStream,
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  writeFileSync,
-} from 'node:fs';
+import { createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { networkInterfaces } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -353,7 +347,9 @@ async function printExpoQrCode() {
   const expoUrl = `exp://${lanIpAddress}:8081`;
   const { default: qrcodeTerminal } = await import('qrcode-terminal');
 
-  console.log(`\n${ANSI.green}${ANSI.bold}[mobile ]${ANSI.reset} Scanne ce QR avec Expo Go (même Wi-Fi) :\n`);
+  console.log(
+    `\n${ANSI.green}${ANSI.bold}[mobile ]${ANSI.reset} Scanne ce QR avec Expo Go (même Wi-Fi) :\n`,
+  );
   await new Promise((resolve) => {
     qrcodeTerminal.generate(expoUrl, { small: true }, (qrOutput) => {
       console.log(qrOutput);
@@ -446,8 +442,7 @@ function setLogFocus(nextFocus) {
 
 function printHelp() {
   printShortcutsBanner();
-  const focusLabel =
-    logFocus === null ? 'tout' : (APP_STYLES[logFocus]?.label.trim() ?? logFocus);
+  const focusLabel = logFocus === null ? 'tout' : (APP_STYLES[logFocus]?.label.trim() ?? logFocus);
   log(`Focus actuel : ${focusLabel}`);
 }
 
@@ -510,9 +505,7 @@ function enableKeyboardShortcuts() {
 
     const isRunning = children.some((entry) => entry.name === appKey);
     if (!isRunning) {
-      log(
-        `Pas de process « ${appKey} » (relance avec le bon flag, ex. --functions pour f).`,
-      );
+      log(`Pas de process « ${appKey} » (relance avec le bon flag, ex. --functions pour f).`);
       return;
     }
 
@@ -559,7 +552,9 @@ if (withFunctions) {
     shell: false,
   });
   if (openAgendaBootstrap.status !== 0) {
-    log('Import OpenAgenda automatique échoué — vérifie supabase/functions/.env puis `pnpm import:openagenda`.');
+    log(
+      'Import OpenAgenda automatique échoué — vérifie supabase/functions/.env puis `pnpm import:openagenda`.',
+    );
   }
 }
 
@@ -572,39 +567,31 @@ if (withMobile) {
 }
 
 if (withWebsite) {
-  spawnDev(
-    'website',
-    'pnpm',
-    [
-      '--filter',
-      '@tourose/website',
-      'exec',
-      'astro',
-      'dev',
-      '--host',
-      '127.0.0.1',
-      '--port',
-      '4321',
-    ],
-  );
+  spawnDev('website', 'pnpm', [
+    '--filter',
+    '@tourose/website',
+    'exec',
+    'astro',
+    'dev',
+    '--host',
+    '127.0.0.1',
+    '--port',
+    '4321',
+  ]);
 }
 
 if (withAdmin) {
-  spawnDev(
-    'admin',
-    'pnpm',
-    [
-      '--filter',
-      '@tourose/admin',
-      'exec',
-      'ng',
-      'serve',
-      '--host',
-      '127.0.0.1',
-      '--port',
-      '4200',
-    ],
-  );
+  spawnDev('admin', 'pnpm', [
+    '--filter',
+    '@tourose/admin',
+    'exec',
+    'ng',
+    'serve',
+    '--host',
+    '127.0.0.1',
+    '--port',
+    '4200',
+  ]);
 }
 
 if (withMobile) {

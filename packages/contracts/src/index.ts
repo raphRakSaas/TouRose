@@ -93,9 +93,7 @@ export const publicEventDetailsSchema = z.object({
   attendance_mode: z.enum(['onsite', 'online', 'mixed']).nullish(),
   online_access_link: z.string().nullish(),
   keywords: z.array(z.string()).nullish(),
-  registration: z
-    .array(z.object({ type: z.string(), value: z.string() }))
-    .nullish(),
+  registration: z.array(z.object({ type: z.string(), value: z.string() })).nullish(),
   timezone: z.string().nullish(),
 });
 
@@ -125,7 +123,10 @@ export const publicEventRowSchema = z.object({
   image_alt: z.string().nullable().optional(),
   image_attribution: z.string().nullable().optional(),
   image_source_url: z.string().url().nullable().optional(),
-  categories: z.array(z.string()).nullish().transform((value) => value ?? []),
+  categories: z
+    .array(z.string())
+    .nullish()
+    .transform((value) => value ?? []),
   description: z.string().nullable().optional(),
   details: publicEventDetailsSchema.nullish().transform((value) => value ?? {}),
   upcoming_occurrences: z

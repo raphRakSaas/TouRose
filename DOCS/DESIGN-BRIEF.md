@@ -56,12 +56,12 @@ Les infos locales sont dispersées. Les catalogues exhaustifs **surchargent** : 
 
 ## 3. Publics cibles
 
-| Persona | Besoin design |
-| --- | --- |
-| **Nouvel arrivant** | Rassurant, clair, « première semaine à Toulouse », pas intimidant |
-| **Couple local** | Idées rapides le soir / week-end, favoris visibles |
-| **Habitant curieux** | Lieux moins évidents, éditorial soigné |
-| **Visiteur** | Immédiat, sans compte, suggestions actionnables |
+| Persona              | Besoin design                                                     |
+| -------------------- | ----------------------------------------------------------------- |
+| **Nouvel arrivant**  | Rassurant, clair, « première semaine à Toulouse », pas intimidant |
+| **Couple local**     | Idées rapides le soir / week-end, favoris visibles                |
+| **Habitant curieux** | Lieux moins évidents, éditorial soigné                            |
+| **Visiteur**         | Immédiat, sans compte, suggestions actionnables                   |
 
 **Compte facultatif** partout : aucune barrière login sur le parcours principal.
 
@@ -69,11 +69,11 @@ Les infos locales sont dispersées. Les catalogues exhaustifs **surchargent** : 
 
 ## 4. Plateformes à designer
 
-| Surface | Priorité | Nature |
-| --- | --- | --- |
-| **App mobile iOS/Android** | P0 | Cœur produit — Expo / React Native |
-| **Site web public** | P1 | Landing, catalogue, légal, soutien Stripe |
-| **Admin web** | P2 | Outil interne — clair, dense, sobre (pas marketing) |
+| Surface                    | Priorité | Nature                                              |
+| -------------------------- | -------- | --------------------------------------------------- |
+| **App mobile iOS/Android** | P0       | Cœur produit — Expo / React Native                  |
+| **Site web public**        | P1       | Landing, catalogue, légal, soutien Stripe           |
+| **Admin web**              | P2       | Outil interne — clair, dense, sobre (pas marketing) |
 
 ---
 
@@ -81,10 +81,10 @@ Les infos locales sont dispersées. Les catalogues exhaustifs **surchargent** : 
 
 Barre inférieure **4 onglets** :
 
-1. **Aujourd’hui** — recommandations + raccourcis  
-2. **Explorer** — catalogue + recherche  
-3. **Carte** — découverte géo  
-4. **Pour moi** — favoris, préférences, compte, soutien  
+1. **Aujourd’hui** — recommandations + raccourcis
+2. **Explorer** — catalogue + recherche
+3. **Carte** — découverte géo
+4. **Pour moi** — favoris, préférences, compte, soutien
 
 Recherche globale accessible depuis Aujourd’hui et Explorer.
 
@@ -94,30 +94,30 @@ Recherche globale accessible depuis Aujourd’hui et Explorer.
 
 ### 6.1 Onboarding léger (skippable)
 
-- Histoire + promesse TouRose  
-- Choix de centres d’intérêt (chips)  
-- Explication localisation **avant** la boîte système iOS/Android  
-- Tout est passable  
-- **Aucun** écran de création de compte obligatoire  
+- Histoire + promesse TouRose
+- Choix de centres d’intérêt (chips)
+- Explication localisation **avant** la boîte système iOS/Android
+- Tout est passable
+- **Aucun** écran de création de compte obligatoire
 
 ### 6.2 Aujourd’hui (écran héros)
 
 Contenu du premier viewport (garder simple) :
 
-- Marque **TouRose** bien visible (signal de marque, pas juste dans la nav)  
-- Salutation contextuelle (tutoiement)  
-- Météo synthétique  
-- Sélecteur de moment (maintenant / aujourd’hui / ce soir / demain / week-end / date)  
-- **Trois cartes de suggestion** (cœur de l’écran)  
-- CTA « Affiner mes envies »  
-- Raccourcis : Gratuit · Dehors · Ce week-end · Autour de moi  
-- Plus bas : nouveautés / collection éditoriale  
+- Marque **TouRose** bien visible (signal de marque, pas juste dans la nav)
+- Salutation contextuelle (tutoiement)
+- Météo synthétique
+- Sélecteur de moment (maintenant / aujourd’hui / ce soir / demain / week-end / date)
+- **Trois cartes de suggestion** (cœur de l’écran)
+- CTA « Affiner mes envies »
+- Raccourcis : Gratuit · Dehors · Ce week-end · Autour de moi
+- Plus bas : nouveautés / collection éditoriale
 
 **Les trois suggestions** doivent être visuellement distinctes par rôle :
 
-1. Meilleur choix global  
-2. Alternative économique / gratuite  
-3. Proposition inattendue  
+1. Meilleur choix global
+2. Alternative économique / gratuite
+3. Proposition inattendue
 
 Chaque carte : image (ou placeholder), titre, 1 phrase de **justification** explicable (« gratuit et accessible en métro », « adapté à la météo », « à 18 min »).
 
@@ -125,31 +125,31 @@ Chaque carte : image (ou placeholder), titre, 1 phrase de **justification** expl
 
 Feuille / bottom sheet / écran avec :
 
-- durée : &lt;1 h · 1–2 h · demi-journée · journée  
-- compagnie : seul · couple · amis · famille · avec un chien  
-- budget : gratuit · &lt;10 € · &lt;25 € · indifférent  
-- transport : à pied · vélo · transports · voiture  
-- environnement : intérieur · extérieur · indifférent  
-- envie : découvrir · marcher · se poser · bouger · apprendre · manger · participer  
+- durée : &lt;1 h · 1–2 h · demi-journée · journée
+- compagnie : seul · couple · amis · famille · avec un chien
+- budget : gratuit · &lt;10 € · &lt;25 € · indifférent
+- transport : à pied · vélo · transports · voiture
+- environnement : intérieur · extérieur · indifférent
+- envie : découvrir · marcher · se poser · bouger · apprendre · manger · participer
 
 Filtres actifs visibles + reset facile.
 
 ### 6.4 Explorer
 
-- Champ recherche  
-- Segments : Événements · Lieux · Collections  
-- Filtres (date, catégorie, prix, distance, public, intérieur/extérieur…)  
-- Liste longue (virtualisée)  
-- États : chargement, erreur, vide, hors-ligne  
+- Champ recherche
+- Segments : Événements · Lieux · Collections
+- Filtres (date, catégorie, prix, distance, public, intérieur/extérieur…)
+- Liste longue (virtualisée)
+- États : chargement, erreur, vide, hors-ligne
 
 ### 6.5 Carte
 
-- Marqueurs différenciés événement vs lieu  
-- Clustering  
-- Panneau détail au tap  
-- Recentrage  
-- Filtres alignés Explorer  
-- **Attribution cartographique toujours visible**  
+- Marqueurs différenciés événement vs lieu
+- Clustering
+- Panneau détail au tap
+- Recentrage
+- Filtres alignés Explorer
+- **Attribution cartographique toujours visible**
 
 ### 6.6 Fiche événement
 
@@ -163,40 +163,40 @@ Même logique : image, intérêt du lieu, adresse, durée conseillée, gratuité
 
 ### 6.8 Pour moi
 
-- Favoris · À découvrir · Déjà visité  
-- Préférences  
-- Notifications  
-- Compte / sync (optionnel)  
-- Soutenir TouRose (3 montants humoristiques locaux)  
-- Sources, licences, confidentialité, contact  
+- Favoris · À découvrir · Déjà visité
+- Préférences
+- Notifications
+- Compte / sync (optionnel)
+- Soutenir TouRose (3 montants humoristiques locaux)
+- Sources, licences, confidentialité, contact
 
 ### 6.9 Soutien (mobile + site)
 
 Trois montants, **aucun avantage fonctionnel** :
 
-| Montant | Nom | Phrase |
-| --- | --- | --- |
-| 1 € | Une gorgée de café | « De quoi garder le créateur éveillé pendant trois lignes de code. » |
-| 5 € | Une chocolatine de compétition | « Oui, ici on dit chocolatine. Tu viens de financer une pause très toulousaine. » |
-| 10 € | Une brique rose | « Une brique symbolique pour construire la prochaine fonctionnalité. » |
+| Montant | Nom                            | Phrase                                                                            |
+| ------- | ------------------------------ | --------------------------------------------------------------------------------- |
+| 1 €     | Une gorgée de café             | « De quoi garder le créateur éveillé pendant trois lignes de code. »              |
+| 5 €     | Une chocolatine de compétition | « Oui, ici on dit chocolatine. Tu viens de financer une pause très toulousaine. » |
+| 10 €    | Une brique rose                | « Une brique symbolique pour construire la prochaine fonctionnalité. »            |
 
 Écran de remerciement chaleureux.
 
 ### 6.10 Site web
 
-- **Accueil** : marque dominante, signature, promesse, CTA catalogue / app  
-- **Catalogue** : listes événements / lieux publiés  
-- **Confidentialité** (placeholder clair pour l’instant)  
-- **Crédits / sources**  
-- SEO : titres, meta, structure claire  
+- **Accueil** : marque dominante, signature, promesse, CTA catalogue / app
+- **Catalogue** : listes événements / lieux publiés
+- **Confidentialité** (placeholder clair pour l’instant)
+- **Crédits / sources**
+- SEO : titres, meta, structure claire
 
 ### 6.11 Admin (outil)
 
-- Login  
-- Dashboard  
-- Listes lieux / événements  
-- Formulaires édition + statut draft/published  
-- Esthétique **sobre et efficace**, même famille de couleurs mais moins éditoriale / moins photo  
+- Login
+- Dashboard
+- Listes lieux / événements
+- Formulaires édition + statut draft/published
+- Esthétique **sobre et efficace**, même famille de couleurs mais moins éditoriale / moins photo
 
 ---
 
@@ -204,14 +204,14 @@ Trois montants, **aucun avantage fonctionnel** :
 
 Pour les listes et fiches au minimum :
 
-- Squelette de chargement  
-- Erreur récupérable (retry)  
-- Hors-ligne + cache  
-- Vide utile (« élargis ta recherche »)  
-- Données potentiellement obsolètes  
-- Image manquante → placeholder de marque  
-- Localisation refusée → saisie manuelle  
-- Événement annulé / terminé  
+- Squelette de chargement
+- Erreur récupérable (retry)
+- Hors-ligne + cache
+- Vide utile (« élargis ta recherche »)
+- Données potentiellement obsolètes
+- Image manquante → placeholder de marque
+- Localisation refusée → saisie manuelle
+- Événement annulé / terminé
 
 ---
 
@@ -219,46 +219,46 @@ Pour les listes et fiches au minimum :
 
 ### Inspiration
 
-- Brique toulousaine / terre cuite  
-- Lumière chaude du Sud-Ouest  
-- Garonne (eau, reflets)  
-- Violette de Toulouse (accent, pas dominante criarde)  
+- Brique toulousaine / terre cuite
+- Lumière chaude du Sud-Ouest
+- Garonne (eau, reflets)
+- Violette de Toulouse (accent, pas dominante criarde)
 
 ### À faire
 
-- Photographie locale généreuse (quand droits OK)  
-- Cartes / surfaces arrondies **mais sobres**  
-- Densité maîtrisée : le contenu prime  
-- Identité joyeuse **sans** devenir enfantine  
-- Marque forte sur le premier viewport mobile et landing  
+- Photographie locale généreuse (quand droits OK)
+- Cartes / surfaces arrondies **mais sobres**
+- Densité maîtrisée : le contenu prime
+- Identité joyeuse **sans** devenir enfantine
+- Marque forte sur le premier viewport mobile et landing
 
 ### À éviter absolument
 
-- Rose bonbon / Barbie  
-- Esthétique « mairie » / institutionnelle grise  
-- Look générique startup IA : violet-sur-blanc / indigo glow / glassmorphism excessif  
-- Fond crème générique + serif terracotta « template AI » (le terracotta ici doit être **spécifiquement brique toulousaine**, pas un cliché neutre)  
-- Dashboard overload sur l’accueil  
-- Trop de pills, badges flottants, stickers promo sur le hero  
-- Cards partout sans nécessité d’interaction  
-- Emojis comme identité visuelle  
+- Rose bonbon / Barbie
+- Esthétique « mairie » / institutionnelle grise
+- Look générique startup IA : violet-sur-blanc / indigo glow / glassmorphism excessif
+- Fond crème générique + serif terracotta « template AI » (le terracotta ici doit être **spécifiquement brique toulousaine**, pas un cliché neutre)
+- Dashboard overload sur l’accueil
+- Trop de pills, badges flottants, stickers promo sur le hero
+- Cards partout sans nécessité d’interaction
+- Emojis comme identité visuelle
 
 ### Accessibilité
 
-- WCAG **AA** contraste  
-- Texte dynamique (Dynamic Type)  
-- Zones tactiles ≥ **44×44** pt  
-- Pas d’info par la couleur seule  
-- Respect `prefers-reduced-motion`  
-- Alt text pour images éditoriales  
+- WCAG **AA** contraste
+- Texte dynamique (Dynamic Type)
+- Zones tactiles ≥ **44×44** pt
+- Pas d’info par la couleur seule
+- Respect `prefers-reduced-motion`
+- Alt text pour images éditoriales
 
 ### Motion
 
 2–3 motions intentionnelles max au départ, par ex. :
 
-- apparition des 3 suggestions  
-- transition feuille « Affiner »  
-- feedback favori  
+- apparition des 3 suggestions
+- transition feuille « Affiner »
+- feedback favori
 
 Pas de bruit animationnel.
 
@@ -270,22 +270,22 @@ Le monorepo a déjà `packages/design-tokens`. Claude Design peut **affiner**, m
 
 ### Couleurs
 
-| Famille | Rôle | Exemple 500 |
-| --- | --- | --- |
-| **brick** | Primaire marque / CTA | `#C45C3E` |
-| **garonne** | Secondaire / liens / eau | `#3A7A88` |
-| **violet** | Accent rare (violette) | `#8B5EAD` |
-| **sand** | Fonds chauds | 50 `#FBF8F4` |
-| **ink** | Texte | 800 `#1F1C19` |
-| sémantique | success `#2F7D4A` · warning `#C47A1A` · danger `#B33A2B` | |
+| Famille     | Rôle                                                     | Exemple 500   |
+| ----------- | -------------------------------------------------------- | ------------- |
+| **brick**   | Primaire marque / CTA                                    | `#C45C3E`     |
+| **garonne** | Secondaire / liens / eau                                 | `#3A7A88`     |
+| **violet**  | Accent rare (violette)                                   | `#8B5EAD`     |
+| **sand**    | Fonds chauds                                             | 50 `#FBF8F4`  |
+| **ink**     | Texte                                                    | 800 `#1F1C19` |
+| sémantique  | success `#2F7D4A` · warning `#C47A1A` · danger `#B33A2B` |               |
 
 Échelles complètes 50–900 disponibles dans le code pour brick / garonne / violet / sand / ink.
 
 ### Typographie actuelle (ouverte à meilleure paire)
 
-- **Display / marque** : Fraunces (serif expressive)  
-- **Body** : Source Sans 3  
-- **Mono** (admin / technique) : IBM Plex Mono  
+- **Display / marque** : Fraunces (serif expressive)
+- **Body** : Source Sans 3
+- **Mono** (admin / technique) : IBM Plex Mono
 
 Préférer des polices expressives ; **éviter** Inter / Roboto / Arial comme identité.
 
@@ -305,18 +305,18 @@ Douces, peu nombreuses : soft / medium — pas de multi-layer glow.
 
 ## 10. Contenu & copy (voix)
 
-- **Tutoiement**  
-- Phrases courtes  
-- Local (« chocolatine », brique rose) avec humour léger  
-- Pas de jargon touristique (« patrimoine exceptionnel et pluriel… »)  
-- Toujours créditer sources et images  
+- **Tutoiement**
+- Phrases courtes
+- Local (« chocolatine », brique rose) avec humour léger
+- Pas de jargon touristique (« patrimoine exceptionnel et pluriel… »)
+- Toujours créditer sources et images
 
 Exemples de justifications de suggestion :
 
-- « gratuit et accessible en métro »  
-- « adapté à la météo »  
-- « à 18 minutes à pied »  
-- « idéal en couple ce soir »  
+- « gratuit et accessible en métro »
+- « adapté à la météo »
+- « à 18 minutes à pied »
+- « idéal en couple ce soir »
 
 ---
 
@@ -328,14 +328,14 @@ Exemples de justifications de suggestion :
 
 **Collections éditoriales** (exemples) :
 
-- Toulouse gratuitement  
-- Première semaine à Toulouse  
-- Sorties quand il pleut  
-- Fraîcheur et lieux ombragés  
-- Promenades sans voiture  
-- Toulouse en amoureux  
-- Monuments incontournables  
-- Petits coins moins connus  
+- Toulouse gratuitement
+- Première semaine à Toulouse
+- Sorties quand il pleut
+- Fraîcheur et lieux ombragés
+- Promenades sans voiture
+- Toulouse en amoureux
+- Monuments incontournables
+- Petits coins moins connus
 
 ---
 
@@ -343,29 +343,29 @@ Exemples de justifications de suggestion :
 
 Ne pas maquetter comme features MVP :
 
-- réseau social, chat, groupes, commentaires publics  
-- billetterie propriétaire, marketplace  
-- navigation randonnée GPS  
-- assistant IA conversationnel  
-- expansion multi-villes dans l’UI  
-- publication libre organisateurs  
+- réseau social, chat, groupes, commentaires publics
+- billetterie propriétaire, marketplace
+- navigation randonnée GPS
+- assistant IA conversationnel
+- expansion multi-villes dans l’UI
+- publication libre organisateurs
 
 ---
 
 ## 13. Contraintes techniques utiles au design
 
-- Mobile : React Native + Expo Router + NativeWind (utility classes proches Tailwind)  
-- Site : Astro + Tailwind (souvent statique)  
-- Admin : Angular + Tailwind  
-- Tokens partagés entre les trois  
-- Listes longues = virtualisées → éviter layouts impossibles à virtualiser  
-- Images : toujours prévoir crédit + fallback ; beaucoup d’images réelles seront sous licence — placeholders de marque importants  
+- Mobile : React Native + Expo Router + NativeWind (utility classes proches Tailwind)
+- Site : Astro + Tailwind (souvent statique)
+- Admin : Angular + Tailwind
+- Tokens partagés entre les trois
+- Listes longues = virtualisées → éviter layouts impossibles à virtualiser
+- Images : toujours prévoir crédit + fallback ; beaucoup d’images réelles seront sous licence — placeholders de marque importants
 
 État code actuel (indicatif, ne limite pas le design MVP) :
 
-- 4 onglets mobiles placeholder / catalogue branché  
-- Site : accueil, catalogue, crédits, confidentialité  
-- Admin : login + CRUD lieux/événements  
+- 4 onglets mobiles placeholder / catalogue branché
+- Site : accueil, catalogue, crédits, confidentialité
+- Admin : login + CRUD lieux/événements
 
 ---
 
@@ -373,12 +373,12 @@ Ne pas maquetter comme features MVP :
 
 Sur landing et Aujourd’hui :
 
-- Une seule composition forte (pas un dashboard)  
-- Marque héros  
-- Une promesse / headline  
-- Une courte phrase de soutien  
-- Un groupe de CTA  
-- Une image / atmosphère dominante  
+- Une seule composition forte (pas un dashboard)
+- Marque héros
+- Une promesse / headline
+- Une courte phrase de soutien
+- Un groupe de CTA
+- Une image / atmosphère dominante
 
 Éviter dans le premier viewport : stats, agendas denses, adresses, promos multiples, chips en pagaille.
 
@@ -417,12 +417,12 @@ Référence tokens existants brick #C45C3E, garonne #3A7A88, violet #8B5EAD, fon
 
 Le travail est bon si :
 
-- On reconnaît Toulouse / TouRose sans lire le nom (brique + chaleur + local)  
-- Les 3 suggestions sont le héros évident d’Aujourd’hui  
-- Explorer / Carte / Pour moi sont cohérents et calmes  
-- Les états vides/erreur sont aussi soignés que le happy path  
-- Le site et l’admin partagent la famille visuelle sans confondre marketing et outil  
-- Un développeur peut extraire tokens + specs sans ambiguïté  
+- On reconnaît Toulouse / TouRose sans lire le nom (brique + chaleur + local)
+- Les 3 suggestions sont le héros évident d’Aujourd’hui
+- Explorer / Carte / Pour moi sont cohérents et calmes
+- Les états vides/erreur sont aussi soignés que le happy path
+- Le site et l’admin partagent la famille visuelle sans confondre marketing et outil
+- Un développeur peut extraire tokens + specs sans ambiguïté
 
 ---
 
@@ -430,10 +430,10 @@ Le travail est bon si :
 
 Dans le repo TouRose :
 
-- `docs/01-PRODUCT-VISION.md`  
-- `docs/02-FUNCTIONAL-SPEC.md`  
-- `docs/03-UX-AND-SCREENS.md`  
-- `packages/design-tokens/` (tokens code)  
-- `README.md`  
+- `docs/01-PRODUCT-VISION.md`
+- `docs/02-FUNCTIONAL-SPEC.md`
+- `docs/03-UX-AND-SCREENS.md`
+- `packages/design-tokens/` (tokens code)
+- `README.md`
 
 Ce fichier (`docs/DESIGN-BRIEF.md`) reste le **point d’entrée unique** pour Claude Design.

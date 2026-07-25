@@ -405,7 +405,12 @@ export default function PlaceDetailScreen() {
                   <View className="gap-3 rounded-[18px] bg-white p-4">
                     {details.best_moment ? (
                       <View className="flex-row gap-3">
-                        <FontAwesome name="clock-o" size={16} color="#A94A30" style={{ marginTop: 3 }} />
+                        <FontAwesome
+                          name="clock-o"
+                          size={16}
+                          color="#A94A30"
+                          style={{ marginTop: 3 }}
+                        />
                         <View className="flex-1">
                           <Text className="mb-0.5 text-[13px] font-body-semibold text-ink-500">
                             Meilleur moment
@@ -418,7 +423,12 @@ export default function PlaceDetailScreen() {
                     ) : null}
                     {details.tips.map((tip) => (
                       <View key={tip} className="flex-row gap-3">
-                        <FontAwesome name="lightbulb-o" size={16} color="#A88B63" style={{ marginTop: 3 }} />
+                        <FontAwesome
+                          name="lightbulb-o"
+                          size={16}
+                          color="#A88B63"
+                          style={{ marginTop: 3 }}
+                        />
                         <Text className="flex-1 text-[14px] leading-[1.6] font-body text-ink-800">
                           {tip}
                         </Text>
@@ -433,13 +443,16 @@ export default function PlaceDetailScreen() {
               placeRow.dog_friendly != null ||
               placeRow.accessible != null ? (
                 <View className="mt-6">
-                  <Text className="mb-2 font-display text-[17px] text-ink-800">
-                    Bon à savoir
-                  </Text>
+                  <Text className="mb-2 font-display text-[17px] text-ink-800">Bon à savoir</Text>
                   <View className="gap-3 rounded-[18px] bg-white p-4">
                     {placeRow.price_details ? (
                       <View className="flex-row gap-3">
-                        <FontAwesome name="tag" size={15} color="#A94A30" style={{ marginTop: 3 }} />
+                        <FontAwesome
+                          name="tag"
+                          size={15}
+                          color="#A94A30"
+                          style={{ marginTop: 3 }}
+                        />
                         <Text className="flex-1 text-[14px] leading-[1.6] font-body text-ink-800">
                           {placeRow.price_details}
                         </Text>
@@ -449,7 +462,9 @@ export default function PlaceDetailScreen() {
                       <View className="flex-row items-center gap-3">
                         <FontAwesome name="child" size={16} color="#26525C" />
                         <Text className="text-[14px] font-body text-ink-800">
-                          {placeRow.family_friendly ? 'Adapté aux familles' : 'Non indiqué pour les familles'}
+                          {placeRow.family_friendly
+                            ? 'Adapté aux familles'
+                            : 'Non indiqué pour les familles'}
                         </Text>
                       </View>
                     ) : null}
@@ -467,7 +482,9 @@ export default function PlaceDetailScreen() {
                       <View className="flex-row items-center gap-3">
                         <FontAwesome name="paw" size={15} color="#A88B63" />
                         <Text className="text-[14px] font-body text-ink-800">
-                          {placeRow.dog_friendly ? 'Chiens acceptés' : 'Chiens non indiqués comme acceptés'}
+                          {placeRow.dog_friendly
+                            ? 'Chiens acceptés'
+                            : 'Chiens non indiqués comme acceptés'}
                         </Text>
                       </View>
                     ) : null}
@@ -484,7 +501,9 @@ export default function PlaceDetailScreen() {
                     {placeRow.phone ? (
                       <Pressable
                         accessibilityRole="button"
-                        onPress={() => void Linking.openURL(`tel:${placeRow.phone?.replace(/\s+/g, '')}`)}
+                        onPress={() =>
+                          void Linking.openURL(`tel:${placeRow.phone?.replace(/\s+/g, '')}`)
+                        }
                         className="flex-row items-center gap-3 rounded-[12px] px-3 py-2.5"
                       >
                         <FontAwesome name="phone" size={15} color="#A94A30" />
@@ -524,9 +543,7 @@ export default function PlaceDetailScreen() {
               ) : null}
 
               {attribution ? (
-                <Text className="mt-5 text-[11px] font-body text-ink-300">
-                  {attribution}
-                </Text>
+                <Text className="mt-5 text-[11px] font-body text-ink-300">{attribution}</Text>
               ) : null}
             </Animated.View>
           ) : null}
