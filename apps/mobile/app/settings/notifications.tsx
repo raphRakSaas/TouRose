@@ -1,6 +1,11 @@
 import { Stack } from 'expo-router';
+import { useEffect } from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
 
+import {
+  arePushNotificationsEnabled,
+  syncPushSubscription,
+} from '@/src/lib/push-notifications';
 import {
   usePreferencesStore,
   type NotificationSettings,
@@ -31,6 +36,29 @@ const NOTIFICATION_ROWS: ReadonlyArray<{
 export default function NotificationsSettingsScreen() {
   const notificationSettings = usePreferencesStore((state) => state.notificationSettings);
   const setNotificationSetting = usePreferencesStore((state) => state.setNotificationSetting);
+  const pushEnabled = arePushNotificationsEnabled();
+
+  useEffect(() => {
+    if (!pushEnabled) {
+      return;
+    }
+    void syncPushSubscription(notificationSettings);
+  }, [notificationSettings, pushEnabled]);
+
+  async function onToggleSetting(
+    settingKey: keyof NotificationSettings,
+    enabled: boolean,
+  ): Promise<void> {
+    setNotificationSetting(settingKey, enabled);
+    if (!pushEnabled) {
+      return;
+    }
+    const nextSettings = {
+      ...notificationSettings,
+      [settingKey]: enabled,
+    };
+    await syncPushSubscription(nextSettings);
+  }
 
   return (
     <>
@@ -38,7 +66,9 @@ export default function NotificationsSettingsScreen() {
       <ScrollView className="flex-1 bg-sand-50" contentContainerClassName="px-5 pb-12 pt-4">
         <Text className="mb-5 text-[14px] leading-[1.6] font-body text-ink-500">
           Choisis ce que TouRose peut t’envoyer. Ces réglages sont enregistrés sur ton téléphone
-          et seront appliqués dès l’activation des notifications push.
+          {pushEnabled
+            ? ' et synchronisés pour les notifications push.'
+            : ' et seront appliqués dès l’activation des notifications push.'}
         </Text>
 
         <View
@@ -67,7 +97,7 @@ export default function NotificationsSettingsScreen() {
               <Switch
                 testID={`notif-switch-${row.settingKey}`}
                 value={notificationSettings[row.settingKey]}
-                onValueChange={(enabled) => setNotificationSetting(row.settingKey, enabled)}
+                onValueChange={(enabled) => void onToggleSetting(row.settingKey, enabled)}
                 trackColor={{ false: '#EDE0CB', true: '#C45C3E' }}
                 thumbColor="#FFFFFF"
               />
@@ -76,8 +106,9 @@ export default function NotificationsSettingsScreen() {
         </View>
 
         <Text className="mt-5 text-[13px] leading-[1.6] font-body text-ink-400">
-          Les notifications push arriveront dans une prochaine version : tes choix seront
-          respectés dès leur activation, rien ne sera envoyé sans ton accord.
+          {pushEnabled
+            ? 'Les rappels de favoris sont planifiés sur ton téléphone. Les idées week-end sont envoyées le vendredi si tu les actives.'
+            : 'Active EXPO_PUBLIC_NOTIFICATIONS_ENABLED=true et un development build EAS pour recevoir les notifications push.'}
         </Text>
       </ScrollView>
     </>

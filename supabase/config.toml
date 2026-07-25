@@ -63,3 +63,18 @@ verify_jwt = false
 
 [functions.import-openagenda]
 verify_jwt = false
+
+[functions.import-health]
+verify_jwt = false
+
+[functions.register-push-subscription]
+verify_jwt = false
+
+[functions.send-push-notifications]
+verify_jwt = false
+
+[functions.create-support-checkout]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false

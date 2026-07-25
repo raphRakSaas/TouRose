@@ -5,6 +5,7 @@
  */
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -43,12 +44,46 @@ export function startFunctionsServeDetached() {
     serveArgs.push('--env-file', 'supabase/functions/.env');
   }
 
+  const functionsEnv = loadFunctionsEnvFromFile(envFilePath);
+
   const child = spawn('pnpm', serveArgs, {
     cwd: rootDirectory,
     detached: true,
     stdio: 'ignore',
+    env: {
+      ...process.env,
+      ...functionsEnv,
+    },
   });
   child.unref();
+}
+
+function loadFunctionsEnvFromFile(envFilePath) {
+  if (!existsSync(envFilePath)) {
+    return {};
+  }
+
+  const envValues = {};
+  for (const line of readFileSync(envFilePath, 'utf8').split('\n')) {
+    const trimmedLine = line.trim();
+    if (!trimmedLine || trimmedLine.startsWith('#')) {
+      continue;
+    }
+    const separatorIndex = trimmedLine.indexOf('=');
+    if (separatorIndex === -1) {
+      continue;
+    }
+    const key = trimmedLine.slice(0, separatorIndex).trim();
+    let value = trimmedLine.slice(separatorIndex + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    envValues[key] = value;
+  }
+  return envValues;
 }
 
 export async function ensureFunctionsServe(apiUrl) {

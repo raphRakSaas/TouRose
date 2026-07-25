@@ -1,11 +1,16 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 
-import { ImportAdminService, type ImportErrorRow, type ImportRunRow } from '../core/import-admin.service';
+import {
+  ImportAdminService,
+  type ImportErrorRow,
+  type ImportHealth,
+  type ImportRunRow,
+} from '../core/import-admin.service';
 
 @Component({
   selector: 'app-imports-page',
-  imports: [DatePipe],
+  imports: [DatePipe, DecimalPipe],
   template: `
     <section class="mt-6 grid gap-6">
       <div class="flex flex-wrap items-center justify-between gap-3">
@@ -24,6 +29,24 @@ import { ImportAdminService, type ImportErrorRow, type ImportRunRow } from '../c
           {{ isTriggering() ? 'Import…' : 'Lancer import (local)' }}
         </button>
       </div>
+
+      @if (healthSummary()) {
+        <p
+          class="rounded-lg px-4 py-3 text-sm"
+          [class.bg-white]="!healthSummary()?.is_stale"
+          [class.bg-white/70]="!healthSummary()?.is_stale"
+          [class.bg-[#FCE8E4]]="healthSummary()?.is_stale"
+        >
+          Santé OpenAgenda :
+          <strong>{{ healthSummary()?.status }}</strong>
+          @if (healthSummary()?.hours_since_success !== null) {
+            · dernière réussite il y a {{ healthSummary()?.hours_since_success | number: '1.0-1' }} h
+          }
+          @if ((healthSummary()?.open_alerts ?? 0) > 0) {
+            · {{ healthSummary()?.open_alerts }} alerte(s) ouverte(s)
+          }
+        </p>
+      }
 
       @if (statusMessage()) {
         <p class="rounded-lg bg-white/70 px-4 py-3 text-sm">{{ statusMessage() }}</p>
@@ -89,9 +112,11 @@ export class ImportsPage {
   readonly isTriggering = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly statusMessage = signal<string | null>(null);
+  readonly healthSummary = signal<ImportHealth | null>(null);
 
   constructor() {
     void this.reloadRuns();
+    void this.reloadHealth();
   }
 
   async onSelectRun(runId: string): Promise<void> {
@@ -113,6 +138,7 @@ export class ImportsPage {
         `Run ${result.importRunId} — ${result.status} (mode ${result.mode}, fetch ${result.fetchedCount})`,
       );
       await this.reloadRuns();
+      await this.reloadHealth();
       if (result.importRunId) {
         await this.onSelectRun(result.importRunId);
       }
@@ -128,6 +154,14 @@ export class ImportsPage {
       this.runs.set(await this.importAdmin.listRuns());
     } catch (error) {
       this.errorMessage.set(error instanceof Error ? error.message : 'Chargement runs impossible');
+    }
+  }
+
+  private async reloadHealth(): Promise<void> {
+    try {
+      this.healthSummary.set(await this.importAdmin.getImportHealth());
+    } catch {
+      this.healthSummary.set(null);
     }
   }
 }

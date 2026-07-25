@@ -3,7 +3,7 @@
 Vue d’ensemble de ce qui est **fait**, **en cours** et **à faire**.  
 Ce fichier est vivant : **ajoute des lignes** au fur et à mesure (bugs, idées, dettes techniques).
 
-Dernière mise à jour : **2026-07-25** (compte mobile retiré de l’UI — argument de vente futur)
+Dernière mise à jour : **2026-07-25** (Phase 2 cron + Phase 6 push/Stripe MVP)
 
 ---
 
@@ -48,19 +48,19 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 | **0 — Fondations** | Fait | Apps démarrent, CI, migration locale | ~100 % |
 | **1 — Catalogue admin** | Fait | Admin publie → visible mobile/web | ~100 % (doublons / MFA / médias upload / SSR reportés) |
 | **Design** | En cours | Brief + maquette mobile intégrée | Mobile UI + motion OK ; site/admin maquettes ouvertes |
-| **2 — Imports** | Partiel | OpenAgenda idempotent | ~80 % (OA + images + catégories + prix ; DATAtourisme / cron / alertes ouverts) |
+| **2 — Imports** | Partiel | OpenAgenda idempotent | ~90 % (cron pg_cron + GitHub Actions + alertes ; DATAtourisme / doublons UI ouverts) |
 | **3 — Cœur mobile** | En cours | Onboarding, fiches, favoris, carte | ~95 % (hors-ligne + clustering OK ; MapLibre natif / cache Query→SQLite ouverts) |
 | **4 — Recommandations** | Fait | 3 suggestions scorées | ~95 % (RPC + impressions + ADR 0005) |
 | **5 — Comptes / sync** | En pause (UI) | Magic link + fusion locale | Backend ~60 % ; UI mobile retirée (compte = argument de vente futur) |
-| **6 — Notifs / soutien** | À faire | Push + Stripe + IAP | 0 % |
+| **6 — Notifs / soutien** | En cours | Push + Stripe + IAP | ~55 % (push weekend + rappels locaux favoris + Stripe Checkout mobile ; IAP / site ouverts) |
 | **7 — Boutiques** | À faire | Store-ready | 0 % |
 
 **Prochaine priorité (mobile / backend uniquement — site web en pause) :**
 
-1. **Phase 2** — cron import OpenAgenda prod + alertes  
+1. **Phase 6** — credentials EAS push + Stripe prod + IAP mobile  
 2. **Phase 3** — MapLibre natif (dev build) + cache TanStack Query→SQLite complet  
 3. **Design mobile** — logo / assets (pas de maquettes site)  
-4. **Phase 5** — réactiver compte mobile (magic link + sync) quand argument de vente prêt ; RGPD export/suppression
+4. **Phase 5** — réactiver compte mobile quand argument de vente prêt ; RGPD export/suppression
 
 > **Site web (`apps/website`) — en pause** : pas de SSR/ISR, polish catalogue, page soutien Stripe, ni maquettes site pour l’instant. Le catalogue web actuel reste tel quel.
 
@@ -232,8 +232,8 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [x] ADR `0004-openagenda-image-previews`
 - [ ] Import **DATAtourisme**
 - [ ] Import **Toulouse Open Data** (parcs / équipements)
-- [ ] Cron d’import (pg_cron ou scheduler Supabase)
-- [ ] Alertes import échoué / source trop ancienne
+- [x] Cron d’import OpenAgenda (`pg_cron` + `pg_net` local, `pnpm cron:tick`, workflow GitHub cloud)
+- [x] Alertes import échoué / source trop ancienne (`import-health` + `import_alerts` + badge admin)
 - [ ] UI admin de résolution de doublons (au-delà du journal)
 ---
 
@@ -283,7 +283,7 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [x] Notifications : réglages granulaires persistés localement (prêts pour le push Phase 6)
 - [x] Compte : écran mode invité + magic link + sync favoris/visités/à découvrir
 - [x] Sources & confidentialité : sources ouvertes cliquables + engagements vie privée
-- [x] Soutenir TouRose (maquette montants, paiement réel = Phase 6)
+- [x] Soutenir TouRose (Stripe Checkout mobile via Edge Function ; merci via deep link)
 
 ---
 
@@ -322,17 +322,17 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 ## Phase 6 — Notifications et soutien
 
-- [ ] Consentement + préférences granulaires
-- [ ] Push Expo (credentials EAS)
-- [ ] Sélection week-end
-- [ ] Rappel événement favori
+- [x] Consentement + préférences granulaires (toggles + sync `push_subscriptions`)
+- [~] Push Expo (module mobile + `register-push-subscription` + cron vendredi ; credentials EAS à configurer)
+- [x] Sélection week-end (push serveur vendredi si `weekendIdeas`)
+- [x] Rappel événement favori (notification locale planifiée sur l’appareil)
 - [ ] Event modifié / annulé
 - [ ] Nouvelle collection pertinente
-- [ ] Désinscription immédiate
-- [ ] Page soutien site + Stripe Checkout
-- [ ] IAP Apple / Google (consommables 1/5/10 €)
-- [ ] Webhooks idempotents + table `support_payments`
-- [ ] Remerciement UX
+- [x] Désinscription immédiate (tous toggles off → `opted_out_at`)
+- [ ] Page soutien site + Stripe Checkout (site en pause)
+- [ ] IAP Apple / Google (consommables 1/5/10 €) — Stripe mobile en attendant
+- [x] Webhooks idempotents + table `support_payments` (`stripe-webhook`)
+- [x] Remerciement UX (`/support/success`)
 
 ---
 
@@ -403,5 +403,6 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 | 2026-07-25 | Site web mis en pause ; priorité mobile Phase 3 finition → Phase 5 → Phase 2 cron |
 | 2026-07-25 | Mobile : cache catalogue hors-ligne, clustering carte, Phase 5 (profiles, magic link, sync favoris) |
 | 2026-07-25 | Compte mobile retiré de l’UI (backend Phase 5 conservé pour réactivation future) |
+| 2026-07-25 | Phase 2 cron OpenAgenda (pg_cron, import-health, GitHub Actions) + Phase 6 push/Stripe MVP |
 
 *(Ajoute une ligne ici quand tu modifies significativement le backlog.)*

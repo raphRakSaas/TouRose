@@ -11,6 +11,12 @@ spawnSync('node', ['./scripts/openagenda-import-if-needed.mjs'], {
   shell: false,
 });
 
+spawnSync('node', ['./scripts/sync-cron-runtime.mjs'], {
+  cwd: rootDirectory,
+  stdio: 'inherit',
+  shell: false,
+});
+
 spawnSync('pnpm', ['import:editorial-photos'], {
   cwd: rootDirectory,
   stdio: 'inherit',

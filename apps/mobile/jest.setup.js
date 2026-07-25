@@ -114,6 +114,17 @@ jest.mock('expo-web-browser', () => ({
   openBrowserAsync: jest.fn(async () => ({ type: 'dismiss' })),
 }));
 
+jest.mock('expo-notifications', () => ({
+  setNotificationHandler: jest.fn(),
+  getPermissionsAsync: jest.fn(async () => ({ granted: true })),
+  requestPermissionsAsync: jest.fn(async () => ({ granted: true })),
+  getExpoPushTokenAsync: jest.fn(async () => ({ data: 'ExponentPushToken[test-token]' })),
+  scheduleNotificationAsync: jest.fn(async () => 'notification-id'),
+  getAllScheduledNotificationsAsync: jest.fn(async () => []),
+  cancelScheduledNotificationAsync: jest.fn(async () => undefined),
+  SchedulableTriggerInputTypes: { DATE: 'date' },
+}));
+
 jest.mock('@react-native-community/netinfo', () => ({
   fetch: jest.fn(async () => ({ isConnected: true, isInternetReachable: true })),
   addEventListener: jest.fn(() => jest.fn()),
@@ -125,6 +136,13 @@ jest.mock('expo-linking', () => ({
   getInitialURL: jest.fn(async () => null),
   addEventListener: jest.fn(() => ({ remove: jest.fn() })),
   useURL: jest.fn(() => null),
+}));
+
+jest.mock('@/src/lib/support-checkout', () => ({
+  createSupportCheckoutSession: jest.fn(async () => ({
+    ok: true,
+    checkoutUrl: 'https://checkout.stripe.test/session',
+  })),
 }));
 
 jest.mock('react-native-webview');

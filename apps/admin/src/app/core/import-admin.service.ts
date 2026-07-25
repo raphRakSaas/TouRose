@@ -35,6 +35,23 @@ export type ImportTriggerResult = {
   fetchedCount: number;
 };
 
+export type ImportHealth = {
+  status: string;
+  is_stale: boolean;
+  hours_since_success: number | null;
+  open_alerts: number;
+  stale_after_hours: number;
+  last_run: {
+    id: string;
+    status: string;
+    started_at: string;
+    finished_at: string | null;
+    fetched_count: number;
+    error_count: number;
+    message: string | null;
+  } | null;
+};
+
 @Injectable({ providedIn: 'root' })
 export class ImportAdminService {
   private readonly supabaseClient = inject(SupabaseClientService);
@@ -61,6 +78,13 @@ export class ImportAdminService {
       .order('created_at', { ascending: false });
     if (error) throw new Error(error.message);
     return (data ?? []) as ImportErrorRow[];
+  }
+
+  async getImportHealth(): Promise<ImportHealth> {
+    const client = this.requireClient();
+    const { data, error } = await client.rpc('get_openagenda_import_health');
+    if (error) throw new Error(error.message);
+    return data as ImportHealth;
   }
 
   async triggerOpenAgendaImport(): Promise<ImportTriggerResult> {

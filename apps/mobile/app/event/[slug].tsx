@@ -31,6 +31,11 @@ import {
   fetchPublicPlaceById,
 } from '@/src/data/catalog-api';
 import { isFavorite, toggleFavorite } from '@/src/data/local-catalog';
+import {
+  cancelFavoriteRemindersForSlug,
+  scheduleFavoriteReminder,
+} from '@/src/lib/push-notifications';
+import { usePreferencesStore } from '@/src/store/preferences-store';
 import { EVENT_CATEGORIES } from '@/src/domain/today-feed';
 import { addEventToCalendar } from '@/src/lib/calendar';
 import { openDirections } from '@/src/lib/directions';
@@ -258,6 +263,18 @@ export default function EventDetailScreen() {
         subtitle: eventRow.price_type,
       });
       setIsFavoriteState(nextValue);
+
+      const favoriteRemindersEnabled = usePreferencesStore.getState().notificationSettings
+        .favoriteReminders;
+      if (nextValue && favoriteRemindersEnabled && eventRow.next_starts_at) {
+        await scheduleFavoriteReminder({
+          eventTitle: eventRow.title,
+          eventSlug: eventRow.slug,
+          startsAt: new Date(eventRow.next_starts_at),
+        });
+      } else if (!nextValue) {
+        await cancelFavoriteRemindersForSlug(eventRow.slug);
+      }
     } finally {
       setIsTogglingFavorite(false);
     }

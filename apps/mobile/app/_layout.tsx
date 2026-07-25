@@ -11,6 +11,7 @@ import {
 } from '@expo-google-fonts/source-sans-3';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack, useRouter, useSegments } from 'expo-router';
+import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
@@ -19,6 +20,11 @@ import '../global.css';
 
 import { OfflineBanner } from '@/components/ui/OfflineBanner';
 import { purgeLegacyCatalogCache } from '@/src/lib/catalog-cache';
+import {
+  arePushNotificationsEnabled,
+  syncPushSubscription,
+} from '@/src/lib/push-notifications';
+import { routeForSupportDeepLink } from '@/src/lib/support-deeplink';
 import { usePreferencesStore } from '@/src/store/preferences-store';
 
 export { ErrorBoundary } from 'expo-router';
@@ -54,6 +60,7 @@ export default function RootLayout() {
 
   const fontsLoaded = frauncesLoaded && sourceSansLoaded;
   const onboardingCompleted = usePreferencesStore((state) => state.onboardingCompleted);
+  const notificationSettings = usePreferencesStore((state) => state.notificationSettings);
   const segments = useSegments();
   const router = useRouter();
 
@@ -68,11 +75,44 @@ export default function RootLayout() {
   }, [fontsLoaded]);
 
   useEffect(() => {
+    if (!fontsLoaded || !arePushNotificationsEnabled()) {
+      return;
+    }
+    void syncPushSubscription(notificationSettings).catch(() => undefined);
+  }, [fontsLoaded, notificationSettings]);
+
+  useEffect(() => {
     if (!fontsLoaded) {
       return;
     }
-    const onOnboarding = segments[0] === 'onboarding';
-    if (!onboardingCompleted && !onOnboarding) {
+
+    const handleSupportDeepLink = (incomingUrl: string | null): void => {
+      if (!incomingUrl) {
+        return;
+      }
+      const supportRoute = routeForSupportDeepLink(incomingUrl);
+      if (supportRoute) {
+        requestAnimationFrame(() => {
+          router.replace(supportRoute);
+        });
+      }
+    };
+
+    void Linking.getInitialURL().then(handleSupportDeepLink);
+    const subscription = Linking.addEventListener('url', (event) => {
+      handleSupportDeepLink(event.url);
+    });
+    return () => subscription.remove();
+  }, [fontsLoaded, router]);
+
+  useEffect(() => {
+    if (!fontsLoaded) {
+      return;
+    }
+    const segmentRoot = segments[0];
+    const onOnboarding = segmentRoot === 'onboarding';
+    const onSupportFlow = segmentRoot === 'support';
+    if (!onboardingCompleted && !onOnboarding && !onSupportFlow) {
       router.replace('/onboarding');
     } else if (onboardingCompleted && onOnboarding) {
       router.replace('/(tabs)');
@@ -125,6 +165,7 @@ export default function RootLayout() {
             />
           ),
         )}
+        <Stack.Screen name="support" options={{ headerShown: false }} />
       </Stack>
     </QueryClientProvider>
   );

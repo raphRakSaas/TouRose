@@ -70,16 +70,29 @@ describe('ForMeScreen menu', () => {
     expect(mockRouterPush).toHaveBeenCalledWith('/settings/privacy');
   });
 
-  it('still opens the support flow', async () => {
+  it('opens support from the promo card', async () => {
+    const WebBrowser = jest.requireMock<typeof import('expo-web-browser')>('expo-web-browser');
     renderWithSafeArea(<ForMeScreen />);
 
     await waitFor(() => {
-      expect(screen.getByTestId('me-menu-Soutenir TouRose')).toBeTruthy();
+      expect(screen.getByTestId('support-promo-card')).toBeTruthy();
     });
-    fireEvent.press(screen.getByTestId('me-menu-Soutenir TouRose'));
-    expect(
-      screen.getByText("Aucun avantage, juste un coup de pouce sympa pour continuer à construire l'app."),
-    ).toBeTruthy();
+
+    fireEvent.press(screen.getByTestId('support-amount-100'));
+    await waitFor(() => {
+      expect(WebBrowser.openBrowserAsync).toHaveBeenCalledWith('https://checkout.stripe.test/session');
+    });
+  });
+
+  it('opens the support detail screen from learn more', async () => {
+    renderWithSafeArea(<ForMeScreen />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('support-learn-more')).toBeTruthy();
+    });
+
+    fireEvent.press(screen.getByTestId('support-learn-more'));
+    expect(screen.getByText('Une brique symbolique pour construire la prochaine fonctionnalité.')).toBeTruthy();
   });
 });
 

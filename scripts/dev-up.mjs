@@ -28,6 +28,35 @@ import { fileURLToPath } from 'node:url';
 
 const rootDirectory = join(dirname(fileURLToPath(import.meta.url)), '..');
 const logsDirectory = join(rootDirectory, '.logs');
+const functionsEnvFilePath = join(rootDirectory, 'supabase/functions/.env');
+
+function loadFunctionsEnvFile() {
+  if (!existsSync(functionsEnvFilePath)) {
+    return {};
+  }
+
+  const envValues = {};
+  for (const line of readFileSync(functionsEnvFilePath, 'utf8').split('\n')) {
+    const trimmedLine = line.trim();
+    if (!trimmedLine || trimmedLine.startsWith('#')) {
+      continue;
+    }
+    const separatorIndex = trimmedLine.indexOf('=');
+    if (separatorIndex === -1) {
+      continue;
+    }
+    const key = trimmedLine.slice(0, separatorIndex).trim();
+    let value = trimmedLine.slice(separatorIndex + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    envValues[key] = value;
+  }
+  return envValues;
+}
 const children = [];
 
 /** `null` = show all apps; otherwise only that appKey */
@@ -503,10 +532,23 @@ const supabase = startSupabase();
 const config = syncAppEnv(supabase);
 
 if (withFunctions) {
+  const functionsEnv = loadFunctionsEnvFile();
+  const loadedKeys = Object.keys(functionsEnv);
+  if (loadedKeys.length > 0) {
+    log(`Edge Functions .env : ${loadedKeys.join(', ')}`);
+  } else {
+    log('Edge Functions .env introuvable ou vide — copie supabase/functions/.env.example');
+  }
+  if (!functionsEnv.STRIPE_SECRET_KEY) {
+    log(
+      '⚠ STRIPE_SECRET_KEY absent de supabase/functions/.env sur disque — enregistre le fichier (Cmd+S) puis redémarre dev:up.',
+    );
+  }
   spawnDev(
     'functions',
     'pnpm',
     ['exec', 'supabase', 'functions', 'serve', '--env-file', 'supabase/functions/.env'],
+    functionsEnv,
   );
 }
 
