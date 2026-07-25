@@ -67,5 +67,5 @@
       "supabaseAnonKey": "${EXPO_PUBLIC_SUPABASE_ANON_KEY}"
     }
   },
-  "version": "0.1.2"
+  "version": "0.1.3"
 }

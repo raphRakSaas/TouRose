@@ -22,25 +22,25 @@ describe('formatWeatherLine', () => {
 });
 
 describe('fetchToulouseWeather', () => {
-  const originalFetch = global.fetch;
+  const originalFetch = globalThis.fetch;
 
   afterEach(() => {
-    global.fetch = originalFetch;
+    globalThis.fetch = originalFetch;
   });
 
   it('retourne la météo courante depuis Open-Meteo', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    globalThis.fetch = jest.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ current: { temperature_2m: 21.3, weather_code: 2 } }),
     }) as unknown as typeof fetch;
 
     const weather = await fetchToulouseWeather();
     expect(weather).toEqual({ temperatureCelsius: 21.3, label: 'Éclaircies', weatherCode: 2 });
-    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('api.open-meteo.com'));
+    expect(globalThis.fetch).toHaveBeenCalledWith(expect.stringContaining('api.open-meteo.com'));
   });
 
   it('échoue proprement sur une réponse HTTP en erreur', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    globalThis.fetch = jest.fn().mockResolvedValue({
       ok: false,
       status: 503,
     }) as unknown as typeof fetch;
@@ -49,7 +49,7 @@ describe('fetchToulouseWeather', () => {
   });
 
   it('échoue proprement sur une réponse invalide', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    globalThis.fetch = jest.fn().mockResolvedValue({
       ok: true,
       json: async () => ({}),
     }) as unknown as typeof fetch;
