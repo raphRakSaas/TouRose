@@ -146,7 +146,7 @@ scripts/         dev-up / dev-down / test-supabase
 
 - Specs produit : `docs/01-*.md` … `docs/09-*.md`
 - Agents : `docs/AGENTS.md`
-- Guides : `LOCAL-SETUP.md`, `SUPABASE-LOCAL.md`, `PRODUCTION-DEPLOY.md`, `ENV-VARS.md`, `TESTING.md`, `CONTRIBUTING.md`
+- Guides : `LOCAL-SETUP.md`, `SUPABASE-LOCAL.md`, `PRODUCTION-DEPLOY.md`, `MOBILE-EAS-BUILD.md`, `ENV-VARS.md`, `TESTING.md`, `CONTRIBUTING.md`
 - Backlog : `BACKLOG.md` — fait / reste / à enrichir
 - Auth admin & sécu : `ADMIN-AUTH-AND-SECURITY.md` — JWT rôle, promotion, injection SQL
 - Design : `DESIGN-BRIEF.md` — brief complet pour Claude Design / designer

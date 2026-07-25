@@ -17,7 +17,7 @@ import {
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { BrandLockup } from '@/components/ui/BrandLockup';
+import { BrandIcon } from '@/components/ui/BrandIcon';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
 import { requestLocationAccess } from '@/src/lib/location';
@@ -125,7 +125,7 @@ function HeroCarouselStep({ onSkip, onContinue }: { onSkip: () => void; onContin
         style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24 }}
       >
         <Animated.View entering={FadeIn.duration(600)}>
-          <BrandLockup iconSize={44} wordmarkHeight={28} />
+          <BrandIcon size={44} />
         </Animated.View>
 
         <View pointerEvents="box-none">

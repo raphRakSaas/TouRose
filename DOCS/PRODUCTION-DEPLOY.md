@@ -152,9 +152,29 @@ where email = 'ton-email@example.com';
 | Symptôme                        | Piste                                                                                              |
 | ------------------------------- | -------------------------------------------------------------------------------------------------- |
 | Job Supabase ignoré             | `SUPABASE_DEPLOY_ENABLED` ≠ `true`                                                                 |
-| `db push` échoue                | Vérifier `SUPABASE_DB_PASSWORD`, drift schéma                                                      |
+| `db push` échoue avec `password authentication failed` | Le secret `SUPABASE_DB_PASSWORD` est incorrect — voir ci-dessous |
+| `db push` échoue (autre)        | Drift schéma, migrations en conflit                                                                |
 | Health check KO                 | Functions pas déployées ou projet en pause                                                         |
 | Site build OK mais pas en ligne | `WEBSITE_DEPLOY_ENABLED` ou secrets Cloudflare manquants                                           |
 | Cron import inactif             | `OPENAGENDA_CRON_ENABLED=true` + secrets `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `IMPORT_CRON_SECRET` |
 
 Voir aussi : [`ENV-VARS.md`](./ENV-VARS.md), [`SUPABASE-LOCAL.md`](./SUPABASE-LOCAL.md), [`ADMIN-AUTH-AND-SECURITY.md`](./ADMIN-AUTH-AND-SECURITY.md).
+
+### Mot de passe Postgres refusé (`SQLSTATE 28P01`)
+
+Ce n’est **pas** la clé anon ni la service role. C’est le mot de passe **Database** du projet.
+
+1. Supabase Dashboard → **Project Settings** → **Database**
+2. Section **Database password** → **Reset database password**
+3. Copie le nouveau mot de passe (sans espace avant/après)
+4. GitHub → **Settings → Secrets → Actions** → mets à jour `SUPABASE_DB_PASSWORD`
+5. Relance le workflow : **Actions → Release (production) → Re-run failed jobs**
+
+Vérification locale (optionnel) :
+
+```bash
+export SUPABASE_ACCESS_TOKEN="sbp_..."
+export SUPABASE_DB_PASSWORD="ton_nouveau_mdp"
+pnpm exec supabase link --project-ref TON_REF --password "$SUPABASE_DB_PASSWORD"
+pnpm exec supabase db push --linked --password "$SUPABASE_DB_PASSWORD"
+```

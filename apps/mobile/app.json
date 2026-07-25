@@ -25,7 +25,13 @@
         "backgroundColor": "#FBF8F4"
       },
       "package": "app.tourose.mobile",
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.READ_CALENDAR",
+        "android.permission.WRITE_CALENDAR"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -64,8 +70,13 @@
     "extra": {
       "mapStyleUrl": "${EXPO_PUBLIC_MAP_STYLE_URL}",
       "supabaseUrl": "${EXPO_PUBLIC_SUPABASE_URL}",
-      "supabaseAnonKey": "${EXPO_PUBLIC_SUPABASE_ANON_KEY}"
-    }
+      "supabaseAnonKey": "${EXPO_PUBLIC_SUPABASE_ANON_KEY}",
+      "router": {},
+      "eas": {
+        "projectId": "1f1ea6aa-e0c2-47d0-9af3-72b75b1ebedc"
+      }
+    },
+    "owner": "raphaelrak"
   },
   "version": "0.1.3"
 }

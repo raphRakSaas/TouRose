@@ -50,8 +50,17 @@ function runCapture(command, args, options = {}) {
     cwd: rootDirectory,
     encoding: 'utf8',
     shell: false,
+    env: supabaseEnv(),
     ...options,
   });
+}
+
+function supabaseEnv() {
+  return {
+    ...process.env,
+    SUPABASE_ACCESS_TOKEN: requireEnv('SUPABASE_ACCESS_TOKEN'),
+    SUPABASE_DB_PASSWORD: requireEnv('SUPABASE_DB_PASSWORD'),
+  };
 }
 
 function runOrFail(command, args, options = {}) {
@@ -60,6 +69,7 @@ function runOrFail(command, args, options = {}) {
     encoding: 'utf8',
     stdio: 'inherit',
     shell: false,
+    env: supabaseEnv(),
     ...options,
   });
   if (result.status !== 0) {
@@ -87,8 +97,8 @@ function escapeSql(value) {
 function main() {
   const dryRun = hasFlag('--dry-run');
   const projectRef = requireEnv('SUPABASE_PROJECT_REF');
+  const databasePassword = requireEnv('SUPABASE_DB_PASSWORD');
   requireEnv('SUPABASE_ACCESS_TOKEN');
-  requireEnv('SUPABASE_DB_PASSWORD');
   const anonKey = requireEnv('SUPABASE_ANON_KEY');
   const importCronSecret = requireEnv('IMPORT_CRON_SECRET');
 
@@ -109,11 +119,19 @@ function main() {
     '--project-ref',
     projectRef,
     '--password',
-    process.env.SUPABASE_DB_PASSWORD,
+    databasePassword,
   ]);
 
   console.log('[deploy-supabase] Applying migrations…');
-  runOrFail('pnpm', ['exec', 'supabase', 'db', 'push', '--linked']);
+  runOrFail('pnpm', [
+    'exec',
+    'supabase',
+    'db',
+    'push',
+    '--linked',
+    '--password',
+    databasePassword,
+  ]);
 
   console.log('[deploy-supabase] Deploying Edge Functions…');
   for (const functionName of EDGE_FUNCTION_NAMES) {
