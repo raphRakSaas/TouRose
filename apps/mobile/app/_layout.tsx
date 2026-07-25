@@ -11,7 +11,6 @@ import {
 } from '@expo-google-fonts/source-sans-3';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack, useRouter, useSegments } from 'expo-router';
-import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
@@ -19,10 +18,7 @@ import 'react-native-reanimated';
 import '../global.css';
 
 import { OfflineBanner } from '@/components/ui/OfflineBanner';
-import { syncLocalCatalogWithCloud } from '@/src/data/catalog-sync';
-import { subscribeToAuthChanges } from '@/src/lib/auth';
 import { purgeLegacyCatalogCache } from '@/src/lib/catalog-cache';
-import { parseAuthSessionFromUrl } from '@/src/lib/supabase';
 import { usePreferencesStore } from '@/src/store/preferences-store';
 
 export { ErrorBoundary } from 'expo-router';
@@ -72,37 +68,6 @@ export default function RootLayout() {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    const unsubscribe = subscribeToAuthChanges((authState) => {
-      if (!authState.session) {
-        return;
-      }
-      const company = usePreferencesStore.getState().company;
-      const interests = usePreferencesStore.getState().interests;
-      void syncLocalCatalogWithCloud({ company, interests: [...interests] }).catch(() => undefined);
-    });
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    const handleDeepLink = (incomingUrl: string | null): void => {
-      if (!incomingUrl || !incomingUrl.includes('auth/callback')) {
-        return;
-      }
-      void parseAuthSessionFromUrl(incomingUrl).then((success) => {
-        if (success) {
-          router.push('/auth/callback');
-        }
-      });
-    };
-
-    void Linking.getInitialURL().then(handleDeepLink);
-    const subscription = Linking.addEventListener('url', (event) => {
-      handleDeepLink(event.url);
-    });
-    return () => subscription.remove();
-  }, [router]);
-
-  useEffect(() => {
     if (!fontsLoaded) {
       return;
     }
@@ -124,7 +89,6 @@ export default function RootLayout() {
       <OfflineBanner />
       <Stack>
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        <Stack.Screen name="auth/callback" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="place/[slug]"
@@ -146,7 +110,7 @@ export default function RootLayout() {
             headerTitleStyle: { fontFamily: 'Fraunces_700Bold' },
           }}
         />
-        {['settings/preferences', 'settings/notifications', 'settings/account', 'settings/privacy'].map(
+        {['settings/preferences', 'settings/notifications', 'settings/privacy'].map(
           (settingsRoute) => (
             <Stack.Screen
               key={settingsRoute}

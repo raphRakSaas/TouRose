@@ -205,7 +205,6 @@ export default function ForMeScreen() {
             [
               ['Préférences', '/settings/preferences'],
               ['Notifications', '/settings/notifications'],
-              ['Compte (facultatif)', '/settings/account'],
               ['Soutenir TouRose', 'support'],
               ['Sources & confidentialité', '/settings/privacy'],
             ] as const

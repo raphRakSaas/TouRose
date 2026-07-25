@@ -3,7 +3,7 @@
 Vue d’ensemble de ce qui est **fait**, **en cours** et **à faire**.  
 Ce fichier est vivant : **ajoute des lignes** au fur et à mesure (bugs, idées, dettes techniques).
 
-Dernière mise à jour : **2026-07-25** (hors-ligne, clustering carte, Phase 5 comptes/sync)
+Dernière mise à jour : **2026-07-25** (compte mobile retiré de l’UI — argument de vente futur)
 
 ---
 
@@ -51,16 +51,16 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 | **2 — Imports** | Partiel | OpenAgenda idempotent | ~80 % (OA + images + catégories + prix ; DATAtourisme / cron / alertes ouverts) |
 | **3 — Cœur mobile** | En cours | Onboarding, fiches, favoris, carte | ~95 % (hors-ligne + clustering OK ; MapLibre natif / cache Query→SQLite ouverts) |
 | **4 — Recommandations** | Fait | 3 suggestions scorées | ~95 % (RPC + impressions + ADR 0005) |
-| **5 — Comptes / sync** | En cours | Magic link + fusion locale | ~60 % (profiles + magic link + sync favoris/visités ; RGPD export/suppression ouverts) |
+| **5 — Comptes / sync** | En pause (UI) | Magic link + fusion locale | Backend ~60 % ; UI mobile retirée (compte = argument de vente futur) |
 | **6 — Notifs / soutien** | À faire | Push + Stripe + IAP | 0 % |
 | **7 — Boutiques** | À faire | Store-ready | 0 % |
 
 **Prochaine priorité (mobile / backend uniquement — site web en pause) :**
 
-1. **Phase 5** — export / suppression compte (RGPD) + tests E2E magic link  
-2. **Phase 2** — cron import OpenAgenda prod + alertes  
-3. **Phase 3** — MapLibre natif (dev build) + cache TanStack Query→SQLite complet  
-4. **Design mobile** — logo / assets (pas de maquettes site)
+1. **Phase 2** — cron import OpenAgenda prod + alertes  
+2. **Phase 3** — MapLibre natif (dev build) + cache TanStack Query→SQLite complet  
+3. **Design mobile** — logo / assets (pas de maquettes site)  
+4. **Phase 5** — réactiver compte mobile (magic link + sync) quand argument de vente prêt ; RGPD export/suppression
 
 > **Site web (`apps/website`) — en pause** : pas de SSR/ISR, polish catalogue, page soutien Stripe, ni maquettes site pour l’instant. Le catalogue web actuel reste tel quel.
 
@@ -304,12 +304,15 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 ## Phase 5 — Comptes et synchronisation
 
+**Statut :** UI mobile **retirée** pour l’instant — le compte sera réintroduit plus tard comme argument de vente. Le schéma Supabase (profiles, sync) reste en place côté backend.
+
 **Critère :** compte optionnel, fusion locale sans perte silencieuse.
 
 - [x] `profiles` + préférences cloud (`user_catalog_items`, RPC `merge_user_catalog`)
-- [x] Magic link (Supabase Auth + deep link `tourose://auth/callback`)
-- [x] Sync favoris / visites / à découvrir (fusion locale ↔ cloud par `updated_at`)
+- [x] Magic link backend (Supabase Auth + deep link `tourose://auth/callback`) — **UI mobile retirée**
+- [x] Sync favoris / visites / à découvrir (fusion locale ↔ cloud par `updated_at`) — **code mobile retiré, à réactiver**
 - [x] Fusion locale → cloud idempotente (`merge_user_catalog`)
+- [ ] Réactiver écran compte + callback auth dans l’app mobile
 - [ ] Export données (RGPD)
 - [ ] Suppression compte + données
 - [ ] [!] Google Sign-In (après stabilisation)
@@ -399,5 +402,6 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 | 2026-07-25 | Audit backlog vs code ; motion mobile ; filtre date « Tout » ; fix navigation modal 3 idées |
 | 2026-07-25 | Site web mis en pause ; priorité mobile Phase 3 finition → Phase 5 → Phase 2 cron |
 | 2026-07-25 | Mobile : cache catalogue hors-ligne, clustering carte, Phase 5 (profiles, magic link, sync favoris) |
+| 2026-07-25 | Compte mobile retiré de l’UI (backend Phase 5 conservé pour réactivation future) |
 
 *(Ajoute une ligne ici quand tu modifies significativement le backlog.)*

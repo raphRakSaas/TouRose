@@ -66,9 +66,6 @@ describe('ForMeScreen menu', () => {
     fireEvent.press(screen.getByTestId('me-menu-Notifications'));
     expect(mockRouterPush).toHaveBeenCalledWith('/settings/notifications');
 
-    fireEvent.press(screen.getByTestId('me-menu-Compte (facultatif)'));
-    expect(mockRouterPush).toHaveBeenCalledWith('/settings/account');
-
     fireEvent.press(screen.getByTestId('me-menu-Sources & confidentialité'));
     expect(mockRouterPush).toHaveBeenCalledWith('/settings/privacy');
   });
