@@ -21,6 +21,7 @@ import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as WebBrowser from 'expo-web-browser';
 
+import { BrandWordmark } from '@/components/ui/BrandWordmark';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { FavoriteActionButton } from '@/components/ui/FavoriteActionButton';
 import { MarkdownLite } from '@/components/ui/MarkdownLite';
@@ -397,7 +398,10 @@ export default function PlaceDetailScreen() {
 
               {details.best_moment || details.tips.length > 0 ? (
                 <View className="mt-6">
-                  <Text className="mb-2 font-display text-[17px] text-ink-800">Conseils TouRose</Text>
+                  <View className="mb-2 flex-row items-center gap-2">
+                    <Text className="font-display text-[17px] text-ink-800">Conseils</Text>
+                    <BrandWordmark height={24} />
+                  </View>
                   <View className="gap-3 rounded-[18px] bg-white p-4">
                     {details.best_moment ? (
                       <View className="flex-row gap-3">

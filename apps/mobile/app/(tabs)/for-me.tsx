@@ -7,6 +7,7 @@ import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnimatedListItem } from '@/components/ui/AnimatedListItem';
+import { BrandWordmark } from '@/components/ui/BrandWordmark';
 import { CatalogListRow } from '@/components/ui/CatalogListRow';
 import { SupportPromoCard } from '@/components/ui/SupportPromoCard';
 import {
@@ -71,7 +72,10 @@ export default function ForMeScreen() {
           <Pressable accessibilityRole="button" onPress={() => setSupportScreen(null)}>
             <FontAwesome name="chevron-left" size={16} color="#1F1C19" />
           </Pressable>
-          <Text className="font-display text-[22px] text-ink-800">Soutenir TouRose</Text>
+          <View className="flex-row items-center gap-2">
+            <Text className="font-display text-[22px] text-ink-800">Soutenir</Text>
+            <BrandWordmark height={22} />
+          </View>
         </View>
         <ScrollView contentContainerClassName="gap-4 px-6 pb-10 pt-1">
           <Text className="text-[15px] leading-[1.65] font-body text-ink-600">

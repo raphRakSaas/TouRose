@@ -23,12 +23,30 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/brand/logo-icon.png', Astro.site)} />
     <link rel="canonical" href={canonical} />
-    <title>{title}</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/brand/logo-icon.png" />
   </head>
   <body>
     <header class="mx-auto flex max-w-5xl items-baseline justify-between gap-4 px-6 py-6">
-      <a href="/" class="brand text-3xl text-brick-700 no-underline">TouRose</a>
+      <a href="/" class="inline-flex items-center gap-2.5 no-underline" aria-label="TouRose — accueil">
+        <img
+          src="/brand/logo-icon.png"
+          alt=""
+          width="40"
+          height="40"
+          class="h-9 w-9"
+          aria-hidden="true"
+        />
+        <img
+          src="/brand/logo-wordmark.png"
+          alt="TouRose"
+          width="791"
+          height="208"
+          class="h-6 w-auto"
+        />
+      </a>
       <nav class="flex gap-4 text-sm text-ink-700" aria-label="Navigation principale">
         <a href="/">Accueil</a>
         <a href="/catalogue">Catalogue</a>

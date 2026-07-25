@@ -9,6 +9,9 @@ import { AuthSessionService } from '../core/auth-session.service';
   imports: [ReactiveFormsModule],
   template: `
     <section class="mx-auto mt-16 max-w-md rounded-2xl bg-white/70 p-6 shadow-sm">
+      <div class="mb-4 flex justify-center">
+        <img src="/brand/logo-wordmark.png" alt="TouRose" class="h-8 w-auto" />
+      </div>
       <h1 class="brand text-3xl">Connexion admin</h1>
       <p class="mt-2 text-sm text-[var(--tourose-color-ink-700)]">
         Auth Supabase réelle. La sécurité d’écriture repose sur RLS (<code>is_admin()</code>), pas

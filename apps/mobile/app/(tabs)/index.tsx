@@ -8,6 +8,7 @@ import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnimatedOverlay } from '@/components/ui/AnimatedOverlay';
+import { BrandLockup } from '@/components/ui/BrandLockup';
 import { CatalogListRow } from '@/components/ui/CatalogListRow';
 import { Chip } from '@/components/ui/Chip';
 import { EventCompactCard } from '@/components/ui/EventCompactCard';
@@ -237,9 +238,9 @@ export default function TodayScreen() {
       <ScrollView className="flex-1" contentContainerClassName="pb-10">
         <Animated.View
           entering={enterFadeInUp(0, reduceMotion)}
-          className="flex-row items-baseline justify-between px-5 pb-2 pt-4"
+          className="flex-row items-center justify-between px-5 pb-2 pt-4"
         >
-          <Text className="font-display text-[22px] text-brick-900">TouRose</Text>
+          <BrandLockup iconSize={40} wordmarkHeight={26} />
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Mon profil"

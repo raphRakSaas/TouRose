@@ -17,6 +17,7 @@ import {
 import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { BrandLockup } from '@/components/ui/BrandLockup';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
 import { requestLocationAccess } from '@/src/lib/location';
@@ -123,12 +124,9 @@ function HeroCarouselStep({ onSkip, onContinue }: { onSkip: () => void; onContin
         className="flex-1 justify-between px-7"
         style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 24 }}
       >
-        <Animated.Text
-          entering={FadeIn.duration(600)}
-          className="font-display text-[26px] text-white"
-        >
-          TouRose
-        </Animated.Text>
+        <Animated.View entering={FadeIn.duration(600)}>
+          <BrandLockup iconSize={44} wordmarkHeight={28} />
+        </Animated.View>
 
         <View pointerEvents="box-none">
           <Animated.Text

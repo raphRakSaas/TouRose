@@ -142,6 +142,10 @@ export const brand = {
   accent: colors.violet[500],
   background: colors.sand[50],
   foreground: colors.ink[800],
+  assets: {
+    icon: '/brand/logo-icon.png',
+    wordmark: '/brand/logo-wordmark.png',
+  },
 } as const;
 
 export const tokens = {

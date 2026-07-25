@@ -11,9 +11,11 @@ import { AuthSessionService } from '../core/auth-session.service';
       <header class="flex flex-wrap items-center justify-between gap-4 px-6 py-4">
         <a
           routerLink="/dashboard"
-          class="brand text-2xl text-[var(--tourose-color-brick-700)] no-underline"
+          class="inline-flex items-center gap-2 no-underline"
+          aria-label="TouRose Admin"
         >
-          TouRose Admin
+          <img src="/brand/logo-wordmark.png" alt="TouRose" class="h-6 w-auto" />
+          <span class="text-lg text-[var(--tourose-color-ink-700)]">Admin</span>
         </a>
         <nav class="flex flex-wrap items-center gap-4 text-sm">
           <a
