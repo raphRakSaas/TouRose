@@ -1,4 +1,6 @@
-name: Production Migrations
+# Deprecated — use `.github/workflows/release.yml` (tag `v*`).
+
+name: Production Migrations (legacy)
 
 on:
   workflow_dispatch:
@@ -9,8 +11,8 @@ on:
         type: string
 
 jobs:
-  migrate-disabled:
-    name: Production migrations disabled until secrets exist
+  redirect:
+    name: Use release workflow instead
     runs-on: ubuntu-latest
     steps:
       - name: Guard
@@ -19,7 +21,7 @@ jobs:
             echo "Confirmation token mismatch. Aborting."
             exit 1
           fi
-          echo "Production migrations remain disabled until SUPABASE_ACCESS_TOKEN,"
-          echo "SUPABASE_DB_PASSWORD and project ref secrets are configured."
-          echo "No migration was applied."
+          echo "This workflow is deprecated."
+          echo "Tag a release instead: git tag v0.1.0 && git push origin v0.1.0"
+          echo "See docs/PRODUCTION-DEPLOY.md"
           exit 1

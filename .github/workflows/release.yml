@@ -1,0 +1,214 @@
+name: Release (production)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  quality:
+    name: Quality gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Format check
+        run: pnpm run format:check
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Unit tests
+        run: pnpm run test
+
+      - name: Build apps/packages
+        run: pnpm run build
+
+  deploy-supabase:
+    name: Supabase cloud
+    needs: quality
+    runs-on: ubuntu-latest
+    environment: production
+    if: ${{ vars.SUPABASE_DEPLOY_ENABLED == 'true' }}
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      IMPORT_CRON_SECRET: ${{ secrets.IMPORT_CRON_SECRET }}
+      OPENAGENDA_PUBLIC_KEY: ${{ secrets.OPENAGENDA_PUBLIC_KEY }}
+      OPENAGENDA_AGENDA_UID: ${{ secrets.OPENAGENDA_AGENDA_UID }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+      IMPORT_ALERT_WEBHOOK_URL: ${{ secrets.IMPORT_ALERT_WEBHOOK_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy Supabase (migrations + functions + secrets)
+        run: node ./scripts/deploy-supabase.mjs
+
+      - name: Health check
+        env:
+          PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          curl --fail --silent "https://${PROJECT_REF}.supabase.co/functions/v1/health" | tee health.json
+          grep -q '"status":"ok"' health.json
+
+  build-clients:
+    name: Build website and admin
+    needs: deploy-supabase
+    if: ${{ always() && needs.deploy-supabase.result == 'success' && vars.SUPABASE_DEPLOY_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+      IMPORT_CRON_SECRET: ${{ secrets.IMPORT_CRON_SECRET }}
+      PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.PUBLIC_STRIPE_PUBLISHABLE_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Write production client env
+        run: node ./scripts/write-production-env.mjs
+
+      - name: Build website
+        run: pnpm --filter @tourose/website build
+
+      - name: Build admin
+        run: pnpm --filter @tourose/admin build
+
+      - name: Upload website artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-dist-${{ github.ref_name }}
+          path: apps/website/dist
+          if-no-files-found: error
+
+      - name: Upload admin artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-dist-${{ github.ref_name }}
+          path: apps/admin/dist/admin/browser
+          if-no-files-found: error
+
+  deploy-website:
+    name: Deploy website (Cloudflare Pages)
+    needs: build-clients
+    runs-on: ubuntu-latest
+    environment: production
+    if: ${{ vars.WEBSITE_DEPLOY_ENABLED == 'true' }}
+    steps:
+      - name: Download website artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website-dist-${{ github.ref_name }}
+          path: apps/website/dist
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ vars.CLOUDFLARE_PAGES_PROJECT_WEBSITE }}
+          directory: apps/website/dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-admin:
+    name: Deploy admin (Cloudflare Pages)
+    needs: build-clients
+    runs-on: ubuntu-latest
+    environment: production
+    if: ${{ vars.WEBSITE_DEPLOY_ENABLED == 'true' && vars.ADMIN_DEPLOY_ENABLED == 'true' }}
+    steps:
+      - name: Download admin artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: admin-dist-${{ github.ref_name }}
+          path: apps/admin/dist-release
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ vars.CLOUDFLARE_PAGES_PROJECT_ADMIN }}
+          directory: apps/admin/dist-release
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  release-summary:
+    name: Release summary
+    needs: [deploy-supabase, build-clients, deploy-website, deploy-admin]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summary
+        run: |
+          echo "## Release ${{ github.ref_name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Step | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| --- | --- |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Supabase | ${{ needs.deploy-supabase.result }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Build clients | ${{ needs.build-clients.result }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Website deploy | ${{ needs.deploy-website.result }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Admin deploy | ${{ needs.deploy-admin.result }} |" >> "$GITHUB_STEP_SUMMARY"

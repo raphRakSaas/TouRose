@@ -126,7 +126,8 @@ pnpm test:supabase  # skip si Docker/Supabase absents
 | `pnpm import:openagenda`       | Lancer l’import OpenAgenda (API réelle)              |
 | `pnpm import:wikimedia-places` | Importer des galeries libres pour les lieux locaux   |
 | `pnpm import:editorial-photos` | Photos Commons (catégorie curée) pour lieux éditoriaux |
-| `pnpm openagenda:find`         | Lister les agendas OpenAgenda + UID                  |
+| `pnpm deploy:supabase`         | Déployer migrations + Edge Functions Supabase cloud |
+| `pnpm deploy:production`       | Déploiement production complet (Supabase + builds)  |
 
 ## Structure
 
@@ -144,7 +145,7 @@ scripts/         dev-up / dev-down / test-supabase
 
 - Specs produit : `docs/01-*.md` … `docs/09-*.md`
 - Agents : `docs/AGENTS.md`
-- Guides : `LOCAL-SETUP.md`, `SUPABASE-LOCAL.md`, `ENV-VARS.md`, `TESTING.md`, `CONTRIBUTING.md`
+- Guides : `LOCAL-SETUP.md`, `SUPABASE-LOCAL.md`, `PRODUCTION-DEPLOY.md`, `ENV-VARS.md`, `TESTING.md`, `CONTRIBUTING.md`
 - Backlog : `BACKLOG.md` — fait / reste / à enrichir
 - Auth admin & sécu : `ADMIN-AUTH-AND-SECURITY.md` — JWT rôle, promotion, injection SQL
 - Design : `DESIGN-BRIEF.md` — brief complet pour Claude Design / designer

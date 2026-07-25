@@ -110,10 +110,11 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 ### CI/CD
 
 - [x] Workflow PR (format/lint/typecheck/test/build + job Supabase)
-- [x] Workflows placeholder preview / EAS / migrations prod (désactivées)
-- [ ] [!] Secrets CI cloud (Supabase, EAS, hébergeur) — quand comptes créés
+- [x] Workflow release production par tag `v*` + scripts `deploy:supabase` / `deploy:production`
+- [x] Guide `PRODUCTION-DEPLOY.md` (secrets, variables, checklist post-deploy)
+- [ ] [!] Secrets CI cloud (Supabase, EAS, hébergeur) — configurer GitHub puis `SUPABASE_DEPLOY_ENABLED=true`
 - [ ] Activer vraiment les preview deploys
-- [ ] Activer `db push` prod sécurisé
+- [ ] Activer hébergement Cloudflare Pages (`WEBSITE_DEPLOY_ENABLED=true`)
 
 ---
 

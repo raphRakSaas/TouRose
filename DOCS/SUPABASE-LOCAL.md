@@ -79,4 +79,12 @@ pnpm supabase:stop
 
 ## Production
 
-Les migrations production restent désactivées dans GitHub Actions tant que les secrets plateforme ne sont pas configurés.
+Déploiement cloud par **tag Git** (`v*`) : voir [`docs/PRODUCTION-DEPLOY.md`](./docs/PRODUCTION-DEPLOY.md).
+
+```bash
+git tag v0.1.0 && git push origin v0.1.0
+```
+
+Scripts manuels : `pnpm deploy:supabase`, `pnpm deploy:production`.
+
+Les migrations production restent désactivées tant que `SUPABASE_DEPLOY_ENABLED` n’est pas configuré dans GitHub (voir le guide).
