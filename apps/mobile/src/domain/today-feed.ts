@@ -1,7 +1,7 @@
 import { distanceFromToulouseCenter, formatRelativeDayLabel } from '@tourose/shared';
 import type { PublicEventRow, RecommendationPick } from '@tourose/contracts';
 
-export type MomentKey = 'tonight' | 'today' | 'weekend' | 'custom-date';
+export type MomentKey = 'all' | 'tonight' | 'today' | 'weekend' | 'custom-date';
 
 export type PriceFilterKey = 'all' | 'free' | 'paid';
 
@@ -101,6 +101,11 @@ export function getMomentRange(moment: MomentKey, now: Date, customDate?: Date):
     new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
 
   switch (moment) {
+    case 'all': {
+      const farFuture = new Date(now);
+      farFuture.setFullYear(now.getFullYear() + 1);
+      return { start: now, end: farFuture };
+    }
     case 'tonight': {
       const eveningStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0, 0);
       return { start: now > eveningStart ? now : eveningStart, end: endOfDay(now) };
@@ -189,6 +194,9 @@ function applyDateFilter(
   now: Date,
   customDate?: Date,
 ): PublicEventRow[] {
+  if (moment === 'all') {
+    return sortByStartDate(events);
+  }
   const range = getMomentRange(moment, now, customDate);
   const inRange = events.filter((eventRow) => isEventInRange(eventRow, range));
   // Fallback : si rien ne colle à la fenêtre, on garde les prochains à venir.

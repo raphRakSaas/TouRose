@@ -35,6 +35,13 @@ function makeEvent(overrides: Partial<PublicEventRow>): PublicEventRow {
 }
 
 describe('getMomentRange', () => {
+  it('all couvre les événements à venir sur une longue période', () => {
+    const range = getMomentRange('all', NOW);
+    expect(isEventInRange(makeEvent({ next_starts_at: '2026-08-01T19:00:00' }), range)).toBe(
+      true,
+    );
+  });
+
   it('tonight couvre 18h à minuit', () => {
     const range = getMomentRange('tonight', NOW);
     expect(range.start.getHours()).toBe(18);
@@ -145,6 +152,20 @@ describe('pickForYouEvents / buildTodayFeed', () => {
       filters: { moment: 'weekend', price: 'free' as PriceFilterKey, category: 'all' },
     });
     expect(allEvents.every((item) => item.priceType === 'free')).toBe(true);
+  });
+
+  it('moment all affiche tous les événements à venir', () => {
+    const farAway = makeEvent({
+      id: '55555555-5555-5555-5555-555555555505',
+      slug: 'festival-ete',
+      title: 'Festival d’été',
+      next_starts_at: '2026-08-15T20:00:00',
+    });
+    const { allEvents } = buildTodayFeed([concert, farAway], {
+      now: NOW,
+      filters: { moment: 'all', price: 'all', category: 'all' },
+    });
+    expect(allEvents).toHaveLength(2);
   });
 
   it('filtre une seule catégorie (liste sans carrousels)', () => {

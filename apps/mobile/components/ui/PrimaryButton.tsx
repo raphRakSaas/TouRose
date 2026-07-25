@@ -1,4 +1,6 @@
-import { Pressable, Text, type PressableProps } from 'react-native';
+import { Text, type PressableProps } from 'react-native';
+
+import { PressableScale } from '@/components/ui/PressableScale';
 
 type PrimaryButtonProps = PressableProps & {
   label: string;
@@ -13,7 +15,7 @@ export function PrimaryButton({
 }: PrimaryButtonProps) {
   const isOutline = variant === 'outline';
   return (
-    <Pressable
+    <PressableScale
       accessibilityRole="button"
       disabled={disabled}
       className={`items-center rounded-lg px-[26px] py-[13px] ${
@@ -28,6 +30,6 @@ export function PrimaryButton({
       >
         {label}
       </Text>
-    </Pressable>
+    </PressableScale>
   );
 }

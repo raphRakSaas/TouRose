@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AnimatedListItem } from '@/components/ui/AnimatedListItem';
 import { CatalogListRow } from '@/components/ui/CatalogListRow';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import {
@@ -153,18 +154,20 @@ export default function ForMeScreen() {
             </Text>
           ) : (
             segmentItems.map((item, index) => (
-              <Link key={`${item.entityType}-${item.entityId}`} href={hrefForLocalItem(item) as never} asChild>
-                <CatalogListRow
-                  title={item.title}
-                  subtitle={
-                    item.subtitle ??
-                    (item.entityType === 'event' ? 'Événement' : 'Lieu')
-                  }
-                  imageLabel={item.title}
-                  thumbSize={56}
-                  showDivider={index < segmentItems.length - 1}
-                />
-              </Link>
+              <AnimatedListItem key={`${item.entityType}-${item.entityId}`} index={index}>
+                <Link href={hrefForLocalItem(item) as never} asChild>
+                  <CatalogListRow
+                    title={item.title}
+                    subtitle={
+                      item.subtitle ??
+                      (item.entityType === 'event' ? 'Événement' : 'Lieu')
+                    }
+                    imageLabel={item.title}
+                    thumbSize={56}
+                    showDivider={index < segmentItems.length - 1}
+                  />
+                </Link>
+              </AnimatedListItem>
             ))
           )}
         </View>

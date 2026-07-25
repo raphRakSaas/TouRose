@@ -17,11 +17,13 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as WebBrowser from 'expo-web-browser';
 
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { FavoriteActionButton } from '@/components/ui/FavoriteActionButton';
 import { MarkdownLite } from '@/components/ui/MarkdownLite';
 import {
   fetchEventMedia,
@@ -32,6 +34,7 @@ import { isFavorite, toggleFavorite } from '@/src/data/local-catalog';
 import { EVENT_CATEGORIES } from '@/src/domain/today-feed';
 import { addEventToCalendar } from '@/src/lib/calendar';
 import { openDirections } from '@/src/lib/directions';
+import { enterFadeInUp, useReducedMotion } from '@/src/lib/motion';
 import { buildPublicCatalogUrl } from '@/src/lib/public-urls';
 
 const CATEGORY_META = new Map(EVENT_CATEGORIES.map((category) => [category.slug, category]));
@@ -123,6 +126,7 @@ function formatEventSchedule(startsAt: string | null, endsAt: string | null): {
 }
 
 export default function EventDetailScreen() {
+  const reduceMotion = useReducedMotion();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const eventSlug = typeof slug === 'string' ? slug : '';
   const { width: screenWidth } = useWindowDimensions();
@@ -411,7 +415,10 @@ export default function EventDetailScreen() {
           ) : null}
 
           {eventRow ? (
-            <View className="-mt-5 rounded-t-[24px] bg-sand-50 px-[22px] pt-6">
+            <Animated.View
+              entering={enterFadeInUp(0, reduceMotion)}
+              className="-mt-5 rounded-t-[24px] bg-sand-50 px-[22px] pt-6"
+            >
               {/* Badges catégories + prix */}
               <View className="mb-3 flex-row flex-wrap gap-2">
                 {categoryBadges.map((category) => (
@@ -523,27 +530,11 @@ export default function EventDetailScreen() {
 
               {/* Actions secondaires */}
               <View className="mb-5 flex-row gap-2.5">
-                <Pressable
+                <FavoriteActionButton
                   testID="event-favorite"
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: isFavoriteState }}
+                  isFavorite={isFavoriteState}
                   onPress={() => void onToggleFavorite()}
-                  className="flex-1 flex-row items-center justify-center gap-2 rounded-[14px] border-[1.5px] border-brick-500 py-2.5"
-                  style={{ backgroundColor: isFavoriteState ? '#C45C3E' : 'transparent' }}
-                >
-                  <FontAwesome
-                    name={isFavoriteState ? 'heart' : 'heart-o'}
-                    size={14}
-                    color={isFavoriteState ? '#FFFFFF' : '#A94A30'}
-                  />
-                  <Text
-                    className={`text-[13px] font-body-semibold ${
-                      isFavoriteState ? 'text-white' : 'text-brick-700'
-                    }`}
-                  >
-                    Favori
-                  </Text>
-                </Pressable>
+                />
                 <Pressable
                   testID="event-calendar"
                   accessibilityRole="button"
@@ -717,7 +708,7 @@ export default function EventDetailScreen() {
                   Photo : {attribution}
                 </Text>
               ) : null}
-            </View>
+            </Animated.View>
           ) : null}
         </ScrollView>
 

@@ -1,5 +1,7 @@
 import { forwardRef } from 'react';
-import { Pressable, Text, View, type ImageSourcePropType } from 'react-native';
+import { Text, View, type ImageSourcePropType } from 'react-native';
+
+import { PressableScale } from '@/components/ui/PressableScale';
 
 import { ImagePlaceholder } from './ImagePlaceholder';
 
@@ -19,7 +21,7 @@ export const SuggestionCard = forwardRef<View, SuggestionCardProps>(function Sug
   ref,
 ) {
   return (
-    <Pressable
+    <PressableScale
       ref={ref}
       accessibilityRole="button"
       onPress={onPress}
@@ -54,6 +56,6 @@ export const SuggestionCard = forwardRef<View, SuggestionCardProps>(function Sug
           </Text>
         ) : null}
       </View>
-    </Pressable>
+    </PressableScale>
   );
 });

@@ -1,5 +1,7 @@
 import { forwardRef } from 'react';
-import { Pressable, Text, View, type ImageSourcePropType } from 'react-native';
+import { Text, View, type ImageSourcePropType } from 'react-native';
+
+import { PressableScale } from '@/components/ui/PressableScale';
 
 import { ImagePlaceholder } from './ImagePlaceholder';
 
@@ -13,6 +15,7 @@ type EventCompactCardProps = {
   imageAttribution?: string | null;
   onPress?: () => void;
   width?: number;
+  testID?: string;
 };
 
 export const EventCompactCard = forwardRef<View, EventCompactCardProps>(function EventCompactCard(
@@ -26,12 +29,14 @@ export const EventCompactCard = forwardRef<View, EventCompactCardProps>(function
     imageAttribution,
     onPress,
     width = 160,
+    testID,
   },
   ref,
 ) {
   return (
-    <Pressable
+    <PressableScale
       ref={ref}
+      testID={testID}
       accessibilityRole="button"
       onPress={onPress}
       className="overflow-hidden rounded-2xl bg-white"
@@ -65,6 +70,6 @@ export const EventCompactCard = forwardRef<View, EventCompactCardProps>(function
           </Text>
         ) : null}
       </View>
-    </Pressable>
+    </PressableScale>
   );
 });

@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import type { PublicEventRow, PublicPlaceRow } from '@tourose/contracts';
@@ -26,6 +27,7 @@ import {
 import { formatDistanceLabel, placeTypeLabel } from '@/src/domain/place-labels';
 import { getMomentRange, isEventInRange } from '@/src/domain/today-feed';
 import { getUserCoordinatesOrToulouse } from '@/src/lib/location';
+import { enterFadeInUp, useReducedMotion } from '@/src/lib/motion';
 
 type CatalogSegment = 'events' | 'places' | 'collections';
 type ExploreFilterKey = 'weekend' | 'free' | 'outdoor' | 'nearby';
@@ -94,6 +96,7 @@ function placeSubtitle(
 }
 
 export default function ExploreScreen() {
+  const reduceMotion = useReducedMotion();
   const routeParams = useLocalSearchParams<{ segment?: string }>();
   const [segment, setSegment] = useState<CatalogSegment>('events');
   const [searchText, setSearchText] = useState('');
@@ -329,7 +332,12 @@ export default function ExploreScreen() {
       ) : null}
 
       {!isLoading && !errorMessage && isSearching ? (
-        <FlatList
+        <Animated.View
+          key="search"
+          entering={enterFadeInUp(0, reduceMotion)}
+          className="flex-1"
+        >
+          <FlatList
           data={searchQuery.data ?? []}
           keyExtractor={(item) => `${item.entity_type}-${item.id}`}
           contentContainerClassName="px-5 pb-8"
@@ -364,11 +372,17 @@ export default function ExploreScreen() {
               />
             </Link>
           )}
-        />
+          />
+        </Animated.View>
       ) : null}
 
       {!isLoading && !errorMessage && !isSearching && segment === 'events' ? (
-        <FlatList
+        <Animated.View
+          key="events"
+          entering={enterFadeInUp(0, reduceMotion)}
+          className="flex-1"
+        >
+          <FlatList
           data={filteredEvents}
           keyExtractor={(item) => item.id}
           contentContainerClassName="px-5 pb-8"
@@ -404,11 +418,17 @@ export default function ExploreScreen() {
               />
             </Link>
           )}
-        />
+          />
+        </Animated.View>
       ) : null}
 
       {!isLoading && !errorMessage && !isSearching && segment === 'places' ? (
-        <FlatList
+        <Animated.View
+          key="places"
+          entering={enterFadeInUp(0, reduceMotion)}
+          className="flex-1"
+        >
+          <FlatList
           data={filteredPlaces}
           keyExtractor={(item) => item.id}
           contentContainerClassName="px-5 pb-8"
@@ -434,11 +454,17 @@ export default function ExploreScreen() {
               />
             </Link>
           )}
-        />
+          />
+        </Animated.View>
       ) : null}
 
       {!isLoading && !errorMessage && !isSearching && segment === 'collections' ? (
-        <FlatList
+        <Animated.View
+          key="collections"
+          entering={enterFadeInUp(0, reduceMotion)}
+          className="flex-1"
+        >
+          <FlatList
           data={collectionsQuery.data ?? []}
           keyExtractor={(item) => item.id}
           contentContainerClassName="px-5 pb-8"
@@ -459,7 +485,8 @@ export default function ExploreScreen() {
               showDivider={index < (collectionsQuery.data?.length ?? 0) - 1}
             />
           )}
-        />
+          />
+        </Animated.View>
       ) : null}
     </SafeAreaView>
   );

@@ -4,13 +4,15 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { Platform, Pressable, ScrollView, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AnimatedOverlay } from '@/components/ui/AnimatedOverlay';
 import { CatalogListRow } from '@/components/ui/CatalogListRow';
 import { Chip } from '@/components/ui/Chip';
 import { EventCompactCard } from '@/components/ui/EventCompactCard';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
+import { SkeletonBlock } from '@/components/ui/SkeletonBlock';
 import { StackedPicksModal } from '@/components/ui/StackedPicksModal';
 import { SuggestionCard } from '@/components/ui/SuggestionCard';
 import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
@@ -32,12 +34,14 @@ import {
   hideStackedPicksForToday,
   isStackedPicksHiddenForToday,
 } from '@/src/lib/stacked-picks-pref';
+import { enterFadeIn, enterFadeInUp, useReducedMotion } from '@/src/lib/motion';
 import { usePreferencesStore } from '@/src/store/preferences-store';
 
 /** Une seule présentation du modal par lancement d'app. */
 let stackedPicksShownThisSession = false;
 
 const MOMENT_CHIPS: { key: MomentKey; label: string }[] = [
+  { key: 'all', label: 'Tout' },
   { key: 'tonight', label: 'Ce soir' },
   { key: 'today', label: "Aujourd'hui" },
   { key: 'weekend', label: 'Week-end' },
@@ -67,6 +71,7 @@ const SECTION_PHOTOS = [
 type FilterModalKey = 'moment' | 'price' | 'category' | null;
 
 export default function TodayScreen() {
+  const reduceMotion = useReducedMotion();
   const company = usePreferencesStore((state) => state.company);
   const interests = usePreferencesStore((state) => state.interests);
   const setCompany = usePreferencesStore((state) => state.setCompany);
@@ -228,7 +233,10 @@ export default function TodayScreen() {
   return (
     <SafeAreaView className="flex-1 bg-sand-50" edges={['top']}>
       <ScrollView className="flex-1" contentContainerClassName="pb-10">
-        <View className="flex-row items-baseline justify-between px-5 pb-2 pt-4">
+        <Animated.View
+          entering={enterFadeInUp(0, reduceMotion)}
+          className="flex-row items-baseline justify-between px-5 pb-2 pt-4"
+        >
           <Text className="font-display text-[22px] text-brick-900">TouRose</Text>
           <Pressable
             accessibilityRole="button"
@@ -238,9 +246,9 @@ export default function TodayScreen() {
           >
             <FontAwesome name="user-o" size={14} color="#A39B90" />
           </Pressable>
-        </View>
+        </Animated.View>
 
-        <View className="px-5 pt-1.5">
+        <Animated.View entering={enterFadeInUp(1, reduceMotion)} className="px-5 pt-1.5">
           <Text className="mb-1 font-display-semibold text-[22px] text-ink-800">
             Salut, belle journée pour sortir
           </Text>
@@ -248,9 +256,12 @@ export default function TodayScreen() {
           <Text className="mt-1 text-[12px] font-body text-ink-300">
             Compagnie : {companyLabels[company] ?? company}
           </Text>
-        </View>
+        </Animated.View>
 
-        <View className="mt-4 flex-row gap-2 px-5 pb-3">
+        <Animated.View
+          entering={enterFadeInUp(2, reduceMotion)}
+          className="mt-4 flex-row gap-2 px-5 pb-3"
+        >
           {[
             { key: 'moment' as const, title: 'Quand', value: momentButtonLabel },
             { key: 'price' as const, title: 'Prix', value: priceButtonLabel },
@@ -277,20 +288,23 @@ export default function TodayScreen() {
               </Text>
             </Pressable>
           ))}
-        </View>
+        </Animated.View>
 
-        <View className="px-5 pb-3 pt-1">
+        <Animated.View entering={enterFadeInUp(3, reduceMotion)} className="px-5 pb-3 pt-1">
           <PrimaryButton
             label="Affiner mes envies"
             variant="outline"
             onPress={() => setSheetOpen(true)}
           />
-        </View>
+        </Animated.View>
 
         {isLoading ? (
           <View className="gap-3 px-5">
             {[0, 1].map((skeletonIndex) => (
-              <View key={skeletonIndex} className="h-[140px] rounded-2xl bg-sand-100" />
+              <SkeletonBlock
+                key={skeletonIndex}
+                className="h-[140px] rounded-2xl bg-sand-100"
+              />
             ))}
           </View>
         ) : null}
@@ -313,7 +327,7 @@ export default function TodayScreen() {
           ? feed.sections.map((section, sectionIndex) => (
               <Animated.View
                 key={section.key}
-                entering={FadeInUp.duration(400).delay(Math.min(sectionIndex, 4) * 90)}
+                entering={enterFadeInUp(sectionIndex + 4, reduceMotion)}
                 className="mb-4"
               >
                 <Text className="mb-2.5 px-5 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
@@ -347,7 +361,7 @@ export default function TodayScreen() {
           : null}
 
         {!isLoading && !loadError ? (
-          <Animated.View entering={FadeInUp.duration(400).delay(180)} className="px-5 pt-2">
+          <Animated.View entering={enterFadeInUp(4, reduceMotion)} className="px-5 pt-2">
             <View className="mb-2.5 flex-row items-center justify-between">
               <Text className="text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
                 Tous les événements
@@ -392,7 +406,7 @@ export default function TodayScreen() {
                 {listEvents.map((item, index) => (
                   <Animated.View
                     key={`card-${item.id}`}
-                    entering={FadeIn.duration(300).delay(Math.min(index, 6) * 60)}
+                    entering={enterFadeIn(index, reduceMotion)}
                   >
                     <Link href={item.href as never} asChild>
                       <SuggestionCard
@@ -438,188 +452,183 @@ export default function TodayScreen() {
       />
 
       {filterModal ? (
-        <View className="absolute inset-0 z-40 items-center justify-center px-7">
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Fermer les filtres"
-            className="absolute inset-0 bg-ink-800/45"
-            onPress={() => {
-              setShowNativeDatePicker(false);
-              setFilterModal(null);
-            }}
-          />
-          <View className="w-full max-w-[360px] rounded-[24px] bg-sand-50 p-5">
-            <Text className="mb-4 font-display text-[21px] text-ink-800">
-              {filterModal === 'moment'
-                ? 'Quand sortir ?'
-                : filterModal === 'price'
-                  ? 'Quel prix ?'
-                  : 'Quelle catégorie ?'}
-            </Text>
+        <AnimatedOverlay
+          visible
+          variant="center-dialog"
+          backdropClassName="bg-ink-800/45"
+          backdropAccessibilityLabel="Fermer les filtres"
+          onClose={() => {
+            setShowNativeDatePicker(false);
+            setFilterModal(null);
+          }}
+          sheetClassName="w-full max-w-[360px] rounded-[24px] bg-sand-50 p-5"
+        >
+          <Text className="mb-4 font-display text-[21px] text-ink-800">
+            {filterModal === 'moment'
+              ? 'Quand sortir ?'
+              : filterModal === 'price'
+                ? 'Quel prix ?'
+                : 'Quelle catégorie ?'}
+          </Text>
 
-            <ScrollView
-              style={{ maxHeight: 320 }}
-              showsVerticalScrollIndicator={false}
-              contentContainerClassName="flex-row flex-wrap gap-2"
-            >
-              {filterModal === 'moment'
-                ? MOMENT_CHIPS.map((moment) => {
-                    const isSelected =
-                      moment.key === 'custom-date'
-                        ? selectedMoment === 'custom-date'
-                        : selectedMoment === moment.key && customDate === null;
-                    return (
-                      <Chip
-                        key={moment.key}
-                        testID={`moment-filter-${moment.key}`}
-                        label={moment.key === 'custom-date' ? customDateLabel : moment.label}
-                        selected={isSelected}
-                        tone={isSelected ? 'solid' : 'white'}
-                        onPress={() => {
-                          onMomentPress(moment.key);
-                          if (moment.key !== 'custom-date') {
-                            setFilterModal(null);
-                          }
-                        }}
-                      />
-                    );
-                  })
-                : null}
-              {filterModal === 'price'
-                ? PRICE_CHIPS.map((price) => (
+          <ScrollView
+            style={{ maxHeight: 320 }}
+            showsVerticalScrollIndicator={false}
+            contentContainerClassName="flex-row flex-wrap gap-2"
+          >
+            {filterModal === 'moment'
+              ? MOMENT_CHIPS.map((moment) => {
+                  const isSelected =
+                    moment.key === 'custom-date'
+                      ? selectedMoment === 'custom-date'
+                      : selectedMoment === moment.key && customDate === null;
+                  return (
                     <Chip
-                      key={price.key}
-                      testID={`price-filter-${price.key}`}
-                      label={price.label}
-                      selected={priceFilter === price.key}
-                      tone={priceFilter === price.key ? 'solid' : 'white'}
+                      key={moment.key}
+                      testID={`moment-filter-${moment.key}`}
+                      label={moment.key === 'custom-date' ? customDateLabel : moment.label}
+                      selected={isSelected}
+                      tone={isSelected ? 'solid' : 'white'}
                       onPress={() => {
-                        setPriceFilter(price.key);
-                        setFilterModal(null);
+                        onMomentPress(moment.key);
+                        if (moment.key !== 'custom-date') {
+                          setFilterModal(null);
+                        }
                       }}
                     />
-                  ))
-                : null}
-              {filterModal === 'category'
-                ? CATEGORY_CHIPS.map((category) => (
-                    <Chip
-                      key={category.key}
-                      testID={`category-filter-${category.key}`}
-                      label={category.label}
-                      selected={categoryFilter === category.key}
-                      tone={categoryFilter === category.key ? 'solid' : 'white'}
-                      onPress={() => {
-                        setCategoryFilter(category.key);
-                        setFilterModal(null);
-                      }}
-                    />
-                  ))
-                : null}
-            </ScrollView>
-
-            {filterModal === 'moment' && showNativeDatePicker ? (
-              <View className="mt-4 overflow-hidden rounded-2xl bg-white px-2 py-1">
-                <DateTimePicker
-                  value={customDate ?? new Date()}
-                  mode="date"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  minimumDate={new Date()}
-                  onChange={onNativeDateChange}
-                  locale="fr-FR"
-                />
-                {Platform.OS === 'ios' ? (
-                  <PrimaryButton
-                    label="Valider la date"
+                  );
+                })
+              : null}
+            {filterModal === 'price'
+              ? PRICE_CHIPS.map((price) => (
+                  <Chip
+                    key={price.key}
+                    testID={`price-filter-${price.key}`}
+                    label={price.label}
+                    selected={priceFilter === price.key}
+                    tone={priceFilter === price.key ? 'solid' : 'white'}
                     onPress={() => {
-                      if (!customDate) {
-                        setCustomDate(new Date());
-                        setSelectedMoment('custom-date');
-                      }
-                      setShowNativeDatePicker(false);
+                      setPriceFilter(price.key);
                       setFilterModal(null);
                     }}
                   />
-                ) : null}
-              </View>
-            ) : null}
-          </View>
-        </View>
+                ))
+              : null}
+            {filterModal === 'category'
+              ? CATEGORY_CHIPS.map((category) => (
+                  <Chip
+                    key={category.key}
+                    testID={`category-filter-${category.key}`}
+                    label={category.label}
+                    selected={categoryFilter === category.key}
+                    tone={categoryFilter === category.key ? 'solid' : 'white'}
+                    onPress={() => {
+                      setCategoryFilter(category.key);
+                      setFilterModal(null);
+                    }}
+                  />
+                ))
+              : null}
+          </ScrollView>
+
+          {filterModal === 'moment' && showNativeDatePicker ? (
+            <View className="mt-4 overflow-hidden rounded-2xl bg-white px-2 py-1">
+              <DateTimePicker
+                value={customDate ?? new Date()}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                minimumDate={new Date()}
+                onChange={onNativeDateChange}
+                locale="fr-FR"
+              />
+              {Platform.OS === 'ios' ? (
+                <PrimaryButton
+                  label="Valider la date"
+                  onPress={() => {
+                    if (!customDate) {
+                      setCustomDate(new Date());
+                      setSelectedMoment('custom-date');
+                    }
+                    setShowNativeDatePicker(false);
+                    setFilterModal(null);
+                  }}
+                />
+              ) : null}
+            </View>
+          ) : null}
+        </AnimatedOverlay>
       ) : null}
 
-      {sheetOpen ? (
-        <View className="absolute inset-0 z-40">
+      <AnimatedOverlay
+        visible={sheetOpen}
+        variant="bottom-sheet"
+        onClose={() => setSheetOpen(false)}
+        sheetClassName="absolute bottom-0 left-0 right-0 top-[150px] rounded-t-[28px] bg-sand-50 px-6 pb-8 pt-3.5"
+      >
+        <View className="mb-1.5 h-1.5 w-10 self-center rounded-full bg-sand-200" />
+        <View className="mb-[18px] flex-row items-baseline justify-between">
+          <Text className="font-display text-[22px] text-ink-800">Affiner mes envies</Text>
           <Pressable
             accessibilityRole="button"
-            className="absolute inset-0 bg-ink-800/35"
-            onPress={() => setSheetOpen(false)}
-          />
-          <View className="absolute bottom-0 left-0 right-0 top-[150px] rounded-t-[28px] bg-sand-50 px-6 pb-8 pt-3.5">
-            <View className="mb-1.5 h-1.5 w-10 self-center rounded-full bg-sand-200" />
-            <View className="mb-[18px] flex-row items-baseline justify-between">
-              <Text className="font-display text-[22px] text-ink-800">Affiner mes envies</Text>
-              <Pressable
-                accessibilityRole="button"
-                onPress={() => {
-                  resetPreferences();
-                  setPriceFilter('all');
-                  setCategoryFilter('all');
-                  setSelectedMoment('today');
-                  setCustomDate(null);
-                }}
-              >
-                <Text className="text-[13px] font-body text-brick-900">Réinitialiser</Text>
-              </Pressable>
-            </View>
-            <Text className="mb-2 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
-              Compagnie
-            </Text>
-            <View className="mb-[18px] flex-row flex-wrap gap-2">
-              {(['Seul', 'Couple', 'Amis', 'Famille'] as const).map((label) => {
-                const companyValue = label.toLowerCase() as typeof company;
-                const isSelected = company === companyValue;
-                return (
-                  <Chip
-                    key={label}
-                    label={label}
-                    selected={isSelected}
-                    tone={isSelected ? 'solid' : 'white'}
-                    onPress={() => setCompany(companyValue)}
-                  />
-                );
-              })}
-            </View>
-            <Text className="mb-2 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
-              Prix
-            </Text>
-            <View className="mb-[18px] flex-row flex-wrap gap-2">
-              {PRICE_CHIPS.map((price) => (
-                <Chip
-                  key={price.key}
-                  label={price.label}
-                  selected={priceFilter === price.key}
-                  tone={priceFilter === price.key ? 'solid' : 'white'}
-                  onPress={() => setPriceFilter(price.key)}
-                />
-              ))}
-            </View>
-            <Text className="mb-2 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
-              Catégorie
-            </Text>
-            <View className="mb-[18px] flex-row flex-wrap gap-2">
-              {CATEGORY_CHIPS.map((category) => (
-                <Chip
-                  key={category.key}
-                  label={category.label}
-                  selected={categoryFilter === category.key}
-                  tone={categoryFilter === category.key ? 'solid' : 'white'}
-                  onPress={() => setCategoryFilter(category.key)}
-                />
-              ))}
-            </View>
-            <PrimaryButton label="Voir les idées" onPress={() => setSheetOpen(false)} />
-          </View>
+            onPress={() => {
+              resetPreferences();
+              setPriceFilter('all');
+              setCategoryFilter('all');
+              setSelectedMoment('today');
+              setCustomDate(null);
+            }}
+          >
+            <Text className="text-[13px] font-body text-brick-900">Réinitialiser</Text>
+          </Pressable>
         </View>
-      ) : null}
+        <Text className="mb-2 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
+          Compagnie
+        </Text>
+        <View className="mb-[18px] flex-row flex-wrap gap-2">
+          {(['Seul', 'Couple', 'Amis', 'Famille'] as const).map((label) => {
+            const companyValue = label.toLowerCase() as typeof company;
+            const isSelected = company === companyValue;
+            return (
+              <Chip
+                key={label}
+                label={label}
+                selected={isSelected}
+                tone={isSelected ? 'solid' : 'white'}
+                onPress={() => setCompany(companyValue)}
+              />
+            );
+          })}
+        </View>
+        <Text className="mb-2 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
+          Prix
+        </Text>
+        <View className="mb-[18px] flex-row flex-wrap gap-2">
+          {PRICE_CHIPS.map((price) => (
+            <Chip
+              key={price.key}
+              label={price.label}
+              selected={priceFilter === price.key}
+              tone={priceFilter === price.key ? 'solid' : 'white'}
+              onPress={() => setPriceFilter(price.key)}
+            />
+          ))}
+        </View>
+        <Text className="mb-2 text-[13px] font-body-bold uppercase tracking-wide text-ink-500">
+          Catégorie
+        </Text>
+        <View className="mb-[18px] flex-row flex-wrap gap-2">
+          {CATEGORY_CHIPS.map((category) => (
+            <Chip
+              key={category.key}
+              label={category.label}
+              selected={categoryFilter === category.key}
+              tone={categoryFilter === category.key ? 'solid' : 'white'}
+              onPress={() => setCategoryFilter(category.key)}
+            />
+          ))}
+        </View>
+        <PrimaryButton label="Voir les idées" onPress={() => setSheetOpen(false)} />
+      </AnimatedOverlay>
     </SafeAreaView>
   );
 }

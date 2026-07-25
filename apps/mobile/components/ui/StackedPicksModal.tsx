@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
   Dimensions,
@@ -9,12 +9,14 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EventCompactCard } from '@/components/ui/EventCompactCard';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { TOULOUSE_PHOTOS } from '@/src/assets/photos';
 import type { FeedItem } from '@/src/domain/today-feed';
+import { enterFadeIn, MOTION, useReducedMotion } from '@/src/lib/motion';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const CARD_WIDTH = Math.min(280, SCREEN_WIDTH - 64);
@@ -41,6 +43,7 @@ export function StackedPicksModal({
   onHideForToday,
 }: StackedPicksModalProps) {
   const insets = useSafeAreaInsets();
+  const reduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
 
@@ -53,25 +56,42 @@ export function StackedPicksModal({
     setActiveIndex(index);
   }
 
+  function openPick(pickHref: string): void {
+    onClose();
+    router.push(pickHref as never);
+  }
+
   return (
     <View className="absolute inset-0 z-50" testID="stacked-picks-modal">
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Fermer le fond"
-        className="absolute inset-0 bg-ink-800/55"
-        onPress={onClose}
-      />
-      <View
+      <Animated.View
+        entering={reduceMotion ? undefined : FadeIn.duration(MOTION.fast)}
+        className="absolute inset-0"
+      >
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Fermer le fond"
+          className="absolute inset-0 bg-ink-800/55"
+          onPress={onClose}
+        />
+      </Animated.View>
+      <Animated.View
+        entering={enterFadeIn(0, reduceMotion)}
         className="absolute bottom-0 left-0 right-0 top-0 justify-center"
         style={{ paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }}
         pointerEvents="box-none"
       >
-        <Text className="mb-2 px-6 text-center font-display text-[24px] text-white">
+        <Animated.Text
+          entering={enterFadeIn(0, reduceMotion)}
+          className="mb-2 px-6 text-center font-display text-[24px] text-white"
+        >
           Nos 3 idées du moment
-        </Text>
-        <Text className="mb-6 px-8 text-center text-[14px] font-body text-white/80">
+        </Animated.Text>
+        <Animated.Text
+          entering={enterFadeIn(1, reduceMotion)}
+          className="mb-6 px-8 text-center text-[14px] font-body text-white/80"
+        >
           Glisse pour découvrir — ou ferme pour explorer l'accueil.
-        </Text>
+        </Animated.Text>
 
         <View className="mb-4 h-[340px]">
           <ScrollView
@@ -82,8 +102,9 @@ export function StackedPicksModal({
             onMomentumScrollEnd={handleScrollEnd}
           >
             {picks.map((pick, pickIndex) => (
-              <View
+              <Animated.View
                 key={pick.id}
+                entering={enterFadeIn(pickIndex + 2, reduceMotion)}
                 className="items-center justify-center"
                 style={{ width: SCREEN_WIDTH }}
               >
@@ -127,36 +148,34 @@ export function StackedPicksModal({
                   );
                 })}
 
-                <Link href={pick.href as never} asChild>
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={onClose}
-                    style={{
-                      zIndex: picks.length + 1,
-                      transform: [
-                        {
-                          rotate: `${STACK_ROTATIONS[pickIndex % STACK_ROTATIONS.length]}deg`,
-                        },
-                      ],
-                    }}
-                  >
-                    <EventCompactCard
-                      title={pick.title}
-                      reason={pick.reason}
-                      badge={pick.badge}
-                      badgeColor={pick.badgeColor}
-                      imageLabel={pick.title}
-                      imageSource={
-                        pick.imageUrl
-                          ? { uri: pick.imageUrl }
-                          : PICK_PHOTOS[pickIndex % PICK_PHOTOS.length]
-                      }
-                      imageAttribution={pick.imageAttribution}
-                      width={CARD_WIDTH}
-                    />
-                  </Pressable>
-                </Link>
-              </View>
+                <View
+                  style={{
+                    zIndex: picks.length + 1,
+                    transform: [
+                      {
+                        rotate: `${STACK_ROTATIONS[pickIndex % STACK_ROTATIONS.length]}deg`,
+                      },
+                    ],
+                  }}
+                >
+                  <EventCompactCard
+                    testID={`stacked-pick-card-${pickIndex}`}
+                    title={pick.title}
+                    reason={pick.reason}
+                    badge={pick.badge}
+                    badgeColor={pick.badgeColor}
+                    imageLabel={pick.title}
+                    imageSource={
+                      pick.imageUrl
+                        ? { uri: pick.imageUrl }
+                        : PICK_PHOTOS[pickIndex % PICK_PHOTOS.length]
+                    }
+                    imageAttribution={pick.imageAttribution}
+                    width={CARD_WIDTH}
+                    onPress={() => openPick(pick.href)}
+                  />
+                </View>
+              </Animated.View>
             ))}
           </ScrollView>
         </View>
@@ -185,7 +204,7 @@ export function StackedPicksModal({
             </Text>
           </Pressable>
         </View>
-      </View>
+      </Animated.View>
     </View>
   );
 }

@@ -185,6 +185,16 @@ describe('TodayScreen', () => {
     await dismissStackedModal();
   });
 
+  it('ouvre la fiche événement quand on tape une carte du modal', async () => {
+    renderTodayScreen();
+    await screen.findByTestId('stacked-picks-modal');
+    fireEvent.press(screen.getByTestId('stacked-pick-card-0'));
+    await waitFor(() => {
+      expect(screen.queryByTestId('stacked-picks-modal')).toBeNull();
+    });
+    expect(mockRouterPush).toHaveBeenCalledWith('/event/concert-openagenda');
+  });
+
   it('filtre par prix gratuit', async () => {
     renderTodayScreen();
     await dismissStackedModal();

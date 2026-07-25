@@ -17,14 +17,17 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as WebBrowser from 'expo-web-browser';
 
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { FavoriteActionButton } from '@/components/ui/FavoriteActionButton';
 import { MarkdownLite } from '@/components/ui/MarkdownLite';
 import { fetchPlaceMedia, fetchPublicPlaceBySlug } from '@/src/data/catalog-api';
 import { isFavorite, isVisited, toggleFavorite, toggleVisited } from '@/src/data/local-catalog';
 import { openDirections } from '@/src/lib/directions';
+import { enterFadeInUp, useReducedMotion } from '@/src/lib/motion';
 import { buildPublicCatalogUrl } from '@/src/lib/public-urls';
 
 const PLACE_TYPE_LABELS: Record<string, string> = {
@@ -56,6 +59,7 @@ function formatDuration(durationMinutes: number | null | undefined): string | nu
 }
 
 export default function PlaceDetailScreen() {
+  const reduceMotion = useReducedMotion();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const placeSlug = typeof slug === 'string' ? slug : '';
   const { width: screenWidth } = useWindowDimensions();
@@ -263,7 +267,10 @@ export default function PlaceDetailScreen() {
           ) : null}
 
           {placeRow ? (
-            <View className="-mt-5 rounded-t-[24px] bg-sand-50 px-[22px] pt-6">
+            <Animated.View
+              entering={enterFadeInUp(0, reduceMotion)}
+              className="-mt-5 rounded-t-[24px] bg-sand-50 px-[22px] pt-6"
+            >
               <View className="mb-3 flex-row flex-wrap gap-2">
                 <View className="rounded-full bg-teal-700/10 px-3 py-1">
                   <Text className="text-[11px] font-body-semibold text-teal-700">
@@ -332,25 +339,11 @@ export default function PlaceDetailScreen() {
               </View>
 
               <View className="mb-5 flex-row gap-2.5">
-                <Pressable
+                <FavoriteActionButton
                   testID="place-favorite"
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: isFavoriteState }}
+                  isFavorite={isFavoriteState}
                   onPress={() => void onToggleFavorite()}
-                  className="flex-1 flex-row items-center justify-center gap-2 rounded-[14px] border-[1.5px] border-brick-500 py-2.5"
-                  style={{ backgroundColor: isFavoriteState ? '#C45C3E' : 'transparent' }}
-                >
-                  <FontAwesome
-                    name={isFavoriteState ? 'heart' : 'heart-o'}
-                    size={14}
-                    color={isFavoriteState ? '#FFFFFF' : '#A94A30'}
-                  />
-                  <Text
-                    className={`text-[13px] font-body-semibold ${isFavoriteState ? 'text-white' : 'text-brick-700'}`}
-                  >
-                    Favori
-                  </Text>
-                </Pressable>
+                />
                 <Pressable
                   testID="place-visited"
                   accessibilityRole="button"
@@ -531,7 +524,7 @@ export default function PlaceDetailScreen() {
                   {attribution}
                 </Text>
               ) : null}
-            </View>
+            </Animated.View>
           ) : null}
         </ScrollView>
 
