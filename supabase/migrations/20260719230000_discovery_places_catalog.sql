@@ -196,6 +196,17 @@ values (
 )
 on conflict (id) do nothing;
 
+-- Territoire Toulouse requis avant les lieux (seed.sql le réinsère aussi après migrations).
+insert into public.territories (id, slug, name, timezone, is_active)
+values (
+  '11111111-1111-1111-1111-111111111111',
+  'toulouse',
+  'Toulouse',
+  'Europe/Paris',
+  true
+)
+on conflict (slug) do nothing;
+
 -- Seed lieux découverte (textes originaux TouRose, faits publics).
 insert into public.places (
   id,

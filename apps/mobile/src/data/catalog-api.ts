@@ -17,22 +17,34 @@ import {
 import { z } from 'zod';
 
 import { getSupabaseClient } from '@/src/lib/supabase';
+import { withCatalogCache } from '@/src/lib/catalog-cache';
 
 export async function fetchUpcomingEvents(limitCount = 20): Promise<PublicEventRow[]> {
-  const client = getSupabaseClient();
-  if (!client) {
-    throw new Error('Supabase non configuré — lance `pnpm dev:up`.');
-  }
+  const result = await fetchUpcomingEventsWithMeta(limitCount);
+  return result.data;
+}
 
-  const { data, error } = await client.rpc('list_upcoming_public_events', {
-    limit_count: limitCount,
+export async function fetchUpcomingEventsWithMeta(limitCount = 20): Promise<{
+  data: PublicEventRow[];
+  fromCache: boolean;
+  cachedAt: string | null;
+}> {
+  return withCatalogCache(`catalog:events:v2:${limitCount}`, async () => {
+    const client = getSupabaseClient();
+    if (!client) {
+      throw new Error('Supabase non configuré — lance `pnpm dev:up`.');
+    }
+
+    const { data, error } = await client.rpc('list_upcoming_public_events', {
+      limit_count: limitCount,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return z.array(publicEventRowSchema).parse(data ?? []);
   });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return z.array(publicEventRowSchema).parse(data ?? []);
 }
 
 export type FetchPublicPlacesOptions = {
@@ -46,28 +58,48 @@ export type FetchPublicPlacesOptions = {
 export async function fetchPublicPlaces(
   limitCountOrOptions: number | FetchPublicPlacesOptions = 50,
 ): Promise<PublicPlaceRow[]> {
-  const client = getSupabaseClient();
-  if (!client) {
-    throw new Error('Supabase non configuré — lance `pnpm dev:up`.');
-  }
+  const result = await fetchPublicPlacesWithMeta(limitCountOrOptions);
+  return result.data;
+}
 
+export async function fetchPublicPlacesWithMeta(
+  limitCountOrOptions: number | FetchPublicPlacesOptions = 50,
+): Promise<{
+  data: PublicPlaceRow[];
+  fromCache: boolean;
+  cachedAt: string | null;
+}> {
   const options: FetchPublicPlacesOptions =
     typeof limitCountOrOptions === 'number'
       ? { limitCount: limitCountOrOptions }
       : limitCountOrOptions;
 
-  const { data, error } = await client.rpc('list_public_places', {
-    limit_count: options.limitCount ?? 50,
-    origin_latitude: options.latitude ?? null,
-    origin_longitude: options.longitude ?? null,
-    discovery_only: options.discoveryOnly ?? true,
+  const cacheKey = `catalog:places:v2:${JSON.stringify({
+    limit: options.limitCount ?? 50,
+    lat: options.latitude ?? null,
+    lng: options.longitude ?? null,
+    discovery: options.discoveryOnly ?? true,
+  })}`;
+
+  return withCatalogCache(cacheKey, async () => {
+    const client = getSupabaseClient();
+    if (!client) {
+      throw new Error('Supabase non configuré — lance `pnpm dev:up`.');
+    }
+
+    const { data, error } = await client.rpc('list_public_places', {
+      limit_count: options.limitCount ?? 50,
+      origin_latitude: options.latitude ?? null,
+      origin_longitude: options.longitude ?? null,
+      discovery_only: options.discoveryOnly ?? true,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return z.array(publicPlaceRowSchema).parse(data ?? []);
   });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return z.array(publicPlaceRowSchema).parse(data ?? []);
 }
 
 export async function fetchPublicCollections(limitCount = 10): Promise<PublicCollectionRow[]> {

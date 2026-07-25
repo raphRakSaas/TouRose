@@ -32,7 +32,7 @@
     "supabase:start": "pnpm exec supabase start",
     "supabase:stop": "pnpm exec supabase stop",
     "supabase:status": "pnpm exec supabase status",
-    "supabase:reset": "pnpm exec supabase db reset",
+    "supabase:reset": "pnpm exec supabase db reset && node ./scripts/post-supabase-reset.mjs",
     "prepare": "husky || true"
   },
   "devDependencies": {

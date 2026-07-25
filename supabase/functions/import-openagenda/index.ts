@@ -1,10 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { edgeFunctionErrorSchema } from "../_shared/schemas.ts";
-import fixtureEvents from "./fixtures/toulouse-demo-events.json" with {
-  type: "json",
-};
 import {
-  hashPayload,
   type NormalizedMedia,
   normalizeOpenAgendaEvent,
   OPENAGENDA_SOURCE_ID,
@@ -50,8 +46,24 @@ Deno.serve(async (request) => {
   });
 
   const correlationId = crypto.randomUUID();
-  const agendaUid = Deno.env.get("OPENAGENDA_AGENDA_UID") ?? "fixture";
+  const agendaUid = Deno.env.get("OPENAGENDA_AGENDA_UID");
   const openAgendaKey = Deno.env.get("OPENAGENDA_PUBLIC_KEY");
+
+  if (!openAgendaKey) {
+    return jsonError(
+      "OPENAGENDA_PUBLIC_KEY is required — add it to supabase/functions/.env",
+      "misconfigured",
+      500,
+    );
+  }
+
+  if (!agendaUid) {
+    return jsonError(
+      "OPENAGENDA_AGENDA_UID is required — run pnpm openagenda:find then set the UID in supabase/functions/.env",
+      "misconfigured",
+      500,
+    );
+  }
 
   const { data: runRow, error: runError } = await client
     .from("import_runs")
@@ -227,9 +239,7 @@ Deno.serve(async (request) => {
         updated_count: updatedCount,
         skipped_count: skippedCount,
         error_count: errorCount,
-        message: openAgendaKey
-          ? `OpenAgenda agenda ${agendaUid}`
-          : "Fixture mode (no OPENAGENDA_PUBLIC_KEY)",
+        message: `OpenAgenda agenda ${agendaUid}`,
       })
       .eq("id", importRunId);
 
@@ -244,8 +254,7 @@ Deno.serve(async (request) => {
         updatedCount,
         skippedCount,
         errorCount,
-        mode: openAgendaKey ? "api" : "fixture",
-        fixtureHashProbe: await hashPayload({ fetchedCount }),
+        mode: "api",
       }),
       { status: 200, headers: corsHeaders },
     );
@@ -275,13 +284,9 @@ Deno.serve(async (request) => {
 });
 
 async function loadEvents(
-  openAgendaKey: string | undefined,
+  openAgendaKey: string,
   agendaUid: string,
 ): Promise<OpenAgendaEvent[]> {
-  if (!openAgendaKey) {
-    return fixtureEvents as OpenAgendaEvent[];
-  }
-
   const events: OpenAgendaEvent[] = [];
   let after: string[] | null = null;
 

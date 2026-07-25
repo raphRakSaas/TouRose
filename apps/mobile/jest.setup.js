@@ -114,4 +114,17 @@ jest.mock('expo-web-browser', () => ({
   openBrowserAsync: jest.fn(async () => ({ type: 'dismiss' })),
 }));
 
+jest.mock('@react-native-community/netinfo', () => ({
+  fetch: jest.fn(async () => ({ isConnected: true, isInternetReachable: true })),
+  addEventListener: jest.fn(() => jest.fn()),
+}));
+
+jest.mock('expo-linking', () => ({
+  createURL: jest.fn((path: string) => `tourose://${path.replace(/^\//, '')}`),
+  parse: jest.fn(() => ({ queryParams: {} })),
+  getInitialURL: jest.fn(async () => null),
+  addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+  useURL: jest.fn(() => null),
+}));
+
 jest.mock('react-native-webview');

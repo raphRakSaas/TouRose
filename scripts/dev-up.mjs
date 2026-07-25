@@ -12,7 +12,7 @@
  *   --no-mobile   skip Expo
  *   --no-website  skip Astro
  *   --no-admin    skip Angular
- *   --functions   also serve Edge Functions
+ *   --no-functions  skip Edge Functions (import OpenAgenda désactivé)
  */
 import { spawn, spawnSync } from 'node:child_process';
 import {
@@ -350,6 +350,9 @@ function printSummary(config, options) {
   const mobileLine = options.withMobile
     ? '║  Mobile Expo     : QR ci-dessous ([mobile]) — port 8081  ║'
     : '║  Mobile          : désactivé (--no-mobile)               ║';
+  const functionsLine = options.withFunctions
+    ? '║  Edge Functions  : actives (import OpenAgenda)           ║'
+    : '║  Edge Functions  : désactivées (--no-functions)          ║';
 
   console.log(`
 ${ANSI.bold}╔══════════════════════════════════════════════════════════╗
@@ -360,6 +363,7 @@ ${ANSI.bold}╔═════════════════════�
 ║  Website         : http://localhost:4321                 ║
 ║  Admin           : http://localhost:4200                 ║
 ${mobileLine}
+${functionsLine}
 ╠══════════════════════════════════════════════════════════╣
 ║  Admin login : admin@tourose.local / tourose-admin-local ║
 ║  Arrêt apps  : q  ou  Ctrl+C                             ║
@@ -490,14 +494,34 @@ function enableKeyboardShortcuts() {
 const withMobile = !hasFlag('--no-mobile');
 const withWebsite = !hasFlag('--no-website');
 const withAdmin = !hasFlag('--no-admin');
-const withFunctions = hasFlag('--functions');
+const withFunctions = !hasFlag('--no-functions');
 
 ensureDocker();
 ensureDependencies();
 ensureLogsDirectory();
 const supabase = startSupabase();
 const config = syncAppEnv(supabase);
-printSummary(config, { withMobile });
+
+if (withFunctions) {
+  spawnDev(
+    'functions',
+    'pnpm',
+    ['exec', 'supabase', 'functions', 'serve', '--env-file', 'supabase/functions/.env'],
+  );
+}
+
+if (withFunctions) {
+  const openAgendaBootstrap = spawnSync('node', ['./scripts/openagenda-import-if-needed.mjs'], {
+    cwd: rootDirectory,
+    stdio: 'inherit',
+    shell: false,
+  });
+  if (openAgendaBootstrap.status !== 0) {
+    log('Import OpenAgenda automatique échoué — vérifie supabase/functions/.env puis `pnpm import:openagenda`.');
+  }
+}
+
+printSummary(config, { withMobile, withFunctions });
 
 if (withMobile) {
   // Expo hides its QR when output is piped (non-TTY), so we render it ourselves
@@ -549,14 +573,6 @@ if (withMobile) {
     'pnpm',
     ['--filter', '@tourose/mobile', 'exec', 'expo', 'start', '--go', '--port', '8081'],
     { EXPO_NO_TELEMETRY: '1', CI: undefined },
-  );
-}
-
-if (withFunctions) {
-  spawnDev(
-    'functions',
-    'pnpm',
-    ['exec', 'supabase', 'functions', 'serve', '--env-file', 'supabase/functions/.env'],
   );
 }
 

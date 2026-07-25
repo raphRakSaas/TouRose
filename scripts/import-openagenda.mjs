@@ -5,7 +5,7 @@
  * Usage:
  *   pnpm import:openagenda
  *
- * Fixture mode when OPENAGENDA_PUBLIC_KEY is unset on the function.
+ * Requires OPENAGENDA_PUBLIC_KEY + OPENAGENDA_AGENDA_UID in supabase/functions/.env.
  * Requires: `pnpm supabase:start` and edge runtime with import-openagenda deployed/served.
  */
 import { spawnSync } from 'node:child_process';
@@ -13,6 +13,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const rootDirectory = join(dirname(fileURLToPath(import.meta.url)), '..');
+import { ensureFunctionsServe } from './ensure-functions-serve.mjs';
+
 const importSecret = process.env.IMPORT_CRON_SECRET ?? 'local-import-secret';
 
 function fail(message) {
@@ -56,6 +58,11 @@ if (!anonKey) {
 
 if (!apiUrl.includes('127.0.0.1') && !apiUrl.includes('localhost')) {
   fail('Refus : ce script est réservé au Supabase local.');
+}
+
+const functionsReady = await ensureFunctionsServe(apiUrl);
+if (!functionsReady) {
+  fail('Edge Functions indisponibles. Lance `pnpm dev:up` ou `pnpm exec supabase functions serve --env-file supabase/functions/.env`.');
 }
 
 const response = await fetch(`${apiUrl}/functions/v1/import-openagenda`, {

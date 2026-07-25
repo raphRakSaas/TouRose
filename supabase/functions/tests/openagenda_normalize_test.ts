@@ -4,6 +4,7 @@ import {
   localizeText,
   mapOpenAgendaPriceType,
   normalizeOpenAgendaEvent,
+  normalizeOpenAgendaImage,
   type OpenAgendaEvent,
   slugify,
 } from "../import-openagenda/normalize.ts";
@@ -26,6 +27,27 @@ Deno.test("hashPayload is stable for key order", async () => {
   const secondHash = await hashPayload({ a: 1, b: 2 });
   if (firstHash !== secondHash) {
     throw new Error("hash not stable");
+  }
+});
+
+Deno.test("normalizeOpenAgendaImage accepts img.openagenda.com host", () => {
+  const normalized = normalizeOpenAgendaImage(
+    {
+      base: "https://img.openagenda.com/main/",
+      filename: "event.base.jpg",
+      variants: [{ type: "full", filename: "event.full.image.jpg" }],
+    },
+    {
+      title: "Concert test",
+      sourceUrl: "https://openagenda.com/agendas/1/events/42",
+      credits: "OA",
+    },
+  );
+  if (
+    normalized?.remote_url !==
+      "https://img.openagenda.com/main/event.full.image.jpg"
+  ) {
+    throw new Error(`unexpected image url: ${normalized?.remote_url}`);
   }
 });
 

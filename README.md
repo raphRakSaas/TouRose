@@ -54,7 +54,7 @@ Options :
 pnpm dev:up -- --no-mobile     # sans Expo
 pnpm dev:up -- --no-website    # sans Astro
 pnpm dev:up -- --no-admin      # sans Angular
-pnpm dev:up -- --functions     # + Edge Functions (import OpenAgenda)
+pnpm dev:up -- --no-functions  # sans Edge Functions (pas d'import OpenAgenda)
 ```
 
 ### Admin local (après `pnpm supabase:reset` ou seed)
@@ -80,7 +80,7 @@ open http://127.0.0.1:54323
 # Edge Function santé
 curl -s http://127.0.0.1:54321/functions/v1/health
 
-# Import OpenAgenda (fixture locale si pas de clé API)
+# Import OpenAgenda (données réelles — clé dans supabase/functions/.env)
 pnpm import:openagenda
 
 # Tests RLS / schéma
@@ -123,7 +123,7 @@ pnpm test:supabase  # skip si Docker/Supabase absents
 | `pnpm build`                   | Builds                                               |
 | `pnpm check`                   | Pipeline qualité complète                            |
 | `pnpm grant:admin`             | Promouvoir un user local en admin JWT                |
-| `pnpm import:openagenda`       | Lancer l’import OpenAgenda (fixture ou API)          |
+| `pnpm import:openagenda`       | Lancer l’import OpenAgenda (API réelle)              |
 | `pnpm import:wikimedia-places` | Importer des galeries libres pour les lieux locaux   |
 | `pnpm import:editorial-photos` | Photos Commons (catégorie curée) pour lieux éditoriaux |
 | `pnpm openagenda:find`         | Lister les agendas OpenAgenda + UID                  |

@@ -3,7 +3,7 @@
 Vue d’ensemble de ce qui est **fait**, **en cours** et **à faire**.  
 Ce fichier est vivant : **ajoute des lignes** au fur et à mesure (bugs, idées, dettes techniques).
 
-Dernière mise à jour : **2026-07-19** (Phase 3 cœur local + Phase 4 scoring)
+Dernière mise à jour : **2026-07-25** (hors-ligne, clustering carte, Phase 5 comptes/sync)
 
 ---
 
@@ -47,15 +47,22 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 | --- | --- | --- | --- |
 | **0 — Fondations** | Fait | Apps démarrent, CI, migration locale | ~100 % |
 | **1 — Catalogue admin** | Fait | Admin publie → visible mobile/web | ~100 % (doublons / MFA / médias upload / SSR reportés) |
-| **Design** | En cours | Brief + maquette mobile intégrée | Mobile UI OK ; site/admin maquettes ouvertes |
-| **2 — Imports** | Partiel | OpenAgenda idempotent | ~80 % (OA + images + catégories + prix ; autres sources / cron prod ouverts) |
-| **3 — Cœur mobile** | En cours | Onboarding, fiches, favoris, carte | ~85 % (SQLite favoris, partage, calendrier, Explorer filtres ; MapLibre natif = dev build) |
-| **4 — Recommandations** | Partiel | 3 suggestions scorées | ~90 % (RPC scoring + impressions + ADR 0005 ; cache Query→SQLite ouvert) |
-| **5 — Comptes / sync** | À faire | Magic link + fusion locale | 0 % |
+| **Design** | En cours | Brief + maquette mobile intégrée | Mobile UI + motion OK ; site/admin maquettes ouvertes |
+| **2 — Imports** | Partiel | OpenAgenda idempotent | ~80 % (OA + images + catégories + prix ; DATAtourisme / cron / alertes ouverts) |
+| **3 — Cœur mobile** | En cours | Onboarding, fiches, favoris, carte | ~95 % (hors-ligne + clustering OK ; MapLibre natif / cache Query→SQLite ouverts) |
+| **4 — Recommandations** | Fait | 3 suggestions scorées | ~95 % (RPC + impressions + ADR 0005) |
+| **5 — Comptes / sync** | En cours | Magic link + fusion locale | ~60 % (profiles + magic link + sync favoris/visités ; RGPD export/suppression ouverts) |
 | **6 — Notifs / soutien** | À faire | Push + Stripe + IAP | 0 % |
 | **7 — Boutiques** | À faire | Store-ready | 0 % |
 
-**Prochaine priorité recommandée :** finaliser MapLibre en development build — ou **Phase 5** comptes/sync — ou design (hors MVP mobile).
+**Prochaine priorité (mobile / backend uniquement — site web en pause) :**
+
+1. **Phase 5** — export / suppression compte (RGPD) + tests E2E magic link  
+2. **Phase 2** — cron import OpenAgenda prod + alertes  
+3. **Phase 3** — MapLibre natif (dev build) + cache TanStack Query→SQLite complet  
+4. **Design mobile** — logo / assets (pas de maquettes site)
+
+> **Site web (`apps/website`) — en pause** : pas de SSR/ISR, polish catalogue, page soutien Stripe, ni maquettes site pour l’instant. Le catalogue web actuel reste tel quel.
 
 ---
 
@@ -163,15 +170,19 @@ Exemple : « Publier un lieu depuis l’admin visible sur `/catalogue` » plutô
 - [x] Import Wikimedia Commons conservateur pour les lieux (jusqu’à 3 photos, auteur/licence/attribution obligatoires)
 - [x] Catalogue lieux **découverte** (éditorial) séparé des salles OpenAgenda + tri proximité + filtre « Autour de moi » (ADR 0006)
 - [x] Pull-to-refresh + bouton réessayer sur Explorer / fiches
-- [ ] États erreur / empty states soignés (design)
+- [~] États erreur / empty states soignés (retry + messages OK ; polish visuel design ouvert)
 
 ### Website lecture
+
+> **En pause** — pas de travail site prévu tant que le mobile n’a pas fini Phase 3 + Phase 5.
 
 - [x] Page `/catalogue`
 - [x] Accueil + crédits + confidentialité placeholder
 - [x] Fiches détail SEO (`/catalogue/lieux/[slug]`, `/catalogue/evenements/[slug]`)
 - [x] Recherche sur le site (`?q=` + RPC `search_public_catalog`)
-- [ ] SSR/ISR pour fraîcheur catalogue en prod
+- [ ] [!] SSR/ISR pour fraîcheur catalogue en prod — **reporté**
+- [ ] [!] Page soutien Stripe — **reporté Phase 6**
+- [ ] [!] Recherche live / polish catalogue web — **reporté**
 
 ### Contracts
 
@@ -191,10 +202,12 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [x] Intégration pixel-perfect mobile (écrans MVP principaux)
 - [ ] Direction artistique / moodboard formalisé hors maquette
 - [ ] Logo / wordmark TouRose (assets export)
-- [ ] Maquettes site
+- [ ] Maquettes site — **en pause**
 - [ ] Maquettes admin
 - [ ] Export assets / icônes / placeholders photos
-- [ ] Polish états (skeleton shimmer animé, hors-ligne)
+- [x] Charte motion mobile (`src/lib/motion.ts`, ease-out sans rebond, `prefers-reduced-motion`)
+- [x] Animations ciblées : sheets, listes, favori, press feedback, skeleton shimmer (`SkeletonBlock`)
+- [x] Mode hors-ligne (cache catalogue SQLite + bannière réseau `OfflineBanner`)
 
 ---
 
@@ -232,19 +245,19 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 - [x] Onboarding skippable (histoire, intérêts, localisation expliquée) — UI maquette + permission localisation
 - [x] Salutation + météo réelle (Open-Meteo)
-- [x] Filtres Quand / Prix / Catégorie (modals + date picker natif)
+- [x] Filtres Quand / Prix / Catégorie (modals + date picker natif ; option **Tout** sur la date)
 - [x] Feed sections + liste (cartes/liste) branchés sur événements OpenAgenda
-- [x] Modal 3 cartes empilées (1× / lancement, option masquer aujourd’hui)
+- [x] Modal 3 cartes empilées (1× / lancement, option masquer aujourd’hui, navigation fiche corrigée)
 - [x] Affiner mes envies (feuille filtres compagnie)
 - [x] Trois suggestions « Pour toi » via RPC scoring (ADR 0005 ; fallback heuristique)
 
 ### Explorer & fiches
 
 - [x] Segments Événements / Lieux / Collections
-- [x] Filtres Explorer (week-end / gratuit / extérieur) câblés
+- [x] Filtres Explorer (week-end / gratuit / extérieur / autour de moi sur lieux) câblés
 - [x] Fiche événement (favori SQLite, partage, agenda, lien officiel)
 - [x] Fiche lieu (favori / visité / partage)
-- [~] États UX : skeleton basique ; erreur/vide OK ; hors-ligne/obsolète ouverts
+- [~] États UX : skeleton animé + erreur/vide OK ; cache catalogue hors-ligne OK ; badge « obsolète » ouvert
 
 ### Carte
 
@@ -252,7 +265,7 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [x] Carrousel horizontal bas compact synchronisé avec les pins (swipe ↔ pin, tap carte → fiche)
 - [x] Filtres Tout / Événements / Lieux / Gratuit
 - [~] MapLibre natif (`@maplibre/maplibre-react-native`) + style custom (development build / `EXPO_PUBLIC_MAP_STYLE_URL`) — optionnel
-- [ ] Clustering des pins denses (centre-ville)
+- [x] Clustering des pins denses (centre-ville) — GeoJSON + clusters MapLibre WebView
 - [ ] [!] Fournisseur de tuiles prod si passage MapLibre (pas OSM community CDN)
 
 ### Favoris & local
@@ -268,7 +281,7 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 - [x] Préférences : centres d’intérêt + compagnie éditables, revoir l’onboarding, réinitialisation
 - [x] Notifications : réglages granulaires persistés localement (prêts pour le push Phase 6)
-- [x] Compte : écran mode invité (compteurs de données locales, sync annoncée Phase 5)
+- [x] Compte : écran mode invité + magic link + sync favoris/visités/à découvrir
 - [x] Sources & confidentialité : sources ouvertes cliquables + engagements vie privée
 - [x] Soutenir TouRose (maquette montants, paiement réel = Phase 6)
 
@@ -293,10 +306,10 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 
 **Critère :** compte optionnel, fusion locale sans perte silencieuse.
 
-- [ ] `profiles` + préférences cloud
-- [ ] Magic link
-- [ ] Sync favoris / visites / préférences
-- [ ] Fusion locale → cloud idempotente
+- [x] `profiles` + préférences cloud (`user_catalog_items`, RPC `merge_user_catalog`)
+- [x] Magic link (Supabase Auth + deep link `tourose://auth/callback`)
+- [x] Sync favoris / visites / à découvrir (fusion locale ↔ cloud par `updated_at`)
+- [x] Fusion locale → cloud idempotente (`merge_user_catalog`)
 - [ ] Export données (RGPD)
 - [ ] Suppression compte + données
 - [ ] [!] Google Sign-In (après stabilisation)
@@ -341,7 +354,8 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [x] pgTAP catalogue / RLS
 - [x] Auth admin JWT documentée + tests non-admin bloqués
 - [x] Écritures admin via SQL paramétré (pas de concat → mitigation injection SQL)
-- [ ] Couverture scoring / imports / licences (quand Phase 2–4)
+- [x] Couverture scoring / imports (pgTAP + tests Deno normalize + `today-feed.test.ts`)
+- [ ] Couverture licences médias / E2E (quand stabilisation MVP)
 - [ ] E2E (après stabilisation MVP) : ouvrir sans compte, favori, admin publish
 - [ ] Rate limiting login / signalements
 - [ ] MFA admin production
@@ -359,7 +373,7 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 - [ ] Remplacer heuristique fallback « Pour toi » uniquement si RPC scoring indisponible (déjà en place)
 - [ ] Nettoyer composants template Expo inutilisés (`EditScreenInfo`, etc.)
 - [ ] Harmoniser env admin (fichier généré vs `.env.local` Angular)
-- [ ] Page catalogue web : recherche live
+- [ ] Page catalogue web : recherche live — **en pause (site web)**
 - [ ] Mode sombre ? (non prioritaire — identité chaude claire d’abord)
 - [ ] [-] Réseau social / chat / marketplace / IA conversationnelle (interdit MVP)
 - [ ] [-] Expansion nationale avant rétention Toulouse
@@ -382,5 +396,8 @@ Source : `docs/DESIGN-BRIEF.md` + `DESIGN/TouRose - Maquette App.html`
 | 2026-07-18 | Auth JWT admin + sécu injection SQL documentées / testées |
 | 2026-07-19 | Sync backlog : Aujourd’hui réel, images OA (ADR 0004), catégories `types-devenements`, prix `participation`/`billetterie` |
 | 2026-07-19 | Phase 3 (SQLite favoris, partage, calendrier, Explorer) + Phase 4 scoring (ADR 0005) |
+| 2026-07-25 | Audit backlog vs code ; motion mobile ; filtre date « Tout » ; fix navigation modal 3 idées |
+| 2026-07-25 | Site web mis en pause ; priorité mobile Phase 3 finition → Phase 5 → Phase 2 cron |
+| 2026-07-25 | Mobile : cache catalogue hors-ligne, clustering carte, Phase 5 (profiles, magic link, sync favoris) |
 
 *(Ajoute une ligne ici quand tu modifies significativement le backlog.)*

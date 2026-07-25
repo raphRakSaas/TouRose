@@ -17,7 +17,15 @@ Docker doit être en cours d’exécution. La CLI est fournie en dépendance de 
 pnpm supabase:reset
 ```
 
-Le seed (`supabase/seed.sql`) injecte un territoire Toulouse et des lieux/événements **fictifs** marqués DÉMO.
+Le seed (`supabase/seed.sql`) injecte uniquement le territoire Toulouse, la source OpenAgenda et le compte admin local. Les événements réels arrivent via l’import OpenAgenda ; les lieux « découverte » via la migration `discovery_places_catalog`.
+
+Après un reset, si `OPENAGENDA_PUBLIC_KEY` est dans `supabase/functions/.env`, l’import réel est tenté automatiquement (les Edge Functions sont démarrées si besoin). En cas d’échec :
+
+```bash
+pnpm import:openagenda
+# ou relance tout le stack :
+pnpm dev:up
+```
 
 ## Tests pgTAP
 
@@ -27,17 +35,17 @@ pnpm exec supabase test db
 
 ## Edge Functions
 
+`pnpm dev:up` démarre `supabase functions serve` par défaut (requis pour l’import OpenAgenda). Sans `dev:up` :
+
 ```bash
-pnpm exec supabase functions serve
-# ou une fonction :
-pnpm exec supabase functions serve import-openagenda
+pnpm exec supabase functions serve --env-file supabase/functions/.env
 ```
 
 - `health` — pas de JWT
 - `validate-report` — validation Zod, pas de secret
 - `import-openagenda` — secret `IMPORT_CRON_SECRET` (voir `supabase/functions/.env.example`)
 
-Import local (mode fixture si pas de clé OpenAgenda) :
+Import local (API OpenAgenda réelle) :
 
 ```bash
 pnpm import:openagenda

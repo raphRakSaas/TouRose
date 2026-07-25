@@ -1,6 +1,23 @@
 begin;
 select plan(3);
 
+insert into public.events (
+  id,
+  territory_id,
+  slug,
+  title,
+  status,
+  published_at
+)
+values (
+  '55555555-5555-5555-5555-555555555501',
+  '11111111-1111-1111-1111-111111111111',
+  'media-policy-test-event',
+  'Media policy test event',
+  'published',
+  timezone('utc', now())
+);
+
 insert into public.media_assets (
   id, remote_url, alt_text, source_url, attribution_text, rights_status
 )

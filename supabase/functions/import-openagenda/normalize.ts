@@ -355,6 +355,13 @@ export function isOpenAgendaEventPublic(eventRow: OpenAgendaEvent): boolean {
     normalized === "confirmed";
 }
 
+export function isOpenAgendaPreviewUrl(remoteUrl: string): boolean {
+  return (
+    remoteUrl.startsWith("https://cdn.openagenda.com/") ||
+    remoteUrl.startsWith("https://img.openagenda.com/")
+  );
+}
+
 export function normalizeOpenAgendaImage(
   image: OpenAgendaImage | null | undefined,
   options: { title: string; sourceUrl?: string; credits?: string },
@@ -380,7 +387,7 @@ export function normalizeOpenAgendaImage(
     return null;
   }
 
-  if (!remoteUrl.startsWith("https://cdn.openagenda.com/")) {
+  if (!isOpenAgendaPreviewUrl(remoteUrl)) {
     return null;
   }
 
