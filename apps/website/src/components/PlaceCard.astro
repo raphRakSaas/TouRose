@@ -1,6 +1,7 @@
 ---
 import type { PublicPlaceRow } from '@tourose/contracts';
 import { formatPlaceType, formatPriceBadge } from '../lib/format';
+import { resolvePlaceCoverImage } from '../lib/place-cover-images';
 
 interface Props {
   placeRow: PublicPlaceRow;
@@ -16,21 +17,19 @@ const metaLine = placeRow.city ? `${placeTypeLabel} • ${placeRow.city}` : plac
 const href = `/catalogue/lieux/${placeRow.slug}`;
 const displayLabel = tileLabel ?? placeTypeLabel;
 const priceToneClass = priceBadge.tone === 'free' ? 'text-primary' : 'text-secondary';
+const coverImageUrl = resolvePlaceCoverImage(placeRow);
 ---
 
 {
   variant === 'bento-tile' ? (
     <a href={href} class="group relative block h-[280px] overflow-hidden rounded-[32px] shadow-xl">
-      {placeRow.image_url ? (
-        <img
-          src={placeRow.image_url}
-          alt={placeRow.image_alt ?? placeRow.name}
-          loading="lazy"
-          class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
-        />
-      ) : (
-        <div class="absolute inset-0 bg-gradient-to-br from-tertiary/20 to-sky-blue-muted/30" />
-      )}
+      <img
+        src={coverImageUrl}
+        alt={placeRow.image_alt ?? placeRow.name}
+        loading="lazy"
+        decoding="async"
+        class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+      />
       <div class="absolute inset-0 flex items-center justify-center bg-ink-black/30 p-6 text-center transition-colors group-hover:bg-ink-black/50">
         <div>
           <span class="material-symbols-outlined mb-2 text-4xl text-white">{tileIcon}</span>
@@ -43,18 +42,13 @@ const priceToneClass = priceBadge.tone === 'free' ? 'text-primary' : 'text-secon
     <a href={href} class="group block no-underline">
       <article>
         <div class="relative mb-4 aspect-[4/5] overflow-hidden rounded-2xl border border-soft-pink/20 card-shadow-sm">
-          {placeRow.image_url ? (
-            <img
-              src={placeRow.image_url}
-              alt={placeRow.image_alt ?? placeRow.name}
-              loading="lazy"
-              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          ) : (
-            <div class="flex h-full items-center justify-center bg-gradient-to-br from-tertiary/10 via-sky-blue-muted/20 to-soft-pink/20 font-label-sm text-on-surface-variant">
-              Lieu
-            </div>
-          )}
+          <img
+            src={coverImageUrl}
+            alt={placeRow.image_alt ?? placeRow.name}
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
           <div
             class:list={[
               'absolute top-4 right-4 rounded-full bg-white/90 px-3 py-1 font-label-sm text-label-sm font-bold backdrop-blur-sm',

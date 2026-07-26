@@ -129,8 +129,7 @@ const totalResults = events.length + places.length + collections.length;
 
               <div class="flex items-center justify-between">
                 <p class="font-body-md text-body-md text-on-surface-variant">
-                  <span id="catalogue-count" class="font-bold text-ink-black">{totalResults}</span> pépites trouvées à
-                  Toulouse
+                  <span id="catalogue-count" class="font-bold text-ink-black">{totalResults}</span> résultats à Toulouse
                 </p>
                 <div class="hidden items-center gap-2 font-label-md text-label-md text-on-surface-variant sm:flex">
                   <span>Trier par :</span>
@@ -143,7 +142,7 @@ const totalResults = events.length + places.length + collections.length;
               <div class="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-surface-container-high">
                 <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40">sentiment_dissatisfied</span>
               </div>
-              <h3 class="mb-2 font-headline-md text-headline-md text-ink-black">Mince, aucune pépite ici.</h3>
+              <h3 class="mb-2 font-headline-md text-headline-md text-ink-black">Rien pour ces filtres</h3>
               <p class="max-w-sm font-body-md text-body-md text-on-surface-variant">
                 Essaie de modifier tes filtres ou ta recherche pour trouver d'autres trésors toulousains.
               </p>
@@ -177,7 +176,7 @@ const totalResults = events.length + places.length + collections.length;
                   id="catalogue-load-more"
                   class="rounded-full border-2 border-terra-cotta px-10 py-4 font-label-md text-label-md text-terra-cotta transition-all hover:bg-terra-cotta hover:text-white active:scale-95"
                 >
-                  Charger plus de pépites
+                  Charger plus
                 </button>
                 <div class="sticky-note relative w-full max-w-md overflow-hidden rounded-lg border-2 border-soft-pink/50 bg-soft-pink/30 p-8 shadow-lg">
                   <div class="absolute -top-4 -right-4 h-12 w-12 rotate-45 border-b-2 border-l-2 border-soft-pink/50 bg-background" />
@@ -186,15 +185,15 @@ const totalResults = events.length + places.length + collections.length;
                     Garde le catalogue en poche
                   </h4>
                   <p class="mb-6 font-body-md text-body-md font-medium text-ink-black/80 italic">
-                    « C'est comme avoir un ami toulousain qui connaît tous les coins secrets, directement dans ton
-                    téléphone. »
+                    « Événements + lieux à Toulouse, dans une app encore en beta — le site fait la même chose, sans
+                    installation. »
                   </p>
                   <a
                     href={APP_APK_DOWNLOAD_URL}
                     class="inline-flex items-center gap-2 rounded-lg bg-ink-black px-4 py-2 font-label-sm text-label-sm text-white transition-colors hover:bg-black/80"
                   >
                     <span class="material-symbols-outlined text-[18px]">file_download</span>
-                    Télécharger l'app
+                    Tester l'app (Android)
                   </a>
                 </div>
               </div>

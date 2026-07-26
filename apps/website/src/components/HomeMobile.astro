@@ -1,15 +1,21 @@
 ---
+import type { PublicPlaceRow } from '@tourose/contracts';
 import AppScreenshotCarousel from './AppScreenshotCarousel.astro';
+import { resolvePlaceCoverImage } from '../lib/place-cover-images';
 import {
-  STITCH_HOME_BENTO_CASSOULET_IMAGE,
-  STITCH_HOME_BENTO_COURTYARD_IMAGE,
-  STITCH_HOME_BENTO_STREET_ART_IMAGE,
   STITCH_HOME_CATEGORY_BALADE_IMAGE,
   STITCH_HOME_CATEGORY_CULTURE_IMAGE,
   STITCH_HOME_CATEGORY_GOUT_IMAGE,
   STITCH_HOME_HERO_MOBILE_IMAGE,
 } from '../lib/stitch-home-assets';
 import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL } from '../lib/site-config';
+
+interface Props {
+  featuredPlaces: PublicPlaceRow[];
+}
+
+const { featuredPlaces } = Astro.props;
+const [heroPlace, secondPlace, thirdPlace] = featuredPlaces;
 
 const categoryItems = [
   {
@@ -19,7 +25,7 @@ const categoryItems = [
     backgroundClass: 'bg-primary-container/20',
     iconClass: 'text-primary',
     image: STITCH_HOME_CATEGORY_GOUT_IMAGE,
-    imageAlt: 'Spécialité culinaire toulousaine',
+    imageAlt: 'Terrasse et vie locale à Toulouse',
   },
   {
     label: 'Balade',
@@ -28,16 +34,16 @@ const categoryItems = [
     backgroundClass: 'bg-secondary-container/20',
     iconClass: 'text-secondary',
     image: STITCH_HOME_CATEGORY_BALADE_IMAGE,
-    imageAlt: 'Rue pavée du centre historique de Toulouse',
+    imageAlt: 'Quais de la Garonne à Toulouse',
   },
   {
     label: 'Culture',
     icon: 'museum',
-    borderClass: 'border-tertiary-fixed-dim',
+    borderClass: 'border-outline-variant',
     backgroundClass: 'bg-tertiary-container/20',
     iconClass: 'text-tertiary',
     image: STITCH_HOME_CATEGORY_CULTURE_IMAGE,
-    imageAlt: 'Détail architectural et culturel à Toulouse',
+    imageAlt: 'Vue sur Toulouse',
   },
 ];
 ---
@@ -46,9 +52,11 @@ const categoryItems = [
   <section class="relative flex min-h-[min(751px,100dvh)] flex-col justify-end overflow-hidden px-container-margin pt-20 pb-12">
     <div class="absolute inset-0 z-0">
       <img
-        alt="Pont Neuf et Garonne au coucher du soleil à Toulouse"
+        alt="Pont Neuf et Garonne au crépuscule à Toulouse"
         class="h-full w-full object-cover brightness-[0.7]"
         src={STITCH_HOME_HERO_MOBILE_IMAGE}
+        fetchpriority="high"
+        decoding="async"
       />
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
     </div>
@@ -57,7 +65,7 @@ const categoryItems = [
         Toulouse à voir, à vivre, à aimer
       </h2>
       <p class="font-body-lg text-body-lg text-white/90">
-        Redécouvre la Ville Rose à travers le regard de ceux qui l'aiment vraiment.
+        Un projet local en beta : événements OpenAgenda, lieux à découvrir, et une app Android à tester.
       </p>
       <div class="flex flex-col gap-3">
         <a
@@ -65,7 +73,7 @@ const categoryItems = [
           class="flex items-center justify-center gap-2 rounded-xl bg-deep-rose px-8 py-4 font-label-md text-label-md text-white shadow-lg transition-transform active:scale-95 no-underline"
         >
           <span class="material-symbols-outlined">download</span>
-          Télécharger l'App
+          Tester l'app (Android)
         </a>
         <a
           href="/catalogue"
@@ -80,8 +88,10 @@ const categoryItems = [
 
   <section class="bg-surface-container-low px-container-margin py-12" id="concept">
     <div class="mb-8">
-      <h3 class="font-headline-md text-headline-md text-deep-rose">Le paradoxe du choix ? On l'a résolu.</h3>
-      <p class="mt-2 text-on-surface-variant">Plus besoin de scroller des heures, on a sélectionné l'essentiel.</p>
+      <h3 class="font-headline-md text-headline-md text-deep-rose">Moins de bruit, plus de clarté</h3>
+      <p class="mt-2 text-on-surface-variant">
+        On agrège ce qui se passe à Toulouse et on propose quelques idées — sans prétendre tout connaître.
+      </p>
     </div>
     <div class="grid grid-cols-3 gap-3">
       {
@@ -98,7 +108,7 @@ const categoryItems = [
                 {categoryItem.icon}
               </span>
               <div class="absolute inset-0 opacity-20">
-                <img alt={categoryItem.imageAlt} class="h-full w-full object-cover" src={categoryItem.image} loading="lazy" />
+                <img alt={categoryItem.imageAlt} class="h-full w-full object-cover" src={categoryItem.image} loading="lazy" decoding="async" />
               </div>
             </div>
             <span class="font-label-md text-label-md text-on-surface">{categoryItem.label}</span>
@@ -110,27 +120,27 @@ const categoryItems = [
 
   <section class="px-container-margin py-8">
     <div class="texture-paper rounded-2xl border border-white/20 bg-primary-container p-6 text-on-primary-container shadow-xl">
-      <h4 class="mb-4 font-headline-md text-headline-md">Finies les hésitations</h4>
+      <h4 class="mb-4 font-headline-md text-headline-md">Ce que TouRose fait (vraiment)</h4>
       <ul class="space-y-4">
         <li class="flex items-start gap-3">
-          <span class="material-symbols-outlined rounded-lg bg-white/20 p-1">verified</span>
+          <span class="material-symbols-outlined rounded-lg bg-white/20 p-1">event</span>
           <div>
-            <span class="block font-bold">Testé par nous</span>
-            <span class="text-sm opacity-90">Pas d'avis truqués, seulement des vraies expériences toulousaines.</span>
+            <span class="block font-bold">Événements à jour</span>
+            <span class="text-sm opacity-90">Import OpenAgenda, filtrable sur le site et dans l'app.</span>
           </div>
         </li>
         <li class="flex items-start gap-3">
-          <span class="material-symbols-outlined rounded-lg bg-white/20 p-1">schedule</span>
+          <span class="material-symbols-outlined rounded-lg bg-white/20 p-1">map</span>
           <div>
-            <span class="block font-bold">Gagne du temps</span>
-            <span class="text-sm opacity-90">Ton trio du jour, prêt en quelques secondes.</span>
+            <span class="block font-bold">Lieux à explorer</span>
+            <span class="text-sm opacity-90">Sélection éditoriale Toulouse (monuments, parcs, balades…).</span>
           </div>
         </li>
         <li class="flex items-start gap-3">
-          <span class="material-symbols-outlined rounded-lg bg-white/20 p-1">local_offer</span>
+          <span class="material-symbols-outlined rounded-lg bg-white/20 p-1">construction</span>
           <div>
-            <span class="block font-bold">Bons plans exclusifs</span>
-            <span class="text-sm opacity-90">Des avantages chez nos artisans partenaires préférés.</span>
+            <span class="block font-bold">En construction</span>
+            <span class="text-sm opacity-90">Suggestions du jour et personnalisation : en cours, pas encore parfait.</span>
           </div>
         </li>
       </ul>
@@ -138,7 +148,7 @@ const categoryItems = [
         href="/apropos"
         class="mt-6 block rounded-xl bg-white py-3 text-center font-label-md text-label-md font-bold text-deep-rose no-underline"
       >
-        Comment ça marche ?
+        En savoir plus
       </a>
     </div>
   </section>
@@ -146,75 +156,92 @@ const categoryItems = [
   <section class="bg-surface px-container-margin py-12" id="catalogue">
     <div class="mb-6 flex items-end justify-between">
       <div>
-        <h3 class="font-headline-md text-headline-md text-ink-black">Le cœur battant de Toulouse</h3>
-        <p class="text-sm text-on-surface-variant">Les pépites du moment.</p>
+        <h3 class="font-headline-md text-headline-md text-ink-black">Quelques lieux du catalogue</h3>
+        <p class="text-sm text-on-surface-variant">Extraits réels de notre base — pas des exemples inventés.</p>
       </div>
-      <a href="/catalogue" class="font-label-md text-label-md text-primary no-underline">Tout voir</a>
+      <a href="/catalogue#lieux" class="font-label-md text-label-md text-primary no-underline">Tout voir</a>
     </div>
-    <div class="home-bento-mobile">
-      <a href="/catalogue" class="home-bento-item-large group relative block h-48 overflow-hidden rounded-2xl">
-        <img
-          alt="Bistrot toulousain authentique"
-          class="h-full w-full object-cover"
-          src={STITCH_HOME_BENTO_CASSOULET_IMAGE}
-          loading="lazy"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        <div class="absolute bottom-4 left-4 text-white">
-          <span class="mb-2 inline-block rounded-full bg-terra-cotta px-2 py-0.5 text-[10px] font-bold uppercase">Coup de cœur</span>
-          <p class="font-bold">Chez Émile : Le vrai Cassoulet</p>
+    {
+      featuredPlaces.length > 0 ? (
+        <div class="home-bento-mobile">
+          {heroPlace ? (
+            <a
+              href={`/catalogue/lieux/${heroPlace.slug}`}
+              class="home-bento-item-large group relative block h-48 overflow-hidden rounded-2xl"
+            >
+              <img
+                alt={heroPlace.image_alt ?? heroPlace.name}
+                class="h-full w-full object-cover"
+                src={resolvePlaceCoverImage(heroPlace)}
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div class="absolute bottom-4 left-4 text-white">
+                <p class="font-bold">{heroPlace.name}</p>
+                {heroPlace.summary ? <p class="mt-1 line-clamp-2 text-sm text-white/85">{heroPlace.summary}</p> : null}
+              </div>
+            </a>
+          ) : null}
+          {secondPlace ? (
+            <a href={`/catalogue/lieux/${secondPlace.slug}`} class="group relative block h-40 overflow-hidden rounded-2xl">
+              <img
+                alt={secondPlace.image_alt ?? secondPlace.name}
+                class="h-full w-full object-cover"
+                src={resolvePlaceCoverImage(secondPlace)}
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div class="absolute bottom-3 left-3 text-xs font-bold text-white">{secondPlace.name}</div>
+            </a>
+          ) : null}
+          {thirdPlace ? (
+            <a href={`/catalogue/lieux/${thirdPlace.slug}`} class="group relative block h-40 overflow-hidden rounded-2xl">
+              <img
+                alt={thirdPlace.image_alt ?? thirdPlace.name}
+                class="h-full w-full object-cover"
+                src={resolvePlaceCoverImage(thirdPlace)}
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div class="absolute bottom-3 left-3 text-xs font-bold text-white">{thirdPlace.name}</div>
+            </a>
+          ) : null}
         </div>
-      </a>
-      <a href="/catalogue#lieux" class="group relative block h-40 overflow-hidden rounded-2xl">
-        <img
-          alt="Street art à Toulouse"
-          class="h-full w-full object-cover"
-          src={STITCH_HOME_BENTO_STREET_ART_IMAGE}
-          loading="lazy"
-        />
-        <div class="absolute bottom-3 left-3 text-xs font-bold text-white">Art de Rue</div>
-      </a>
-      <a href="/catalogue#lieux" class="group relative block h-40 overflow-hidden rounded-2xl">
-        <img
-          alt="Cour secrète d'un hôtel particulier toulousain"
-          class="h-full w-full object-cover"
-          src={STITCH_HOME_BENTO_COURTYARD_IMAGE}
-          loading="lazy"
-        />
-        <div class="absolute bottom-3 left-3 text-xs font-bold text-white">Cours Secrètes</div>
-      </a>
-    </div>
+      ) : (
+        <p class="text-on-surface-variant">Le catalogue lieux se charge depuis Supabase — réessaie dans un instant.</p>
+      )
+    }
   </section>
 
   <section class="relative mx-container-margin my-12 overflow-hidden rounded-3xl border-2 border-dashed border-soft-pink bg-soft-pink/20 p-8 text-center">
     <div class="absolute top-0 right-0 -mt-12 -mr-12 h-24 w-24 rounded-full bg-soft-pink/30" />
-    <h3 class="mb-4 font-headline-lg-mobile text-headline-lg-mobile text-deep-rose">Tu es un pionnier ?</h3>
+    <h3 class="mb-4 font-headline-lg-mobile text-headline-lg-mobile text-deep-rose">Tu testes TouRose ?</h3>
     <p class="mb-6 text-on-surface-variant">
-      Aide-nous à construire le guide parfait. Donne ton avis sur nos parcours et gagne des récompenses.
+      L'app et le site évoluent vite. Un retour honnête nous aide plus qu'une étoile sur le store (pas encore dispo).
     </p>
     <a
       href={`mailto:${SITE_CONTACT_EMAIL}?subject=Retour%20TouRose`}
       class="inline-block rounded-full bg-deep-rose px-8 py-3 font-label-md text-label-md text-white shadow-lg transition-transform active:scale-95 no-underline"
     >
-      Je participe !
+      Envoyer un retour
     </a>
   </section>
 
   <section class="overflow-hidden bg-surface-container px-container-margin py-12" id="download">
-    <h3 class="mb-8 text-center font-headline-md text-headline-md">Tes suggestions du jour</h3>
+    <h3 class="mb-2 text-center font-headline-md text-headline-md">Aperçu de l'app</h3>
+    <p class="mb-8 text-center text-sm text-on-surface-variant">Captures réelles — fonctionnalités en beta.</p>
     <div class="relative mx-auto max-w-[280px] rounded-[3rem] border-4 border-surface-container-highest bg-ink-black p-3 shadow-2xl">
       <div class="overflow-hidden rounded-[2.5rem] bg-background">
         <div class="bg-primary px-4 pt-8 pb-4 text-white">
-          <p class="text-[10px] tracking-widest uppercase opacity-80">Aujourd'hui</p>
-          <h4 class="text-lg font-bold">Hello, Explorateur !</h4>
+          <p class="text-[10px] tracking-widest uppercase opacity-80">TouRose</p>
+          <h4 class="text-lg font-bold">Version beta</h4>
         </div>
         <div class="flex justify-center px-2 py-4">
           <AppScreenshotCarousel dotTone="light" compact />
         </div>
-      </div>
-      <div class="absolute top-1/4 -right-6 max-w-[120px] rotate-3 rounded-2xl border border-soft-pink bg-white p-4 shadow-xl">
-        <p class="mb-1 text-[10px] font-bold text-deep-rose">Météo Tip</p>
-        <p class="text-[9px] leading-tight">Prends ton chapeau, le soleil tape Place du Capitole !</p>
       </div>
     </div>
   </section>

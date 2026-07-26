@@ -1,7 +1,10 @@
 ---
+import type { PublicPlaceRow } from '@tourose/contracts';
 import AppScreenshotCarousel from '../components/AppScreenshotCarousel.astro';
 import HomeMobile from '../components/HomeMobile.astro';
+import PlaceCard from '../components/PlaceCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadPublicPlaces } from '../lib/catalog';
 import {
   STITCH_APP_STORE_BADGE,
   STITCH_HOME_HERO_IMAGE,
@@ -10,10 +13,17 @@ import {
   STITCH_PLAY_STORE_BADGE,
 } from '../lib/stitch-home-assets';
 import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/site-config';
+
+let featuredPlaces: PublicPlaceRow[] = [];
+try {
+  featuredPlaces = await loadPublicPlaces(6);
+} catch {
+  featuredPlaces = [];
+}
 ---
 
 <BaseLayout title={`TouRose — ${SITE_TAGLINE}`}>
-  <HomeMobile />
+  <HomeMobile featuredPlaces={featuredPlaces} />
 
   <div class="home-desktop hidden overflow-x-hidden md:block">
     <section class="relative flex min-h-[90vh] items-center px-container-margin pt-24 pb-20">
@@ -22,6 +32,8 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
           alt="Panorama de Toulouse au coucher du soleil"
           class="h-full w-full object-cover brightness-[0.85] contrast-[1.1]"
           src={STITCH_HOME_HERO_IMAGE}
+          fetchpriority="high"
+          decoding="async"
         />
         <div class="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background" />
       </div>
@@ -29,7 +41,7 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
         <div class="grid items-center gap-16 lg:grid-cols-5">
           <div class="lg:col-span-3">
             <span class="mb-8 inline-block rounded-full border border-soft-pink bg-white/90 px-5 py-2 font-label-sm text-label-sm text-deep-rose shadow-sm backdrop-blur">
-               Redécouvrez la Ville Rose autrement
+              Projet local — site et app en beta
             </span>
             <h1 class="mb-8 font-headline-xl text-[48px] leading-[1.1] font-bold tracking-tighter text-ink-black md:text-[80px]">
               Toulouse <br />
@@ -41,9 +53,8 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
               à aimer.
             </h1>
             <p class="mx-auto mb-12 max-w-xl font-body-lg text-body-lg leading-relaxed text-ink-black/80 lg:mx-0">
-              Marre de scroller des listes infinies ? <br />
-              On vous sélectionne <strong>3 pépites par jour</strong>. <br />
-              L'essentiel, pour profiter de l'instant.
+              TouRose agrège événements et lieux à Toulouse. L'app propose des idées selon ton moment — c'est encore
+              jeune, mais on avance en public.
             </p>
             <div class="flex flex-col justify-center gap-5 sm:flex-row lg:justify-start">
               <a
@@ -51,7 +62,7 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
                 class="group flex items-center justify-center gap-3 rounded-2xl bg-deep-rose px-10 py-5 font-label-md text-label-md text-white shadow-2xl shadow-deep-rose/40 transition-all hover:-translate-y-1 hover:bg-primary"
               >
                 <span class="material-symbols-outlined material-symbols-filled text-2xl group-hover:animate-bounce">download</span>
-                Prends l'app gratuitement
+                Tester l'app (Android)
               </a>
               <a
                 href="/catalogue"
@@ -92,9 +103,9 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
       <div class="absolute bottom-0 left-0 -z-10 h-96 w-96 rounded-full bg-sky-blue-muted/10 blur-[100px]" />
       <div class="mx-auto max-w-[1200px]">
         <div class="mb-24 text-center">
-          <h2 class="mb-6 font-headline-xl text-headline-xl text-ink-black">Le paradoxe du choix ? On l'a résolu.</h2>
+          <h2 class="mb-6 font-headline-xl text-headline-xl text-ink-black">Moins de bruit, plus de clarté</h2>
           <p class="mx-auto max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
-            Trop de possibilités tuent l'envie. On fait le tri pour ne vous offrir que l'exceptionnel.
+            Beaucoup d'agendas, peu de temps. On centralise et on trie — sans promettre la perfection.
           </p>
         </div>
         <div class="grid items-center gap-12 md:grid-cols-2">
@@ -106,7 +117,7 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
                 </div>
                 <div>
                   <h3 class="mb-2 font-headline-md text-headline-md">1. Le Goût</h3>
-                  <p class="text-on-surface-variant">Le petit resto que seuls les locaux connaissent.</p>
+                  <p class="text-on-surface-variant">Marchés, restos, adresses du quotidien — selon ce qu'on référence.</p>
                 </div>
               </div>
             </div>
@@ -117,7 +128,7 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
                 </div>
                 <div>
                   <h3 class="mb-2 font-headline-md text-headline-md">2. La Balade</h3>
-                  <p class="text-on-surface-variant">Un coin de verdure caché pour déconnecter.</p>
+                  <p class="text-on-surface-variant">Quais, parcs et rues — pour sortir sans plan compliqué.</p>
                 </div>
               </div>
             </div>
@@ -128,7 +139,7 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
                 </div>
                 <div>
                   <h3 class="mb-2 font-headline-md text-headline-md">3. La Culture</h3>
-                  <p class="text-on-surface-variant">L'expo éphémère à ne pas rater ce weekend.</p>
+                  <p class="text-on-surface-variant">Expos et événements importés depuis OpenAgenda.</p>
                 </div>
               </div>
             </div>
@@ -136,23 +147,23 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
           <div class="lg:pl-12">
             <div class="relative overflow-hidden rounded-[40px] bg-deep-rose p-10 text-white shadow-2xl">
               <div class="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
-              <h3 class="mb-6 font-headline-lg text-headline-lg">Finies les hésitations.</h3>
+              <h3 class="mb-6 font-headline-lg text-headline-lg">Ce qu'on vise</h3>
               <p class="mb-8 font-body-lg leading-relaxed opacity-90">
-                Chaque matin à 8h, votre trio personnalisé vous attend. Que vous soyez d'humeur festive ou contemplative,
-                on a la pépite qu'il vous faut.
+                Des suggestions courtes selon la météo, l'heure et tes envies — pas une liste infinie. La personnalisation
+                avance ; le catalogue, lui, est déjà là.
               </p>
               <ul class="mb-10 space-y-4">
                 <li class="flex items-center gap-3">
                   <span class="material-symbols-outlined text-soft-pink">check_circle</span>
-                  <span>Sélectionné par des Toulousains</span>
+                  <span>Événements mis à jour (OpenAgenda)</span>
                 </li>
                 <li class="flex items-center gap-3">
                   <span class="material-symbols-outlined text-soft-pink">check_circle</span>
-                  <span>Pas de pubs, que du vrai</span>
+                  <span>Lieux éditoriaux Toulouse</span>
                 </li>
                 <li class="flex items-center gap-3">
                   <span class="material-symbols-outlined text-soft-pink">check_circle</span>
-                  <span>Expérience 100% gratuite</span>
+                  <span>Gratuit, sans compte obligatoire</span>
                 </li>
               </ul>
               <a
@@ -171,8 +182,8 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
       <div class="mx-auto max-w-[1200px]">
         <div class="mb-16 flex flex-col items-end justify-between gap-6 md:flex-row">
           <div>
-            <h2 class="mb-4 font-headline-xl text-headline-xl">Le cœur battant de Toulouse</h2>
-            <p class="font-body-lg text-body-lg text-on-surface-variant">Un aperçu des trésors qui vous attendent.</p>
+            <h2 class="mb-4 font-headline-xl text-headline-xl">Lieux du catalogue</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">Quelques fiches réelles — pas des visuels de démo.</p>
           </div>
           <a
             href="/catalogue"
@@ -182,78 +193,29 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
             <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
           </a>
         </div>
-        <div class="bento-grid flex flex-col md:grid">
-          <a
-            href="/catalogue"
-            class="group relative overflow-hidden rounded-[32px] shadow-2xl md:col-span-2 md:row-span-2"
-          >
-            <img
-              alt="Marché Toulouse"
-              class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVlus3uTFx7fV44e1TUSp9is_3lYXeTVNvsM6Iopo9cVC8s4RPBdzxvf0aujMd9tAem3K5I53j1w6RloRYzGogBe8QVsk8DizR61WrBzpK4bINPp2sAGNtppVfEaMVc1hywSAXoL_1K49g9elD8AmJu548dJo4lmqMPiK86GbaTZ45uhOla03ig9P-42cMyMsguCqFu2AEPsYnZXQGHi_FewO9iBvAfrhrzqnTytWqlYZsSwiCw25QpgSlyy-5gwZRClBttYXfOXM"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-ink-black/90 via-ink-black/20 to-transparent" />
-            <div class="absolute bottom-0 left-0 p-10">
-              <span class="mb-4 inline-block rounded-full bg-sky-blue-muted px-4 py-1.5 font-label-sm text-label-sm font-bold text-secondary">
-                ÉVÉNEMENT
-              </span>
-              <h3 class="mb-3 font-headline-xl text-white">Le Marché de la Daurade</h3>
-              <p class="font-body-md text-lg text-white/80">L'artisanat local au fil de l'eau ce dimanche.</p>
+        {
+          featuredPlaces.length > 0 ? (
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {featuredPlaces.slice(0, 4).map((placeRow) => (
+                <PlaceCard placeRow={placeRow} />
+              ))}
             </div>
-          </a>
-          <a href="/catalogue" class="group relative h-[280px] overflow-hidden rounded-[32px] shadow-xl md:col-span-2">
-            <img
-              alt="Café toulousain"
-              class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwWxAwcAUwWpZYiTayFLXTUA81r3Eyu_h1nGZclQogV0ioIcMsXoCPIvBDK_KiQB9jJICiad8eYJaTbaZomtkv0l0qFZWPFMqiyt5WVAm3WwqC5ETH1jl_CglyoF3AFfD-Tkam3B5OlNKzTbVj6_QXAEbkDpcZf7VFNfQGtRbxj9hgvVozIhCucP8o6YZr66Pr2xxVXYv59-7FiH8_SqxjB2kOZO3qHXM0g44TrPoC2MMha8HRz_aYsh2Wwr9KNlEs5MRJZ1Q9IAY"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-ink-black/80 to-transparent" />
-            <div class="absolute bottom-0 left-0 p-8">
-              <span class="mb-3 inline-block rounded-full bg-soft-pink px-4 py-1.5 font-label-sm text-label-sm font-bold text-deep-rose">
-                PAUSE CAFÉ
-              </span>
-              <h3 class="font-headline-md text-white">Le Refuge des Artistes</h3>
-            </div>
-          </a>
-          <a href="/catalogue#lieux" class="group relative h-[280px] overflow-hidden rounded-[32px] shadow-xl">
-            <img
-              alt="Street art"
-              class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvCXujJVLg9ItD_UHrFTCId4YqC8qIB50AzkKCaRCxqOq0xy-FWTk4okJQmqJ2V68-lKsyzRRzXyiRM3IjDFNyHkDN2K4-CLU_bALxDt0XEjcpGvn1l0h8z-0oShRSeslM5uN_5kWgSUkNdSHu0Ph50mPIBLDggSxhkdUseeoQT1UbiMNFN1sBZWd02HXl6KqGGsK4bm1secPKQc4HcO4tbdyQa_f5jwMyksdTGZT7IpJVANgLLjok2Er0MsroKfrNt49A6RiZShE"
-            />
-            <div class="absolute inset-0 flex items-center justify-center bg-ink-black/30 p-6 text-center transition-colors group-hover:bg-ink-black/50">
-              <div>
-                <span class="material-symbols-outlined mb-2 text-4xl text-white">brush</span>
-                <h4 class="font-headline-md text-white">Culture Urbaine</h4>
-              </div>
-            </div>
-          </a>
-          <a href="/catalogue#lieux" class="group relative h-[280px] overflow-hidden rounded-[32px] shadow-xl">
-            <img
-              alt="Jardin"
-              class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8akR2dAbkMMkCqvhq_Mq8ND_XtXIY5mgtCvKrJv5U2MpfqYVYWsZA4OaEPQMHtM0uBE3vXgMcfV4yzHmP6GqvcRUeXMiKE7odJrHygaSpjKb0s_fr0OOQXNd0wofOPgI4SFj26L_5cXxhXfbnt1OpTiqxCjQPN0VutlMI3NelGvCm9ZxfbIkkBesZftgzrbr-AQiYJlMfSDuffUQUVV3m0gYRGrKLl3zNgcPWyMNzYnP_0Y4uonUDhgIRz_kGHxSl0GHFMdlZMrw"
-            />
-            <div class="absolute inset-0 flex items-center justify-center bg-ink-black/30 p-6 text-center transition-colors group-hover:bg-ink-black/50">
-              <div>
-                <span class="material-symbols-outlined mb-2 text-4xl text-white">potted_plant</span>
-                <h4 class="font-headline-md text-white">Jardins Secrets</h4>
-              </div>
-            </div>
-          </a>
-        </div>
+          ) : (
+            <p class="text-on-surface-variant">Catalogue lieux indisponible pour le moment.</p>
+          )
+        }
       </div>
     </section>
 
     <section class="relative overflow-hidden bg-white px-container-margin py-32">
       <div class="relative z-10 mx-auto max-w-[1000px] text-center">
         <span class="mb-8 inline-block rounded-full bg-terra-cotta/10 px-5 py-2 font-label-md tracking-widest text-terra-cotta uppercase">
-          Rejoignez l'aventure
+          Beta ouverte
         </span>
-        <h2 class="mb-10 font-headline-xl text-[48px] leading-tight md:text-[64px]">Tu es un pionnier ?</h2>
+        <h2 class="mb-10 font-headline-xl text-[48px] leading-tight md:text-[64px]">Tu nous aides à tester ?</h2>
         <p class="mx-auto mb-12 max-w-2xl font-body-lg text-body-lg leading-relaxed text-on-surface-variant">
-          TouRose est encore tout jeune ! Nous construisons l'app avec vous, pas à pas. Envie de nous aider à rendre
-          Toulouse encore plus belle ? Tes retours sont précieux.
+          TouRose est un projet perso, construit à Toulouse. Un mail avec ce qui marche (ou pas) vaut mieux qu'une promo
+          exagérée.
         </p>
         <div class="flex flex-col justify-center gap-6 sm:flex-row">
           <a
@@ -272,9 +234,6 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
           </a>
         </div>
       </div>
-      <div class="pointer-events-none absolute -bottom-20 left-0 w-full overflow-hidden text-center whitespace-nowrap opacity-[0.03] select-none">
-        <span class="text-[300px] font-extrabold text-ink-black italic">PIONNIER</span>
-      </div>
     </section>
 
     <section class="px-container-margin py-24" id="download">
@@ -282,11 +241,10 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
         <div class="absolute top-0 right-0 h-full w-full bg-gradient-to-br from-deep-rose/40 to-transparent opacity-50" />
         <div class="z-10 flex-1 text-center lg:text-left">
           <h2 class="mb-8 font-headline-xl text-[40px] leading-tight text-white md:text-[60px]">
-            Vivre Toulouse pour de vrai.
+            Le catalogue, dans ta poche.
           </h2>
           <p class="mb-12 font-body-lg text-xl leading-relaxed text-white/70">
-            Téléchargez TouRose gratuitement. <br />
-            Sans compte, sans pub, juste du pur plaisir local.
+            APK Android disponible. iOS : pas encore. Le site reste la référence pour tout consulter.
           </p>
           <div class="flex flex-wrap justify-center gap-5 lg:justify-start">
             <span class="flex cursor-default items-center gap-4 rounded-2xl bg-white px-8 py-4 font-label-md text-ink-black opacity-60 shadow-lg">

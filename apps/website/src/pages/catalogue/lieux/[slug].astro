@@ -3,6 +3,7 @@ import Button from '../../../components/Button.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { loadPublicPlaceBySlug, loadPublicPlaceSlugs } from '../../../lib/catalog';
 import { formatPlaceType, formatPriceType } from '../../../lib/format';
+import { resolvePlaceCoverImage } from '../../../lib/place-cover-images';
 
 export async function getStaticPaths() {
   const slugs = await loadPublicPlaceSlugs(300);
@@ -11,6 +12,7 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 const placeRow = slug ? await loadPublicPlaceBySlug(slug) : null;
+const coverImageUrl = placeRow ? resolvePlaceCoverImage(placeRow) : null;
 
 if (!placeRow) {
   Astro.response.status = 404;
@@ -20,7 +22,7 @@ if (!placeRow) {
 <BaseLayout
   title={placeRow ? `${placeRow.name} — TouRose` : 'Lieu introuvable — TouRose'}
   description={placeRow?.summary ?? 'Fiche lieu TouRose.'}
-  ogImage={placeRow?.image_url ?? undefined}
+  ogImage={coverImageUrl ?? undefined}
 >
   <article class="site-shell pb-24 pt-6">
     <a href="/catalogue#lieux" class="text-sm font-medium text-ink-500 no-underline hover:text-brick-700">← Catalogue</a>
@@ -59,17 +61,13 @@ if (!placeRow) {
             </div>
           </div>
           <div class="surface-card overflow-hidden">
-            {placeRow.image_url ? (
-              <img
-                src={placeRow.image_url}
+            <img
+                src={coverImageUrl}
                 alt={placeRow.image_alt ?? placeRow.name}
                 class="aspect-[4/3] w-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
-            ) : (
-              <div class="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-garonne-100 to-violet-100 text-ink-500">
-                Lieu
-              </div>
-            )}
             {placeRow.latitude != null && placeRow.longitude != null ? (
               <p class="border-t border-sand-200 px-5 py-4 text-sm text-ink-600">
                 Coordonnées : {placeRow.latitude.toFixed(5)}, {placeRow.longitude.toFixed(5)}
