@@ -8,11 +8,13 @@ on:
       - 'apps/website/**'
       - 'apps/admin/**'
       - 'packages/**'
+      - 'scripts/write-production-env.mjs'
+      - 'scripts/validate-cloudflare-pages-project.mjs'
+      - 'scripts/ensure-cloudflare-pages-production.mjs'
       - '.github/workflows/preview.yml'
 
 permissions:
   contents: read
-  deployments: write
 
 concurrency:
   group: preview-${{ github.ref }}
@@ -58,32 +60,7 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          PROJECT_NAME="$(printf '%s' "$CLOUDFLARE_PAGES_PROJECT" | tr -d '[:space:]')"
-          if [ -z "$PROJECT_NAME" ]; then
-            echo "::error::CLOUDFLARE_PAGES_PROJECT_WEBSITE is empty. Set it in Settings → Secrets and variables → Actions → Variables (repository level)."
-            exit 1
-          fi
-          if [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "::error::CLOUDFLARE_ACCOUNT_ID secret is empty."
-            exit 1
-          fi
-          echo "Account ID: ${CLOUDFLARE_ACCOUNT_ID}"
-          echo "Target project: ${PROJECT_NAME}"
-          http_code=$(curl -sS -o /tmp/cf-project.json -w "%{http_code}" \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${PROJECT_NAME}")
-          echo "Cloudflare API HTTP ${http_code}"
-          cat /tmp/cf-project.json
-          if [ "$http_code" != "200" ]; then
-            echo ""
-            echo "Pages projects available on this account:"
-            curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-              "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects" \
-              | node -e "const fs=require('fs'); const body=JSON.parse(fs.readFileSync(0,'utf8')); (body.result??[]).forEach((project)=>console.log('- '+project.name));"
-            echo "::error::Project not found. Use one of the names above in CLOUDFLARE_PAGES_PROJECT_WEBSITE, or create the project in Cloudflare Pages first."
-            exit 1
-          fi
+        run: node ./scripts/validate-cloudflare-pages-project.mjs
 
       - name: Publish to Cloudflare Pages (staging branch)
         uses: cloudflare/pages-action@v1
@@ -94,7 +71,6 @@ jobs:
           directory: apps/website/dist
           # Must differ from production_branch on the Pages project (default: production).
           branch: ${{ vars.CLOUDFLARE_PAGES_STAGING_BRANCH != '' && vars.CLOUDFLARE_PAGES_STAGING_BRANCH || 'main' }}
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
   hosting-not-configured:
     name: Preview skipped (hosting not configured)
