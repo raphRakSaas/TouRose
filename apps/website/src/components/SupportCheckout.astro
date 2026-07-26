@@ -58,7 +58,7 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL ?? 'https://tourose.app';
   </p>
 </div>
 
-<script define:vars={{ supabaseUrl, supabaseAnonKey, siteUrl }}>
+<script is:inline define:vars={{ supabaseUrl, supabaseAnonKey, siteUrl }}>
   const INSTALLATION_STORAGE_KEY = 'tourose-installation-id';
   let selectedAmountCents = 500;
 

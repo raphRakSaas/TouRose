@@ -90,19 +90,9 @@ Repo → **Settings → Environments → New environment** → `production`
 | `CLOUDFLARE_PAGES_PRODUCTION_BRANCH` | `production` (défaut)   | Branche Cloudflare pour tag `v*` (prod)                  |
 | `PUBLIC_STAGING_SITE_URL`            | URL preview optionnelle | URL canonique du build staging (sinon `PUBLIC_SITE_URL`) |
 
-**Staging vs production (Cloudflare Pages)** : push sur `main` → workflow `preview.yml` → déploiement **preview** (ex. `aa4dc5e4.tourose.pages.dev`). Tag `v*` → workflow `release.yml` → déploiement **production** (`https://tourose.pages.dev`). Sur un projet _Direct Upload_, définir une fois la branche de prod :
+**Staging vs production (Cloudflare Pages)** : push sur `main` → workflow `preview.yml` → déploiement **preview** (ex. `aa4dc5e4.tourose.pages.dev`). Tag `v*` → workflow `release.yml` → déploiement **production** (`https://tourose.pages.dev`). La branche Cloudflare `production_branch` est configurée automatiquement par la CI (`scripts/ensure-cloudflare-pages-production.mjs`) — aucune commande manuelle requise.
 
-```bash
-curl --request PATCH \
-  --url "https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/pages/projects/tourose" \
-  --header "Authorization: Bearer <CLOUDFLARE_API_TOKEN>" \
-  --header "Content-Type: application/json" \
-  --data '{"production_branch":"production"}'
-```
-
-Sans cette config, `main` peut être traité comme production ou tout rester en preview.
-
-Sans `SUPABASE_DEPLOY_ENABLED=true`, le workflow release ne déploie rien (quality gate seulement).
+Sans `WEBSITE_DEPLOY_ENABLED=true`, le site n’est pas publié sur Cloudflare. Le déploiement Supabase reste optionnel (`SUPABASE_DEPLOY_ENABLED`).
 
 ---
 

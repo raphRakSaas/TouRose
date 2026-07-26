@@ -69,10 +69,17 @@ import { APP_SCREENSHOTS } from '../lib/app-screenshots';
       });
     };
 
-    const goToSlide = (index: number, behavior: ScrollBehavior = 'smooth') => {
+    const goToSlide = (index: number, scrollBehavior: ScrollBehavior = 'smooth') => {
       activeIndex = index;
       const slideWidth = getSlideWidth();
+      const previousTransition = track.style.transition;
+      if (scrollBehavior === 'auto') {
+        track.style.transition = 'none';
+      }
       track.style.transform = `translateX(-${slideWidth * index}px)`;
+      if (scrollBehavior === 'auto') {
+        track.style.transition = previousTransition;
+      }
       updateDots(index);
     };
 

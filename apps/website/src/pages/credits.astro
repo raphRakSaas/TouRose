@@ -167,6 +167,8 @@ const photoBannerImage =
 
   <script>
     document.querySelectorAll('.paper-card').forEach((cardElement) => {
+      if (!(cardElement instanceof HTMLElement)) return;
+
       cardElement.addEventListener('mouseenter', () => {
         cardElement.style.transform = 'translateY(-4px)';
         cardElement.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';

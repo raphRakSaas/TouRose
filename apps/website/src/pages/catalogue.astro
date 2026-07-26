@@ -236,9 +236,9 @@ const totalResults = events.length + places.length + collections.length;
   </div>
 
   <script>
-    const searchInput = document.getElementById('catalogue-search');
+    const searchInputElement = document.getElementById('catalogue-search');
     const countElement = document.getElementById('catalogue-count');
-    const emptyState = document.getElementById('catalogue-empty');
+    const emptyStateElement = document.getElementById('catalogue-empty');
     const resetFiltersButton = document.getElementById('catalogue-reset-filters');
     const emptyResetButton = document.getElementById('catalogue-empty-reset');
     const loadMoreButton = document.getElementById('catalogue-load-more');
@@ -250,12 +250,15 @@ const totalResults = events.length + places.length + collections.length;
       collections: document.getElementById('catalogue-panel-collections'),
     };
 
-    if (searchInput && countElement && emptyState) {
-      const activeFilters = new Set();
-      let activeTab = 'events';
+    if (searchInputElement instanceof HTMLInputElement && countElement && emptyStateElement) {
+      const searchInput = searchInputElement;
+      const countLabel = countElement;
+      const emptyState = emptyStateElement;
+      const activeFilters = new Set<string>();
+      let activeTab: 'events' | 'places' | 'collections' = 'events';
       let visibleLimit = 12;
 
-      function normalizeQuery(value) {
+      function normalizeQuery(value: string) {
         return value
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '')
@@ -263,13 +266,13 @@ const totalResults = events.length + places.length + collections.length;
           .trim();
       }
 
-      function isWeekend(dateValue) {
+      function isWeekend(dateValue: string | null) {
         if (!dateValue) return false;
         const day = new Date(dateValue).getDay();
         return day === 0 || day === 6;
       }
 
-      function matchesFilters(itemElement) {
+      function matchesFilters(itemElement: Element) {
         const query = normalizeQuery(searchInput.value);
         const title = normalizeQuery(itemElement.getAttribute('data-title') ?? '');
         const summary = normalizeQuery(itemElement.getAttribute('data-summary') ?? '');
@@ -318,7 +321,7 @@ const totalResults = events.length + places.length + collections.length;
         items.forEach((itemElement) => itemElement.classList.add('hidden'));
         matchedItems.slice(0, visibleLimit).forEach((itemElement) => itemElement.classList.remove('hidden'));
 
-        countElement.textContent = String(matchedItems.length);
+        countLabel.textContent = String(matchedItems.length);
         emptyState.classList.toggle('hidden', matchedItems.length > 0);
         emptyState.classList.toggle('flex', matchedItems.length === 0);
 
@@ -331,7 +334,7 @@ const totalResults = events.length + places.length + collections.length;
         updateTabStyles();
       }
 
-      function setActiveTab(tabName) {
+      function setActiveTab(tabName: 'events' | 'places' | 'collections') {
         activeTab = tabName;
         visibleLimit = 12;
         document.getElementById('catalogue-filters')?.classList.toggle('hidden', tabName === 'collections');
@@ -341,7 +344,7 @@ const totalResults = events.length + places.length + collections.length;
       function resetFilters() {
         activeFilters.clear();
         visibleLimit = 12;
-        if (searchInput instanceof HTMLInputElement) searchInput.value = '';
+        searchInput.value = '';
         renderCatalogue();
       }
 
