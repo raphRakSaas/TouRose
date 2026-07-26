@@ -1,287 +1,409 @@
-<!DOCTYPE html>
+<!doctype html>
 
-<html class="light" lang="fr"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Confidentialité - TouRose</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .paper-texture {
-            background-color: #fbf9f1;
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
-        }
-        .sticky-note {
-            transform: rotate(-1deg);
-            transition: transform 0.3s ease;
-        }
-        .sticky-note:hover {
-            transform: rotate(0deg) scale(1.02);
-        }
-        .bento-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .bento-card:hover {
-            box-shadow: 0 20px 40px rgba(141, 46, 46, 0.08);
-        }
+<html class="light" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Confidentialité - TouRose</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      .paper-texture {
+        background-color: #fbf9f1;
+        background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+      }
+      .sticky-note {
+        transform: rotate(-1deg);
+        transition: transform 0.3s ease;
+      }
+      .sticky-note:hover {
+        transform: rotate(0deg) scale(1.02);
+      }
+      .bento-card {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .bento-card:hover {
+        box-shadow: 0 20px 40px rgba(141, 46, 46, 0.08);
+      }
     </style>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-tertiary-container": "#f6fff6",
-                        "soft-pink": "#F4B9B2",
-                        "background": "#fbf9f1",
-                        "inverse-primary": "#ffb3b0",
-                        "on-tertiary-fixed": "#002113",
-                        "on-secondary-fixed-variant": "#004d62",
-                        "on-error-container": "#93000a",
-                        "surface-dim": "#dcdad2",
-                        "surface-container-high": "#eae8e0",
-                        "surface-container-low": "#f5f4ec",
-                        "surface-container-highest": "#e4e3db",
-                        "on-error": "#ffffff",
-                        "surface-container": "#f0eee6",
-                        "tertiary-fixed-dim": "#5fdda2",
-                        "on-secondary-fixed": "#001f29",
-                        "sky-blue-muted": "#A5D8EA",
-                        "surface-container-lowest": "#ffffff",
-                        "on-secondary-container": "#09657f",
-                        "inverse-surface": "#30312c",
-                        "error-container": "#ffdad6",
-                        "tertiary-fixed": "#7dfabd",
-                        "secondary-fixed": "#baeaff",
-                        "primary": "#a1373a",
-                        "error": "#ba1a1a",
-                        "inverse-on-surface": "#f3f1e9",
-                        "on-primary-container": "#fffbff",
-                        "surface-bright": "#fbf9f1",
-                        "on-background": "#1b1c17",
-                        "tertiary-container": "#008558",
-                        "outline-variant": "#ddc0be",
-                        "on-primary": "#ffffff",
-                        "surface-variant": "#e4e3db",
-                        "on-primary-fixed-variant": "#852227",
-                        "on-tertiary-fixed-variant": "#005235",
-                        "secondary-fixed-dim": "#89d0ed",
-                        "outline": "#8a7170",
-                        "primary-fixed-dim": "#ffb3b0",
-                        "on-tertiary": "#ffffff",
-                        "surface-tint": "#a53a3c",
-                        "on-surface-variant": "#574241",
-                        "primary-container": "#c24f50",
-                        "on-surface": "#1b1c17",
-                        "tertiary": "#006a45",
-                        "deep-rose": "#8D2E2E",
-                        "ink-black": "#2D2926",
-                        "primary-fixed": "#ffdad8",
-                        "on-primary-fixed": "#410007",
-                        "secondary": "#0c6780",
-                        "on-secondary": "#ffffff",
-                        "terra-cotta": "#C05247",
-                        "secondary-container": "#9ae1ff",
-                        "surface": "#fbf9f1"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "base": "8px",
-                        "container-margin": "20px",
-                        "gutter": "16px",
-                        "section-gap": "40px",
-                        "card-padding": "16px"
-                    },
-                    "fontFamily": {
-                        "body-md": ["Be Vietnam Pro"],
-                        "headline-lg": ["Plus Jakarta Sans"],
-                        "headline-xl": ["Plus Jakarta Sans"],
-                        "label-sm": ["Be Vietnam Pro"],
-                        "headline-lg-mobile": ["Plus Jakarta Sans"],
-                        "body-lg": ["Be Vietnam Pro"],
-                        "label-md": ["Be Vietnam Pro"],
-                        "headline-md": ["Plus Jakarta Sans"]
-                    },
-                    "fontSize": {
-                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
-                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
-                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
-                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
-                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
-                    }
-                },
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-tertiary-container': '#f6fff6',
+              'soft-pink': '#F4B9B2',
+              background: '#fbf9f1',
+              'inverse-primary': '#ffb3b0',
+              'on-tertiary-fixed': '#002113',
+              'on-secondary-fixed-variant': '#004d62',
+              'on-error-container': '#93000a',
+              'surface-dim': '#dcdad2',
+              'surface-container-high': '#eae8e0',
+              'surface-container-low': '#f5f4ec',
+              'surface-container-highest': '#e4e3db',
+              'on-error': '#ffffff',
+              'surface-container': '#f0eee6',
+              'tertiary-fixed-dim': '#5fdda2',
+              'on-secondary-fixed': '#001f29',
+              'sky-blue-muted': '#A5D8EA',
+              'surface-container-lowest': '#ffffff',
+              'on-secondary-container': '#09657f',
+              'inverse-surface': '#30312c',
+              'error-container': '#ffdad6',
+              'tertiary-fixed': '#7dfabd',
+              'secondary-fixed': '#baeaff',
+              primary: '#a1373a',
+              error: '#ba1a1a',
+              'inverse-on-surface': '#f3f1e9',
+              'on-primary-container': '#fffbff',
+              'surface-bright': '#fbf9f1',
+              'on-background': '#1b1c17',
+              'tertiary-container': '#008558',
+              'outline-variant': '#ddc0be',
+              'on-primary': '#ffffff',
+              'surface-variant': '#e4e3db',
+              'on-primary-fixed-variant': '#852227',
+              'on-tertiary-fixed-variant': '#005235',
+              'secondary-fixed-dim': '#89d0ed',
+              outline: '#8a7170',
+              'primary-fixed-dim': '#ffb3b0',
+              'on-tertiary': '#ffffff',
+              'surface-tint': '#a53a3c',
+              'on-surface-variant': '#574241',
+              'primary-container': '#c24f50',
+              'on-surface': '#1b1c17',
+              tertiary: '#006a45',
+              'deep-rose': '#8D2E2E',
+              'ink-black': '#2D2926',
+              'primary-fixed': '#ffdad8',
+              'on-primary-fixed': '#410007',
+              secondary: '#0c6780',
+              'on-secondary': '#ffffff',
+              'terra-cotta': '#C05247',
+              'secondary-container': '#9ae1ff',
+              surface: '#fbf9f1',
             },
-        }
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              base: '8px',
+              'container-margin': '20px',
+              gutter: '16px',
+              'section-gap': '40px',
+              'card-padding': '16px',
+            },
+            fontFamily: {
+              'body-md': ['Be Vietnam Pro'],
+              'headline-lg': ['Plus Jakarta Sans'],
+              'headline-xl': ['Plus Jakarta Sans'],
+              'label-sm': ['Be Vietnam Pro'],
+              'headline-lg-mobile': ['Plus Jakarta Sans'],
+              'body-lg': ['Be Vietnam Pro'],
+              'label-md': ['Be Vietnam Pro'],
+              'headline-md': ['Plus Jakarta Sans'],
+            },
+            fontSize: {
+              'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+              'headline-lg': [
+                '32px',
+                { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' },
+              ],
+              'headline-xl': [
+                '40px',
+                { lineHeight: '48px', letterSpacing: '-0.02em', fontWeight: '700' },
+              ],
+              'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+              'headline-lg-mobile': ['28px', { lineHeight: '34px', fontWeight: '700' }],
+              'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+              'label-md': [
+                '14px',
+                { lineHeight: '20px', letterSpacing: '0.02em', fontWeight: '600' },
+              ],
+              'headline-md': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+            },
+          },
+        },
+      };
     </script>
-</head>
-<body class="paper-texture text-on-surface selection:bg-soft-pink selection:text-deep-rose">
-<!-- TopNavBar -->
-<header class="bg-background/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 shadow-sm shadow-primary/5">
-<nav class="flex justify-between items-center px-container-margin py-4 max-w-[1200px] mx-auto w-full">
-<div class="font-headline-md text-headline-md text-deep-rose dark:text-soft-pink font-extrabold tracking-tight">
-                TouRose
+  </head>
+  <body class="paper-texture text-on-surface selection:bg-soft-pink selection:text-deep-rose">
+    <!-- TopNavBar -->
+    <header
+      class="bg-background/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 shadow-sm shadow-primary/5"
+    >
+      <nav
+        class="flex justify-between items-center px-container-margin py-4 max-w-[1200px] mx-auto w-full"
+      >
+        <div
+          class="font-headline-md text-headline-md text-deep-rose dark:text-soft-pink font-extrabold tracking-tight"
+        >
+          TouRose
+        </div>
+        <div class="hidden md:flex items-center gap-8">
+          <a
+            class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
+            href="#"
+            >Catalogue</a
+          >
+          <a
+            class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
+            href="#"
+            >Soutenir</a
+          >
+          <a
+            class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"
+            href="#"
+            >À propos</a
+          >
+        </div>
+        <button
+          class="bg-primary text-on-primary px-6 py-3 rounded-xl font-label-md hover:bg-deep-rose transition-all active:scale-95 shadow-lg shadow-primary/20"
+        >
+          Télécharger l'app
+        </button>
+      </nav>
+    </header>
+    <main class="pt-32 pb-section-gap px-container-margin max-w-[1200px] mx-auto">
+      <!-- Hero Section -->
+      <div class="mb-section-gap max-w-2xl">
+        <span
+          class="inline-block px-4 py-1 bg-soft-pink/20 text-deep-rose rounded-full font-label-md text-label-md mb-4"
+        >
+          Transparence &amp; Confiance
+        </span>
+        <h1 class="font-headline-xl text-headline-xl md:text-5xl text-ink-black mb-6">
+          Tes données restent <span class="text-deep-rose">chez toi</span>.
+        </h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">
+          On déteste les longs textes juridiques autant que toi. Voici l'essentiel sur notre façon
+          de protéger ta vie privée à Toulouse, en toute simplicité.
+        </p>
+      </div>
+      <!-- Bento Grid for Privacy Content -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+        <!-- Localisation Card -->
+        <div
+          class="md:col-span-8 bg-surface-container-lowest border border-soft-pink/30 rounded-2xl p-card-padding bento-card relative overflow-hidden shadow-sm"
+        >
+          <div class="relative z-10">
+            <div
+              class="w-12 h-12 bg-sky-blue-muted/30 rounded-full flex items-center justify-center mb-6 text-secondary"
+            >
+              <span class="material-symbols-outlined text-3xl">location_on</span>
             </div>
-<div class="hidden md:flex items-center gap-8">
-<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Catalogue</a>
-<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Soutenir</a>
-<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">À propos</a>
-</div>
-<button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-label-md hover:bg-deep-rose transition-all active:scale-95 shadow-lg shadow-primary/20">
-                Télécharger l'app
-            </button>
-</nav>
-</header>
-<main class="pt-32 pb-section-gap px-container-margin max-w-[1200px] mx-auto">
-<!-- Hero Section -->
-<div class="mb-section-gap max-w-2xl">
-<span class="inline-block px-4 py-1 bg-soft-pink/20 text-deep-rose rounded-full font-label-md text-label-md mb-4">
-                Transparence &amp; Confiance
-            </span>
-<h1 class="font-headline-xl text-headline-xl md:text-5xl text-ink-black mb-6">
-                Tes données restent <span class="text-deep-rose">chez toi</span>.
-            </h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant">
-                On déteste les longs textes juridiques autant que toi. Voici l'essentiel sur notre façon de protéger ta vie privée à Toulouse, en toute simplicité.
+            <h2 class="font-headline-md text-headline-md text-ink-black mb-4">La Localisation</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6 max-w-lg">
+              Nous utilisons ta position géographique uniquement pour te proposer des suggestions
+              pertinentes autour de toi. On ne garde pas d'historique de tes déplacements : une fois
+              l'app fermée, on oublie où tu étais.
             </p>
-</div>
-<!-- Bento Grid for Privacy Content -->
-<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-<!-- Localisation Card -->
-<div class="md:col-span-8 bg-surface-container-lowest border border-soft-pink/30 rounded-2xl p-card-padding bento-card relative overflow-hidden shadow-sm">
-<div class="relative z-10">
-<div class="w-12 h-12 bg-sky-blue-muted/30 rounded-full flex items-center justify-center mb-6 text-secondary">
-<span class="material-symbols-outlined text-3xl">location_on</span>
-</div>
-<h2 class="font-headline-md text-headline-md text-ink-black mb-4">La Localisation</h2>
-<p class="font-body-md text-body-md text-on-surface-variant mb-6 max-w-lg">
-                        Nous utilisons ta position géographique uniquement pour te proposer des suggestions pertinentes autour de toi. On ne garde pas d'historique de tes déplacements : une fois l'app fermée, on oublie où tu étais.
-                    </p>
-<div class="flex items-center gap-2 text-secondary font-label-md">
-<span class="material-symbols-outlined text-lg">verified_user</span>
-<span>Traitement local uniquement</span>
-</div>
-</div>
-<div class="absolute -right-12 -bottom-12 w-64 h-64 opacity-10">
-<div class="w-full h-full rounded-full border-[20px] border-secondary"></div>
-</div>
-</div>
-<!-- Pas de Vente Card (Sticky Note Style) -->
-<div class="md:col-span-4 bg-[#FFF9C4] p-card-padding rounded-lg sticky-note shadow-md flex flex-col justify-center items-center text-center">
-<span class="material-symbols-outlined text-4xl text-terra-cotta mb-4" style="font-variation-settings: 'FILL' 1;">block</span>
-<h3 class="font-headline-md text-headline-md text-ink-black mb-2">Zéro revente</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">
-                    C'est simple : nous ne vendons <strong>jamais</strong> tes données à des tiers. Pas de pub ciblée, pas de courtier en données. Jamais.
-                </p>
-</div>
-<!-- Le Compte Card -->
-<div class="md:col-span-5 bg-surface-container-lowest border border-soft-pink/30 rounded-2xl p-card-padding bento-card shadow-sm">
-<div class="w-12 h-12 bg-soft-pink/30 rounded-full flex items-center justify-center mb-6 text-deep-rose">
-<span class="material-symbols-outlined text-3xl">account_circle</span>
-</div>
-<h2 class="font-headline-md text-headline-md text-ink-black mb-4">Ton Compte</h2>
-<p class="font-body-md text-body-md text-on-surface-variant">
-                    Créer un compte sert uniquement à synchroniser tes favoris entre tes appareils. Sans compte, tu peux quand même explorer Toulouse, mais tes pépites resteront stockées uniquement sur ton téléphone.
-                </p>
-</div>
-<!-- Stripe Card -->
-<div class="md:col-span-7 bg-ink-black text-on-primary rounded-2xl p-card-padding flex flex-col md:flex-row items-center gap-8 shadow-xl">
-<div class="flex-1">
-<h2 class="font-headline-md text-headline-md mb-4">Paiements sécurisés</h2>
-<p class="opacity-80 font-body-md text-body-md mb-6">
-                        Pour le soutien au projet, nous passons par <strong>Stripe</strong>. Nous ne voyons jamais tes numéros de carte. Tes transactions sont cryptées et protégées par les standards bancaires les plus élevés.
-                    </p>
-<div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-label-sm font-label-sm">
-<span class="material-symbols-outlined text-sm">lock</span>
-<span>SSL 256-bit Encryption</span>
-</div>
-</div>
-<div class="w-full md:w-48 aspect-video bg-white/5 rounded-xl border border-white/10 flex items-center justify-center">
-<div class="text-4xl font-bold opacity-30 italic">stripe</div>
-</div>
-</div>
-<!-- FAQ Privacy Mini-Section -->
-<div class="md:col-span-12 mt-8">
-<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-<div class="p-6 border-l-2 border-soft-pink">
-<h4 class="font-label-md text-label-md text-deep-rose mb-2 uppercase tracking-wider">Tes droits</h4>
-<p class="font-body-md text-body-md text-on-surface-variant">Tu peux demander la suppression totale de ton compte et de tes données à tout moment depuis les réglages de l'application.</p>
-</div>
-<div class="p-6 border-l-2 border-sky-blue-muted">
-<h4 class="font-label-md text-label-md text-secondary mb-2 uppercase tracking-wider">Cookies</h4>
-<p class="font-body-md text-body-md text-on-surface-variant">Sur le web, nous utilisons uniquement des cookies techniques essentiels. Pas de traceurs publicitaires ou analytiques invasifs.</p>
-</div>
-<div class="p-6 border-l-2 border-terra-cotta">
-<h4 class="font-label-md text-label-md text-terra-cotta mb-2 uppercase tracking-wider">Contact</h4>
-<p class="font-body-md text-body-md text-on-surface-variant">Une question sur tes données ? Écris-nous directement à salut@tourose.fr. On te répondra avec le sourire.</p>
-</div>
-</div>
-</div>
-</div>
-<!-- Call to action -->
-<div class="mt-section-gap bg-surface-container-high rounded-3xl p-10 text-center flex flex-col items-center">
-<h3 class="font-headline-md text-headline-md text-ink-black mb-4">Prêt à explorer la Ville Rose sereinement ?</h3>
-<p class="font-body-md text-body-md text-on-surface-variant mb-8 max-w-xl">
-                Rejoins la communauté TouRose et découvre Toulouse comme un habitant, sans jamais compromettre ta vie privée.
+            <div class="flex items-center gap-2 text-secondary font-label-md">
+              <span class="material-symbols-outlined text-lg">verified_user</span>
+              <span>Traitement local uniquement</span>
+            </div>
+          </div>
+          <div class="absolute -right-12 -bottom-12 w-64 h-64 opacity-10">
+            <div class="w-full h-full rounded-full border-[20px] border-secondary"></div>
+          </div>
+        </div>
+        <!-- Pas de Vente Card (Sticky Note Style) -->
+        <div
+          class="md:col-span-4 bg-[#FFF9C4] p-card-padding rounded-lg sticky-note shadow-md flex flex-col justify-center items-center text-center"
+        >
+          <span
+            class="material-symbols-outlined text-4xl text-terra-cotta mb-4"
+            style="font-variation-settings: 'FILL' 1"
+            >block</span
+          >
+          <h3 class="font-headline-md text-headline-md text-ink-black mb-2">Zéro revente</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            C'est simple : nous ne vendons <strong>jamais</strong> tes données à des tiers. Pas de
+            pub ciblée, pas de courtier en données. Jamais.
+          </p>
+        </div>
+        <!-- Le Compte Card -->
+        <div
+          class="md:col-span-5 bg-surface-container-lowest border border-soft-pink/30 rounded-2xl p-card-padding bento-card shadow-sm"
+        >
+          <div
+            class="w-12 h-12 bg-soft-pink/30 rounded-full flex items-center justify-center mb-6 text-deep-rose"
+          >
+            <span class="material-symbols-outlined text-3xl">account_circle</span>
+          </div>
+          <h2 class="font-headline-md text-headline-md text-ink-black mb-4">Ton Compte</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Créer un compte sert uniquement à synchroniser tes favoris entre tes appareils. Sans
+            compte, tu peux quand même explorer Toulouse, mais tes pépites resteront stockées
+            uniquement sur ton téléphone.
+          </p>
+        </div>
+        <!-- Stripe Card -->
+        <div
+          class="md:col-span-7 bg-ink-black text-on-primary rounded-2xl p-card-padding flex flex-col md:flex-row items-center gap-8 shadow-xl"
+        >
+          <div class="flex-1">
+            <h2 class="font-headline-md text-headline-md mb-4">Paiements sécurisés</h2>
+            <p class="opacity-80 font-body-md text-body-md mb-6">
+              Pour le soutien au projet, nous passons par <strong>Stripe</strong>. Nous ne voyons
+              jamais tes numéros de carte. Tes transactions sont cryptées et protégées par les
+              standards bancaires les plus élevés.
             </p>
-<div class="flex flex-col sm:flex-row gap-4">
-<button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-label-md hover:bg-deep-rose transition-all flex items-center gap-2 group">
-<span>Télécharger l'App</span>
-<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-</button>
-<button class="border-2 border-terra-cotta text-terra-cotta px-8 py-4 rounded-xl font-label-md hover:bg-terra-cotta hover:text-white transition-all">
-                    Voir le catalogue
-                </button>
-</div>
-</div>
-</main>
-<!-- Footer -->
-<footer class="bg-surface-container-low dark:bg-surface-container-lowest border-t border-outline-variant">
-<div class="flex flex-col md:flex-row justify-between items-center px-container-margin py-section-gap max-w-[1200px] mx-auto w-full">
-<div class="flex flex-col items-center md:items-start mb-8 md:mb-0">
-<div class="font-headline-md text-headline-md text-deep-rose mb-2 font-extrabold">TouRose</div>
-<p class="font-label-sm text-label-sm text-on-surface-variant">© TouRose. Sans compte obligatoire, toujours.</p>
-</div>
-<div class="flex gap-8">
-<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Crédits</a>
-<a class="font-label-sm text-label-sm text-primary underline" href="#">Confidentialité</a>
-<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact</a>
-</div>
-<div class="mt-8 md:mt-0 flex gap-4">
-<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-primary cursor-pointer transition-all">
-<span class="material-symbols-outlined text-xl">share</span>
-</div>
-<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-primary cursor-pointer transition-all">
-<span class="material-symbols-outlined text-xl">favorite</span>
-</div>
-</div>
-</div>
-</footer>
-<script>
-        // Smooth appearance interaction
-        document.addEventListener('DOMContentLoaded', () => {
-            const cards = document.querySelectorAll('.bento-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
+            <div
+              class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-label-sm font-label-sm"
+            >
+              <span class="material-symbols-outlined text-sm">lock</span>
+              <span>SSL 256-bit Encryption</span>
+            </div>
+          </div>
+          <div
+            class="w-full md:w-48 aspect-video bg-white/5 rounded-xl border border-white/10 flex items-center justify-center"
+          >
+            <div class="text-4xl font-bold opacity-30 italic">stripe</div>
+          </div>
+        </div>
+        <!-- FAQ Privacy Mini-Section -->
+        <div class="md:col-span-12 mt-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+            <div class="p-6 border-l-2 border-soft-pink">
+              <h4 class="font-label-md text-label-md text-deep-rose mb-2 uppercase tracking-wider">
+                Tes droits
+              </h4>
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Tu peux demander la suppression totale de ton compte et de tes données à tout moment
+                depuis les réglages de l'application.
+              </p>
+            </div>
+            <div class="p-6 border-l-2 border-sky-blue-muted">
+              <h4 class="font-label-md text-label-md text-secondary mb-2 uppercase tracking-wider">
+                Cookies
+              </h4>
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Sur le web, nous utilisons uniquement des cookies techniques essentiels. Pas de
+                traceurs publicitaires ou analytiques invasifs.
+              </p>
+            </div>
+            <div class="p-6 border-l-2 border-terra-cotta">
+              <h4
+                class="font-label-md text-label-md text-terra-cotta mb-2 uppercase tracking-wider"
+              >
+                Contact
+              </h4>
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Une question sur tes données ? Écris-nous directement à salut@tourose.fr. On te
+                répondra avec le sourire.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Call to action -->
+      <div
+        class="mt-section-gap bg-surface-container-high rounded-3xl p-10 text-center flex flex-col items-center"
+      >
+        <h3 class="font-headline-md text-headline-md text-ink-black mb-4">
+          Prêt à explorer la Ville Rose sereinement ?
+        </h3>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-8 max-w-xl">
+          Rejoins la communauté TouRose et découvre Toulouse comme un habitant, sans jamais
+          compromettre ta vie privée.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button
+            class="bg-primary text-on-primary px-8 py-4 rounded-xl font-label-md hover:bg-deep-rose transition-all flex items-center gap-2 group"
+          >
+            <span>Télécharger l'App</span>
+            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform"
+              >arrow_forward</span
+            >
+          </button>
+          <button
+            class="border-2 border-terra-cotta text-terra-cotta px-8 py-4 rounded-xl font-label-md hover:bg-terra-cotta hover:text-white transition-all"
+          >
+            Voir le catalogue
+          </button>
+        </div>
+      </div>
+    </main>
+    <!-- Footer -->
+    <footer
+      class="bg-surface-container-low dark:bg-surface-container-lowest border-t border-outline-variant"
+    >
+      <div
+        class="flex flex-col md:flex-row justify-between items-center px-container-margin py-section-gap max-w-[1200px] mx-auto w-full"
+      >
+        <div class="flex flex-col items-center md:items-start mb-8 md:mb-0">
+          <div class="font-headline-md text-headline-md text-deep-rose mb-2 font-extrabold">
+            TouRose
+          </div>
+          <p class="font-label-sm text-label-sm text-on-surface-variant">
+            © TouRose. Sans compte obligatoire, toujours.
+          </p>
+        </div>
+        <div class="flex gap-8">
+          <a
+            class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors"
+            href="#"
+            >Crédits</a
+          >
+          <a class="font-label-sm text-label-sm text-primary underline" href="#">Confidentialité</a>
+          <a
+            class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors"
+            href="#"
+            >Contact</a
+          >
+        </div>
+        <div class="mt-8 md:mt-0 flex gap-4">
+          <div
+            class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-primary cursor-pointer transition-all"
+          >
+            <span class="material-symbols-outlined text-xl">share</span>
+          </div>
+          <div
+            class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-primary cursor-pointer transition-all"
+          >
+            <span class="material-symbols-outlined text-xl">favorite</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      // Smooth appearance interaction
+      document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.bento-card');
+        cards.forEach((card, index) => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            card.style.transition = 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, index * 100);
         });
+      });
     </script>
-</body></html>
+  </body>
+</html>

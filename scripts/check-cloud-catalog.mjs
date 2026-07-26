@@ -11,8 +11,7 @@ function fail(message) {
 }
 
 const supabaseUrl = process.env.SUPABASE_URL?.replace(/\/$/, '');
-const anonKey =
-  process.env.SUPABASE_ANON_KEY ?? process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
+const anonKey = process.env.SUPABASE_ANON_KEY ?? process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 if (!supabaseUrl || !anonKey) {
   fail('Définis SUPABASE_URL et SUPABASE_ANON_KEY (ou EXPO_PUBLIC_SUPABASE_ANON_KEY).');
@@ -46,7 +45,9 @@ if (!response.ok) {
 }
 
 const events = Array.isArray(payload) ? payload : [];
-console.log(`[check:cloud-catalog] OK — ${events.length} événement(s) à venir (échantillon max 5).`);
+console.log(
+  `[check:cloud-catalog] OK — ${events.length} événement(s) à venir (échantillon max 5).`,
+);
 
 if (events.length === 0) {
   console.log(

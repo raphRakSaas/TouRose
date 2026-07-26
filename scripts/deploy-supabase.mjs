@@ -123,15 +123,7 @@ function main() {
   ]);
 
   console.log('[deploy-supabase] Applying migrations…');
-  runOrFail('pnpm', [
-    'exec',
-    'supabase',
-    'db',
-    'push',
-    '--linked',
-    '--password',
-    databasePassword,
-  ]);
+  runOrFail('pnpm', ['exec', 'supabase', 'db', 'push', '--linked', '--password', databasePassword]);
 
   console.log('[deploy-supabase] Deploying Edge Functions…');
   for (const functionName of EDGE_FUNCTION_NAMES) {

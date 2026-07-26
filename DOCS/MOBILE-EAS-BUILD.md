@@ -104,12 +104,12 @@ eas build --platform android --profile preview
 
 ## 4. Profils EAS (`eas.json`)
 
-| Profil | Usage | Sortie Android |
-| --- | --- | --- |
-| `preview` | Test interne cloud | **APK** |
-| `preview-cloud` | Alias preview + canal OTA | **APK** |
-| `development` | Dev client + Metro local | APK dev client |
-| `production` | Store Play / App Store | AAB (Android) |
+| Profil          | Usage                     | Sortie Android |
+| --------------- | ------------------------- | -------------- |
+| `preview`       | Test interne cloud        | **APK**        |
+| `preview-cloud` | Alias preview + canal OTA | **APK**        |
+| `development`   | Dev client + Metro local  | APK dev client |
+| `production`    | Store Play / App Store    | AAB (Android)  |
 
 ---
 
@@ -129,7 +129,7 @@ Pour inspecter la base cloud depuis Cursor (compter les événements, lire les l
 
 1. Copier [`.cursor/mcp.json.example`](../.cursor/mcp.json.example) vers `.cursor/mcp.json` (fichier local, non versionné) et renseigner les clés.
 2. **Cursor → Settings → Tools & MCP** : vérifier que `supabase` est connecté (OAuth au premier lancement).
-3. Recharger la fenêtre si besoin (`Cmd+Shift+P` → *Reload Window*).
+3. Recharger la fenêtre si besoin (`Cmd+Shift+P` → _Reload Window_).
 4. Exemple de prompt : « Combien d’événements publiés en cloud ? Utilise le MCP Supabase. »
 
 Dashboard : [MCP connection](https://supabase.com/dashboard/project/jrdhguqvsykbmsxdepqc?showConnect=true&connectTab=mcp).
@@ -138,16 +138,16 @@ Dashboard : [MCP connection](https://supabase.com/dashboard/project/jrdhguqvsykb
 
 ## 7. Dépannage
 
-| Problème | Piste |
-| --- | --- |
-| Catalogue vide | 1) `pnpm eas env:list --environment preview` — URL + anon key présentes<br>2) Vérifier les données cloud (voir ci-dessous)<br>3) Rebuild APK après correction des variables |
-| Données cloud absentes | `OPENAGENDA_CRON_ENABLED=true` + lancer **Actions → OpenAgenda cron → Run workflow**, ou en local :<br>`SUPABASE_URL=... SUPABASE_ANON_KEY=... IMPORT_CRON_SECRET=... pnpm import:openagenda:cloud` |
-| Diagnostic rapide | `SUPABASE_URL=... SUPABASE_ANON_KEY=... pnpm check:cloud-catalog` (compte les événements via RPC) |
-| « Supabase non configuré » | Rebuild après avoir ajouté les variables EAS ; clé anon = **anon / publishable** du dashboard (pas `replace-with`) |
-| Filtre date trop strict | Sur l’écran Aujourd’hui, essayer **Quand → Tout** |
-| Build échoue credentials Android | Laisser EAS générer un keystore (première fois) |
-| Carte ne s’affiche pas | `EXPO_PUBLIC_MAP_STYLE_URL` manquant (optionnel) |
-| Push notifications | Activer plus tard via EAS + `EXPO_PUBLIC_NOTIFICATIONS_ENABLED=true` |
+| Problème                         | Piste                                                                                                                                                                                               |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Catalogue vide                   | 1) `pnpm eas env:list --environment preview` — URL + anon key présentes<br>2) Vérifier les données cloud (voir ci-dessous)<br>3) Rebuild APK après correction des variables                         |
+| Données cloud absentes           | `OPENAGENDA_CRON_ENABLED=true` + lancer **Actions → OpenAgenda cron → Run workflow**, ou en local :<br>`SUPABASE_URL=... SUPABASE_ANON_KEY=... IMPORT_CRON_SECRET=... pnpm import:openagenda:cloud` |
+| Diagnostic rapide                | `SUPABASE_URL=... SUPABASE_ANON_KEY=... pnpm check:cloud-catalog` (compte les événements via RPC)                                                                                                   |
+| « Supabase non configuré »       | Rebuild après avoir ajouté les variables EAS ; clé anon = **anon / publishable** du dashboard (pas `replace-with`)                                                                                  |
+| Filtre date trop strict          | Sur l’écran Aujourd’hui, essayer **Quand → Tout**                                                                                                                                                   |
+| Build échoue credentials Android | Laisser EAS générer un keystore (première fois)                                                                                                                                                     |
+| Carte ne s’affiche pas           | `EXPO_PUBLIC_MAP_STYLE_URL` manquant (optionnel)                                                                                                                                                    |
+| Push notifications               | Activer plus tard via EAS + `EXPO_PUBLIC_NOTIFICATIONS_ENABLED=true`                                                                                                                                |
 
 ---
 

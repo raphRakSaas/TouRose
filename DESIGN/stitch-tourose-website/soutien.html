@@ -1,261 +1,375 @@
-<!DOCTYPE html>
+<!doctype html>
 
-<html class="light" lang="fr"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Soutenir TouRose - La Ville Rose dans ta poche</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
+<html class="light" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Soutenir TouRose - La Ville Rose dans ta poche</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
       tailwind.config = {
-        darkMode: "class",
+        darkMode: 'class',
         theme: {
           extend: {
-            "colors": {
-                    "on-tertiary-container": "#f6fff6",
-                    "soft-pink": "#F4B9B2",
-                    "background": "#fbf9f1",
-                    "inverse-primary": "#ffb3b0",
-                    "on-tertiary-fixed": "#002113",
-                    "on-secondary-fixed-variant": "#004d62",
-                    "on-error-container": "#93000a",
-                    "surface-dim": "#dcdad2",
-                    "surface-container-high": "#eae8e0",
-                    "surface-container-low": "#f5f4ec",
-                    "surface-container-highest": "#e4e3db",
-                    "on-error": "#ffffff",
-                    "surface-container": "#f0eee6",
-                    "tertiary-fixed-dim": "#5fdda2",
-                    "on-secondary-fixed": "#001f29",
-                    "sky-blue-muted": "#A5D8EA",
-                    "surface-container-lowest": "#ffffff",
-                    "on-secondary-container": "#09657f",
-                    "inverse-surface": "#30312c",
-                    "error-container": "#ffdad6",
-                    "tertiary-fixed": "#7dfabd",
-                    "secondary-fixed": "#baeaff",
-                    "primary": "#a1373a",
-                    "error": "#ba1a1a",
-                    "inverse-on-surface": "#f3f1e9",
-                    "on-primary-container": "#fffbff",
-                    "surface-bright": "#fbf9f1",
-                    "on-background": "#1b1c17",
-                    "tertiary-container": "#008558",
-                    "outline-variant": "#ddc0be",
-                    "on-primary": "#ffffff",
-                    "surface-variant": "#e4e3db",
-                    "on-primary-fixed-variant": "#852227",
-                    "on-tertiary-fixed-variant": "#005235",
-                    "secondary-fixed-dim": "#89d0ed",
-                    "outline": "#8a7170",
-                    "primary-fixed-dim": "#ffb3b0",
-                    "on-tertiary": "#ffffff",
-                    "surface-tint": "#a53a3c",
-                    "on-surface-variant": "#574241",
-                    "primary-container": "#c24f50",
-                    "on-surface": "#1b1c17",
-                    "tertiary": "#006a45",
-                    "deep-rose": "#8D2E2E",
-                    "ink-black": "#2D2926",
-                    "primary-fixed": "#ffdad8",
-                    "on-primary-fixed": "#410007",
-                    "secondary": "#0c6780",
-                    "on-secondary": "#ffffff",
-                    "terra-cotta": "#C05247",
-                    "secondary-container": "#9ae1ff",
-                    "surface": "#fbf9f1"
+            colors: {
+              'on-tertiary-container': '#f6fff6',
+              'soft-pink': '#F4B9B2',
+              background: '#fbf9f1',
+              'inverse-primary': '#ffb3b0',
+              'on-tertiary-fixed': '#002113',
+              'on-secondary-fixed-variant': '#004d62',
+              'on-error-container': '#93000a',
+              'surface-dim': '#dcdad2',
+              'surface-container-high': '#eae8e0',
+              'surface-container-low': '#f5f4ec',
+              'surface-container-highest': '#e4e3db',
+              'on-error': '#ffffff',
+              'surface-container': '#f0eee6',
+              'tertiary-fixed-dim': '#5fdda2',
+              'on-secondary-fixed': '#001f29',
+              'sky-blue-muted': '#A5D8EA',
+              'surface-container-lowest': '#ffffff',
+              'on-secondary-container': '#09657f',
+              'inverse-surface': '#30312c',
+              'error-container': '#ffdad6',
+              'tertiary-fixed': '#7dfabd',
+              'secondary-fixed': '#baeaff',
+              primary: '#a1373a',
+              error: '#ba1a1a',
+              'inverse-on-surface': '#f3f1e9',
+              'on-primary-container': '#fffbff',
+              'surface-bright': '#fbf9f1',
+              'on-background': '#1b1c17',
+              'tertiary-container': '#008558',
+              'outline-variant': '#ddc0be',
+              'on-primary': '#ffffff',
+              'surface-variant': '#e4e3db',
+              'on-primary-fixed-variant': '#852227',
+              'on-tertiary-fixed-variant': '#005235',
+              'secondary-fixed-dim': '#89d0ed',
+              outline: '#8a7170',
+              'primary-fixed-dim': '#ffb3b0',
+              'on-tertiary': '#ffffff',
+              'surface-tint': '#a53a3c',
+              'on-surface-variant': '#574241',
+              'primary-container': '#c24f50',
+              'on-surface': '#1b1c17',
+              tertiary: '#006a45',
+              'deep-rose': '#8D2E2E',
+              'ink-black': '#2D2926',
+              'primary-fixed': '#ffdad8',
+              'on-primary-fixed': '#410007',
+              secondary: '#0c6780',
+              'on-secondary': '#ffffff',
+              'terra-cotta': '#C05247',
+              'secondary-container': '#9ae1ff',
+              surface: '#fbf9f1',
             },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
             },
-            "spacing": {
-                    "base": "8px",
-                    "container-margin": "20px",
-                    "gutter": "16px",
-                    "section-gap": "40px",
-                    "card-padding": "16px"
+            spacing: {
+              base: '8px',
+              'container-margin': '20px',
+              gutter: '16px',
+              'section-gap': '40px',
+              'card-padding': '16px',
             },
-            "fontFamily": {
-                    "body-md": ["Be Vietnam Pro"],
-                    "headline-lg": ["Plus Jakarta Sans"],
-                    "headline-xl": ["Plus Jakarta Sans"],
-                    "label-sm": ["Be Vietnam Pro"],
-                    "headline-lg-mobile": ["Plus Jakarta Sans"],
-                    "body-lg": ["Be Vietnam Pro"],
-                    "label-md": ["Be Vietnam Pro"],
-                    "headline-md": ["Plus Jakarta Sans"]
+            fontFamily: {
+              'body-md': ['Be Vietnam Pro'],
+              'headline-lg': ['Plus Jakarta Sans'],
+              'headline-xl': ['Plus Jakarta Sans'],
+              'label-sm': ['Be Vietnam Pro'],
+              'headline-lg-mobile': ['Plus Jakarta Sans'],
+              'body-lg': ['Be Vietnam Pro'],
+              'label-md': ['Be Vietnam Pro'],
+              'headline-md': ['Plus Jakarta Sans'],
             },
-            "fontSize": {
-                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
-                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
-                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
-                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
-                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
-            }
+            fontSize: {
+              'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+              'headline-lg': [
+                '32px',
+                { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' },
+              ],
+              'headline-xl': [
+                '40px',
+                { lineHeight: '48px', letterSpacing: '-0.02em', fontWeight: '700' },
+              ],
+              'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+              'headline-lg-mobile': ['28px', { lineHeight: '34px', fontWeight: '700' }],
+              'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+              'label-md': [
+                '14px',
+                { lineHeight: '20px', letterSpacing: '0.02em', fontWeight: '600' },
+              ],
+              'headline-md': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+            },
           },
         },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
       }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      .active-card {
+        border: 2px solid #c05247;
+        box-shadow: 0 10px 25px -5px rgba(141, 46, 46, 0.1);
+      }
+      .paper-texture {
+        background-image: url('https://www.transparenttextures.com/patterns/felt.png');
+      }
+      @keyframes subtle-float {
+        0% {
+          transform: translateY(0px);
         }
-        .active-card {
-            border: 2px solid #C05247;
-            box-shadow: 0 10px 25px -5px rgba(141, 46, 46, 0.1);
+        50% {
+          transform: translateY(-5px);
         }
-        .paper-texture {
-            background-image: url("https://www.transparenttextures.com/patterns/felt.png");
+        100% {
+          transform: translateY(0px);
         }
-        @keyframes subtle-float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
-        }
-        .float-animation {
-            animation: subtle-float 4s ease-in-out infinite;
-        }
+      }
+      .float-animation {
+        animation: subtle-float 4s ease-in-out infinite;
+      }
     </style>
-</head>
-<body class="bg-background text-on-surface font-body-md overflow-x-hidden paper-texture">
-<!-- TopNavBar -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-background shadow-sm shadow-primary/5">
-<nav class="flex justify-between items-center px-container-margin py-4 max-w-[1200px] mx-auto w-full">
-<div class="font-headline-md text-headline-md text-deep-rose font-extrabold tracking-tight">TouRose</div>
-<div class="hidden md:flex items-center gap-8 font-body-md text-body-md">
-<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Catalogue</a>
-<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Soutenir</a>
-<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">À propos</a>
-</div>
-<button class="bg-deep-rose text-white px-6 py-3 rounded-full font-label-md hover:scale-95 transition-transform active:scale-90">
-                Télécharger l'app
-            </button>
-</nav>
-</header>
-<main class="pt-32 pb-24 px-container-margin max-w-[1200px] mx-auto">
-<!-- Hero Section -->
-<section class="text-center mb-16">
-<h1 class="font-headline-xl text-headline-xl text-deep-rose mb-4 md:text-headline-xl">On se paye un coup ?</h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-                Pas de compte, pas de pub, pas de chichis. TouRose reste gratuit grâce à vous. Si tu aimes flâner avec nous, tu peux nous filer un petit coup de pouce symbolique. Boudu, ça nous ferait trop plaisir !
-            </p>
-</section>
-<!-- Bento Support Grid -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-section-gap">
-<!-- Option 1 -->
-<div class="bg-white p-card-padding rounded-xl cursor-pointer border border-soft-pink/30 hover:shadow-lg transition-all group flex flex-col items-center text-center relative overflow-hidden" id="option-1" onclick="selectDonation(1)">
-<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-symbols-outlined text-6xl">coffee</span>
-</div>
-<div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-6 text-deep-rose group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-3xl">coffee</span>
-</div>
-<h3 class="font-headline-md text-headline-md mb-2">Une gorgée de café</h3>
-<p class="text-on-surface-variant mb-6 flex-grow">Pour nous donner la force de dénicher le prochain spot pépite à Saint-Cyprien.</p>
-<span class="text-4xl font-extrabold text-terra-cotta">1€</span>
-</div>
-<!-- Option 2 (Chocolatine - Best Value) -->
-<div class="bg-white p-card-padding rounded-xl cursor-pointer border-2 border-terra-cotta/40 shadow-md hover:shadow-xl transition-all group flex flex-col items-center text-center relative overflow-hidden active-card" id="option-5" onclick="selectDonation(5)">
-<div class="absolute -top-2 -right-2 bg-terra-cotta text-white px-4 py-1 rotate-12 font-label-sm shadow-sm">LE TOP</div>
-<div class="w-16 h-16 bg-primary-container/20 rounded-full flex items-center justify-center mb-6 text-deep-rose group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-3xl">bakery_dining</span>
-</div>
-<h3 class="font-headline-md text-headline-md mb-2">Chocolatine de compétition</h3>
-<p class="text-on-surface-variant mb-6 flex-grow">Le carburant officiel du Toulousain. On n'appelle pas ça un pain au chocolat ici, malheureux !</p>
-<span class="text-4xl font-extrabold text-terra-cotta">5€</span>
-</div>
-<!-- Option 3 -->
-<div class="bg-white p-card-padding rounded-xl cursor-pointer border border-soft-pink/30 hover:shadow-lg transition-all group flex flex-col items-center text-center relative overflow-hidden" id="option-10" onclick="selectDonation(10)">
-<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-<span class="material-symbols-outlined text-6xl">foundation</span>
-</div>
-<div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-6 text-deep-rose group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-3xl">foundation</span>
-</div>
-<h3 class="font-headline-md text-headline-md mb-2">Une brique rose</h3>
-<p class="text-on-surface-variant mb-6 flex-grow">Tu participes concrètement à l'édifice. On te doit une fière chandelle, t'es un amour.</p>
-<span class="text-4xl font-extrabold text-terra-cotta">10€</span>
-</div>
-</div>
-<!-- Payment Section -->
-<div class="max-w-md mx-auto bg-surface-container-low p-8 rounded-xl border border-outline-variant/30 text-center shadow-inner">
-<p class="font-label-md text-label-md text-on-surface-variant mb-4 uppercase tracking-widest">Montant sélectionné</p>
-<div class="font-headline-xl text-headline-xl text-deep-rose mb-8" id="selected-display">5,00€</div>
-<button class="w-full bg-ink-black text-white py-4 rounded-lg flex items-center justify-center gap-3 font-label-md hover:bg-on-surface transition-all group" id="stripe-button">
-<span>Payer avec</span>
-<svg class="h-6" fill="currentColor" viewbox="0 0 40 16"><path d="M4.05 10.34c0 .84.66 1.34 1.76 1.34 1.07 0 1.83-.43 1.83-1.09 0-2.31-6.17-.67-6.17-4.66 0-1.84 1.54-3.13 3.97-3.13 2.03 0 3.6 1 3.6 2.5h-2.12c0-.67-.65-1.04-1.46-1.04-.97 0-1.57.44-1.57 1.01 0 2.05 6.17.47 6.17 4.6 0 1.98-1.58 3.24-4.14 3.24-2.2 0-4.04-1-4.04-2.76h2.17zM11.97 4.9h1.76v1.22c.45-.8 1.15-1.22 2.1-1.22.4 0 .67.04.85.1v1.78a2.53 2.53 0 00-.8-.12c-1.07 0-1.78.43-2.15 1.19v5.04h-1.76V4.9zm5.72 0h1.76v8h-1.76v-8zm0-2.45h1.76v1.44h-1.76v-1.44zm7.9 2.45c1.9 0 3.28 1.45 3.28 4.02 0 2.58-1.38 4.03-3.28 4.03-.83 0-1.5-.32-1.92-.86v3.25h-1.76v-10.4h1.76v1.1c.42-.53 1.09-.85 1.92-.85zm-.25 6.33c.96 0 1.63-.78 1.63-2.3 0-1.53-.67-2.3-1.63-2.3-.9 0-1.56.76-1.56 2.3 0 1.55.66 2.3 1.56 2.3zm8.32-6.33c2.32 0 3.86 1.4 3.86 3.97v.51h-5.61c.08 1.25.9 1.85 1.95 1.85.74 0 1.3-.23 1.64-.67l1.32.9c-.64.91-1.74 1.48-3 1.48-2.25 0-3.67-1.45-3.67-4.02 0-2.58 1.43-4.03 3.51-4.03zm-1.87 3.03h3.76c-.07-.94-.65-1.49-1.85-1.49-1.12 0-1.76.54-1.91 1.49z"></path></svg>
-</button>
-<p class="mt-6 text-on-surface-variant font-label-sm flex items-center justify-center gap-2">
-<span class="material-symbols-outlined text-sm">lock</span>
-                Paiement sécurisé. Pas d'abonnement caché.
-            </p>
-</div>
-<!-- Sticky Note - Toulousain Message -->
-<div class="mt-section-gap flex justify-center">
-<div class="bg-[#FFF9C4] p-8 max-w-lg shadow-md -rotate-1 relative float-animation border border-[#F0E68C]/50">
-<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/40 shadow-sm rounded-sm"></div>
-<span class="material-symbols-outlined text-terra-cotta mb-4">favorite</span>
-<p class="font-body-lg text-body-lg text-ink-black italic">
-                    "Merci beaucoup l'ami ! Que tu donnes un euro ou dix, c'est le geste qui compte. Grâce à toi, on va pouvoir continuer à explorer les recoins de la Daurade et du Capitole pour partager le meilleur de notre ville. T'es un vrai de vrai !"
-                </p>
-<p class="mt-4 font-bold text-deep-rose">— L'équipe TouRose</p>
-</div>
-</div>
-</main>
-<!-- Footer -->
-<footer class="bg-surface-container-low border-t border-outline-variant">
-<div class="flex flex-col md:flex-row justify-between items-center px-container-margin py-section-gap max-w-[1200px] mx-auto w-full">
-<div class="mb-6 md:mb-0">
-<div class="font-headline-md text-headline-md text-deep-rose mb-2">TouRose</div>
-<p class="font-label-sm text-label-sm text-on-surface-variant">© TouRose. Sans compte obligatoire, toujours.</p>
-</div>
-<div class="flex gap-8 font-label-sm text-label-sm">
-<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Crédits</a>
-<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Confidentialité</a>
-<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Contact</a>
-</div>
-</div>
-</footer>
-<script>
-        let currentAmount = 5;
+  </head>
+  <body class="bg-background text-on-surface font-body-md overflow-x-hidden paper-texture">
+    <!-- TopNavBar -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-background shadow-sm shadow-primary/5">
+      <nav
+        class="flex justify-between items-center px-container-margin py-4 max-w-[1200px] mx-auto w-full"
+      >
+        <div class="font-headline-md text-headline-md text-deep-rose font-extrabold tracking-tight">
+          TouRose
+        </div>
+        <div class="hidden md:flex items-center gap-8 font-body-md text-body-md">
+          <a class="text-on-surface-variant hover:text-primary transition-colors" href="#"
+            >Catalogue</a
+          >
+          <a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Soutenir</a>
+          <a class="text-on-surface-variant hover:text-primary transition-colors" href="#"
+            >À propos</a
+          >
+        </div>
+        <button
+          class="bg-deep-rose text-white px-6 py-3 rounded-full font-label-md hover:scale-95 transition-transform active:scale-90"
+        >
+          Télécharger l'app
+        </button>
+      </nav>
+    </header>
+    <main class="pt-32 pb-24 px-container-margin max-w-[1200px] mx-auto">
+      <!-- Hero Section -->
+      <section class="text-center mb-16">
+        <h1 class="font-headline-xl text-headline-xl text-deep-rose mb-4 md:text-headline-xl">
+          On se paye un coup ?
+        </h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+          Pas de compte, pas de pub, pas de chichis. TouRose reste gratuit grâce à vous. Si tu aimes
+          flâner avec nous, tu peux nous filer un petit coup de pouce symbolique. Boudu, ça nous
+          ferait trop plaisir !
+        </p>
+      </section>
+      <!-- Bento Support Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-section-gap">
+        <!-- Option 1 -->
+        <div
+          class="bg-white p-card-padding rounded-xl cursor-pointer border border-soft-pink/30 hover:shadow-lg transition-all group flex flex-col items-center text-center relative overflow-hidden"
+          id="option-1"
+          onclick="selectDonation(1)"
+        >
+          <div
+            class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+          >
+            <span class="material-symbols-outlined text-6xl">coffee</span>
+          </div>
+          <div
+            class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-6 text-deep-rose group-hover:scale-110 transition-transform"
+          >
+            <span class="material-symbols-outlined text-3xl">coffee</span>
+          </div>
+          <h3 class="font-headline-md text-headline-md mb-2">Une gorgée de café</h3>
+          <p class="text-on-surface-variant mb-6 flex-grow">
+            Pour nous donner la force de dénicher le prochain spot pépite à Saint-Cyprien.
+          </p>
+          <span class="text-4xl font-extrabold text-terra-cotta">1€</span>
+        </div>
+        <!-- Option 2 (Chocolatine - Best Value) -->
+        <div
+          class="bg-white p-card-padding rounded-xl cursor-pointer border-2 border-terra-cotta/40 shadow-md hover:shadow-xl transition-all group flex flex-col items-center text-center relative overflow-hidden active-card"
+          id="option-5"
+          onclick="selectDonation(5)"
+        >
+          <div
+            class="absolute -top-2 -right-2 bg-terra-cotta text-white px-4 py-1 rotate-12 font-label-sm shadow-sm"
+          >
+            LE TOP
+          </div>
+          <div
+            class="w-16 h-16 bg-primary-container/20 rounded-full flex items-center justify-center mb-6 text-deep-rose group-hover:scale-110 transition-transform"
+          >
+            <span class="material-symbols-outlined text-3xl">bakery_dining</span>
+          </div>
+          <h3 class="font-headline-md text-headline-md mb-2">Chocolatine de compétition</h3>
+          <p class="text-on-surface-variant mb-6 flex-grow">
+            Le carburant officiel du Toulousain. On n'appelle pas ça un pain au chocolat ici,
+            malheureux !
+          </p>
+          <span class="text-4xl font-extrabold text-terra-cotta">5€</span>
+        </div>
+        <!-- Option 3 -->
+        <div
+          class="bg-white p-card-padding rounded-xl cursor-pointer border border-soft-pink/30 hover:shadow-lg transition-all group flex flex-col items-center text-center relative overflow-hidden"
+          id="option-10"
+          onclick="selectDonation(10)"
+        >
+          <div
+            class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity"
+          >
+            <span class="material-symbols-outlined text-6xl">foundation</span>
+          </div>
+          <div
+            class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-6 text-deep-rose group-hover:scale-110 transition-transform"
+          >
+            <span class="material-symbols-outlined text-3xl">foundation</span>
+          </div>
+          <h3 class="font-headline-md text-headline-md mb-2">Une brique rose</h3>
+          <p class="text-on-surface-variant mb-6 flex-grow">
+            Tu participes concrètement à l'édifice. On te doit une fière chandelle, t'es un amour.
+          </p>
+          <span class="text-4xl font-extrabold text-terra-cotta">10€</span>
+        </div>
+      </div>
+      <!-- Payment Section -->
+      <div
+        class="max-w-md mx-auto bg-surface-container-low p-8 rounded-xl border border-outline-variant/30 text-center shadow-inner"
+      >
+        <p
+          class="font-label-md text-label-md text-on-surface-variant mb-4 uppercase tracking-widest"
+        >
+          Montant sélectionné
+        </p>
+        <div class="font-headline-xl text-headline-xl text-deep-rose mb-8" id="selected-display">
+          5,00€
+        </div>
+        <button
+          class="w-full bg-ink-black text-white py-4 rounded-lg flex items-center justify-center gap-3 font-label-md hover:bg-on-surface transition-all group"
+          id="stripe-button"
+        >
+          <span>Payer avec</span>
+          <svg class="h-6" fill="currentColor" viewbox="0 0 40 16">
+            <path
+              d="M4.05 10.34c0 .84.66 1.34 1.76 1.34 1.07 0 1.83-.43 1.83-1.09 0-2.31-6.17-.67-6.17-4.66 0-1.84 1.54-3.13 3.97-3.13 2.03 0 3.6 1 3.6 2.5h-2.12c0-.67-.65-1.04-1.46-1.04-.97 0-1.57.44-1.57 1.01 0 2.05 6.17.47 6.17 4.6 0 1.98-1.58 3.24-4.14 3.24-2.2 0-4.04-1-4.04-2.76h2.17zM11.97 4.9h1.76v1.22c.45-.8 1.15-1.22 2.1-1.22.4 0 .67.04.85.1v1.78a2.53 2.53 0 00-.8-.12c-1.07 0-1.78.43-2.15 1.19v5.04h-1.76V4.9zm5.72 0h1.76v8h-1.76v-8zm0-2.45h1.76v1.44h-1.76v-1.44zm7.9 2.45c1.9 0 3.28 1.45 3.28 4.02 0 2.58-1.38 4.03-3.28 4.03-.83 0-1.5-.32-1.92-.86v3.25h-1.76v-10.4h1.76v1.1c.42-.53 1.09-.85 1.92-.85zm-.25 6.33c.96 0 1.63-.78 1.63-2.3 0-1.53-.67-2.3-1.63-2.3-.9 0-1.56.76-1.56 2.3 0 1.55.66 2.3 1.56 2.3zm8.32-6.33c2.32 0 3.86 1.4 3.86 3.97v.51h-5.61c.08 1.25.9 1.85 1.95 1.85.74 0 1.3-.23 1.64-.67l1.32.9c-.64.91-1.74 1.48-3 1.48-2.25 0-3.67-1.45-3.67-4.02 0-2.58 1.43-4.03 3.51-4.03zm-1.87 3.03h3.76c-.07-.94-.65-1.49-1.85-1.49-1.12 0-1.76.54-1.91 1.49z"
+            ></path>
+          </svg>
+        </button>
+        <p
+          class="mt-6 text-on-surface-variant font-label-sm flex items-center justify-center gap-2"
+        >
+          <span class="material-symbols-outlined text-sm">lock</span>
+          Paiement sécurisé. Pas d'abonnement caché.
+        </p>
+      </div>
+      <!-- Sticky Note - Toulousain Message -->
+      <div class="mt-section-gap flex justify-center">
+        <div
+          class="bg-[#FFF9C4] p-8 max-w-lg shadow-md -rotate-1 relative float-animation border border-[#F0E68C]/50"
+        >
+          <div
+            class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-8 bg-white/40 shadow-sm rounded-sm"
+          ></div>
+          <span class="material-symbols-outlined text-terra-cotta mb-4">favorite</span>
+          <p class="font-body-lg text-body-lg text-ink-black italic">
+            "Merci beaucoup l'ami ! Que tu donnes un euro ou dix, c'est le geste qui compte. Grâce à
+            toi, on va pouvoir continuer à explorer les recoins de la Daurade et du Capitole pour
+            partager le meilleur de notre ville. T'es un vrai de vrai !"
+          </p>
+          <p class="mt-4 font-bold text-deep-rose">— L'équipe TouRose</p>
+        </div>
+      </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-surface-container-low border-t border-outline-variant">
+      <div
+        class="flex flex-col md:flex-row justify-between items-center px-container-margin py-section-gap max-w-[1200px] mx-auto w-full"
+      >
+        <div class="mb-6 md:mb-0">
+          <div class="font-headline-md text-headline-md text-deep-rose mb-2">TouRose</div>
+          <p class="font-label-sm text-label-sm text-on-surface-variant">
+            © TouRose. Sans compte obligatoire, toujours.
+          </p>
+        </div>
+        <div class="flex gap-8 font-label-sm text-label-sm">
+          <a class="text-on-surface-variant hover:text-secondary transition-colors" href="#"
+            >Crédits</a
+          >
+          <a class="text-on-surface-variant hover:text-secondary transition-colors" href="#"
+            >Confidentialité</a
+          >
+          <a class="text-on-surface-variant hover:text-secondary transition-colors" href="#"
+            >Contact</a
+          >
+        </div>
+      </div>
+    </footer>
+    <script>
+      let currentAmount = 5;
 
-        function selectDonation(amount) {
-            currentAmount = amount;
-            
-            // Remove active classes from all cards
-            document.querySelectorAll('[id^="option-"]').forEach(card => {
-                card.classList.remove('active-card', 'shadow-xl');
-                card.classList.add('border-soft-pink/30');
-            });
+      function selectDonation(amount) {
+        currentAmount = amount;
 
-            // Add active class to selected card
-            const selectedCard = document.getElementById(`option-${amount}`);
-            selectedCard.classList.add('active-card', 'shadow-xl');
-            selectedCard.classList.remove('border-soft-pink/30');
-
-            // Update display
-            const display = document.getElementById('selected-display');
-            display.innerText = `${amount},00€`;
-            
-            // Subtle feedback animation
-            display.style.transform = 'scale(1.1)';
-            setTimeout(() => display.style.transform = 'scale(1)', 200);
-        }
-
-        document.getElementById('stripe-button').addEventListener('click', function() {
-            this.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Redirection...';
-            setTimeout(() => {
-                alert(`Merci infiniment pour ton don de ${currentAmount}€ ! C'est le top. (Ceci est une simulation de paiement)`);
-                this.innerHTML = '<span>Payer avec</span> <svg class="h-6" viewBox="0 0 40 16" fill="currentColor">...</svg>';
-            }, 1500);
+        // Remove active classes from all cards
+        document.querySelectorAll('[id^="option-"]').forEach((card) => {
+          card.classList.remove('active-card', 'shadow-xl');
+          card.classList.add('border-soft-pink/30');
         });
+
+        // Add active class to selected card
+        const selectedCard = document.getElementById(`option-${amount}`);
+        selectedCard.classList.add('active-card', 'shadow-xl');
+        selectedCard.classList.remove('border-soft-pink/30');
+
+        // Update display
+        const display = document.getElementById('selected-display');
+        display.innerText = `${amount},00€`;
+
+        // Subtle feedback animation
+        display.style.transform = 'scale(1.1)';
+        setTimeout(() => (display.style.transform = 'scale(1)'), 200);
+      }
+
+      document.getElementById('stripe-button').addEventListener('click', function () {
+        this.innerHTML =
+          '<span class="material-symbols-outlined animate-spin">sync</span> Redirection...';
+        setTimeout(() => {
+          alert(
+            `Merci infiniment pour ton don de ${currentAmount}€ ! C'est le top. (Ceci est une simulation de paiement)`,
+          );
+          this.innerHTML =
+            '<span>Payer avec</span> <svg class="h-6" viewBox="0 0 40 16" fill="currentColor">...</svg>';
+        }, 1500);
+      });
     </script>
-</body></html>
+  </body>
+</html>

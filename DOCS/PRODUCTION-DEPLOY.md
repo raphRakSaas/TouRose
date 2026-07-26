@@ -149,14 +149,14 @@ where email = 'ton-email@example.com';
 
 ## 6. Dépannage
 
-| Symptôme                        | Piste                                                                                              |
-| ------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Job Supabase ignoré             | `SUPABASE_DEPLOY_ENABLED` ≠ `true`                                                                 |
-| `db push` échoue avec `password authentication failed` | Le secret `SUPABASE_DB_PASSWORD` est incorrect — voir ci-dessous |
-| `db push` échoue (autre)        | Drift schéma, migrations en conflit                                                                |
-| Health check KO                 | Functions pas déployées ou projet en pause                                                         |
-| Site build OK mais pas en ligne | `WEBSITE_DEPLOY_ENABLED` ou secrets Cloudflare manquants                                           |
-| Cron import inactif             | `OPENAGENDA_CRON_ENABLED=true` + secrets `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `IMPORT_CRON_SECRET` |
+| Symptôme                                               | Piste                                                                                              |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| Job Supabase ignoré                                    | `SUPABASE_DEPLOY_ENABLED` ≠ `true`                                                                 |
+| `db push` échoue avec `password authentication failed` | Le secret `SUPABASE_DB_PASSWORD` est incorrect — voir ci-dessous                                   |
+| `db push` échoue (autre)                               | Drift schéma, migrations en conflit                                                                |
+| Health check KO                                        | Functions pas déployées ou projet en pause                                                         |
+| Site build OK mais pas en ligne                        | `WEBSITE_DEPLOY_ENABLED` ou secrets Cloudflare manquants                                           |
+| Cron import inactif                                    | `OPENAGENDA_CRON_ENABLED=true` + secrets `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `IMPORT_CRON_SECRET` |
 
 Voir aussi : [`ENV-VARS.md`](./ENV-VARS.md), [`SUPABASE-LOCAL.md`](./SUPABASE-LOCAL.md), [`ADMIN-AUTH-AND-SECURITY.md`](./ADMIN-AUTH-AND-SECURITY.md).
 

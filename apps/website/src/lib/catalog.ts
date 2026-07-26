@@ -102,7 +102,11 @@ export async function loadPublicPlaceById(placeId: string): Promise<PublicPlaceR
     return null;
   }
 
-  const { data, error } = await client.from('public_places').select('*').eq('id', placeId).maybeSingle();
+  const { data, error } = await client
+    .from('public_places')
+    .select('*')
+    .eq('id', placeId)
+    .maybeSingle();
   if (error || !data) {
     return null;
   }

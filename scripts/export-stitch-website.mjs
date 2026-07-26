@@ -9,7 +9,12 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const projectId = '5841602793663413564';
-const outputDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'DESIGN', 'stitch-tourose-website');
+const outputDir = join(
+  dirname(fileURLToPath(import.meta.url)),
+  '..',
+  'DESIGN',
+  'stitch-tourose-website',
+);
 
 const screens = [
   { screenId: '7c778d4fdde1492a8c5ebe0c4ef1f0b1', fileName: 'accueil.html', title: 'Accueil' },
@@ -17,9 +22,21 @@ const screens = [
   { screenId: '487a83eb749a4a4b82ec9a35f1b6200d', fileName: 'apropos.html', title: 'À propos' },
   { screenId: 'b8824ccc2d9945f1ab9801918e3a2900', fileName: 'soutien.html', title: 'Soutenir' },
   { screenId: '16746238386441ffb7de4efd3ddb95fa', fileName: 'credits.html', title: 'Crédits' },
-  { screenId: '81c7f4ef9b5043fd913b6305961f4936', fileName: 'confidentialite.html', title: 'Confidentialité' },
-  { screenId: '785543a6d801444ebc4c1699590e6cc6', fileName: 'evenement-detail.html', title: 'Fiche événement' },
-  { screenId: '3a032bbe7d0a4699a9c0e7c75667d9bc', fileName: 'lieu-detail.html', title: 'Fiche lieu' },
+  {
+    screenId: '81c7f4ef9b5043fd913b6305961f4936',
+    fileName: 'confidentialite.html',
+    title: 'Confidentialité',
+  },
+  {
+    screenId: '785543a6d801444ebc4c1699590e6cc6',
+    fileName: 'evenement-detail.html',
+    title: 'Fiche événement',
+  },
+  {
+    screenId: '3a032bbe7d0a4699a9c0e7c75667d9bc',
+    fileName: 'lieu-detail.html',
+    title: 'Fiche lieu',
+  },
   { screenId: 'cdca858b129d4992896178adda31335d', fileName: 'soutien-merci.html', title: 'Merci' },
 ];
 

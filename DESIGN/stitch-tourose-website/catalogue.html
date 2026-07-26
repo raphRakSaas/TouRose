@@ -1,354 +1,588 @@
-<!DOCTYPE html>
+<!doctype html>
 
-<html class="light" lang="fr"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Catalogue - TouRose</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .card-shadow {
-            box-shadow: 0 4px 20px -2px rgba(141, 46, 46, 0.05);
-        }
-        .paper-texture {
-            background-color: #fbf9f1;
-            background-image: url("https://www.transparenttextures.com/patterns/felt.png");
-        }
-        .sticky-note {
-            transform: rotate(-1deg);
-        }
-        .active-tab-indicator {
-            view-transition-name: active-tab;
-        }
+<html class="light" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Catalogue - TouRose</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px -2px rgba(141, 46, 46, 0.05);
+      }
+      .paper-texture {
+        background-color: #fbf9f1;
+        background-image: url('https://www.transparenttextures.com/patterns/felt.png');
+      }
+      .sticky-note {
+        transform: rotate(-1deg);
+      }
+      .active-tab-indicator {
+        view-transition-name: active-tab;
+      }
     </style>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-tertiary-container": "#f6fff6",
-                        "soft-pink": "#F4B9B2",
-                        "background": "#fbf9f1",
-                        "inverse-primary": "#ffb3b0",
-                        "on-tertiary-fixed": "#002113",
-                        "on-secondary-fixed-variant": "#004d62",
-                        "on-error-container": "#93000a",
-                        "surface-dim": "#dcdad2",
-                        "surface-container-high": "#eae8e0",
-                        "surface-container-low": "#f5f4ec",
-                        "surface-container-highest": "#e4e3db",
-                        "on-error": "#ffffff",
-                        "surface-container": "#f0eee6",
-                        "tertiary-fixed-dim": "#5fdda2",
-                        "on-secondary-fixed": "#001f29",
-                        "sky-blue-muted": "#A5D8EA",
-                        "surface-container-lowest": "#ffffff",
-                        "on-secondary-container": "#09657f",
-                        "inverse-surface": "#30312c",
-                        "error-container": "#ffdad6",
-                        "tertiary-fixed": "#7dfabd",
-                        "secondary-fixed": "#baeaff",
-                        "primary": "#a1373a",
-                        "error": "#ba1a1a",
-                        "inverse-on-surface": "#f3f1e9",
-                        "on-primary-container": "#fffbff",
-                        "surface-bright": "#fbf9f1",
-                        "on-background": "#1b1c17",
-                        "tertiary-container": "#008558",
-                        "outline-variant": "#ddc0be",
-                        "on-primary": "#ffffff",
-                        "surface-variant": "#e4e3db",
-                        "on-primary-fixed-variant": "#852227",
-                        "on-tertiary-fixed-variant": "#005235",
-                        "secondary-fixed-dim": "#89d0ed",
-                        "outline": "#8a7170",
-                        "primary-fixed-dim": "#ffb3b0",
-                        "on-tertiary": "#ffffff",
-                        "surface-tint": "#a53a3c",
-                        "on-surface-variant": "#574241",
-                        "primary-container": "#c24f50",
-                        "on-surface": "#1b1c17",
-                        "tertiary": "#006a45",
-                        "deep-rose": "#8D2E2E",
-                        "ink-black": "#2D2926",
-                        "primary-fixed": "#ffdad8",
-                        "on-primary-fixed": "#410007",
-                        "secondary": "#0c6780",
-                        "on-secondary": "#ffffff",
-                        "terra-cotta": "#C05247",
-                        "secondary-container": "#9ae1ff",
-                        "surface": "#fbf9f1"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "base": "8px",
-                        "container-margin": "20px",
-                        "gutter": "16px",
-                        "section-gap": "40px",
-                        "card-padding": "16px"
-                    },
-                    "fontFamily": {
-                        "body-md": ["Be Vietnam Pro"],
-                        "headline-lg": ["Plus Jakarta Sans"],
-                        "headline-xl": ["Plus Jakarta Sans"],
-                        "label-sm": ["Be Vietnam Pro"],
-                        "headline-lg-mobile": ["Plus Jakarta Sans"],
-                        "body-lg": ["Be Vietnam Pro"],
-                        "label-md": ["Be Vietnam Pro"],
-                        "headline-md": ["Plus Jakarta Sans"]
-                    },
-                    "fontSize": {
-                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
-                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
-                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
-                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
-                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
-                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
-                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
-                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
-                    }
-                },
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-tertiary-container': '#f6fff6',
+              'soft-pink': '#F4B9B2',
+              background: '#fbf9f1',
+              'inverse-primary': '#ffb3b0',
+              'on-tertiary-fixed': '#002113',
+              'on-secondary-fixed-variant': '#004d62',
+              'on-error-container': '#93000a',
+              'surface-dim': '#dcdad2',
+              'surface-container-high': '#eae8e0',
+              'surface-container-low': '#f5f4ec',
+              'surface-container-highest': '#e4e3db',
+              'on-error': '#ffffff',
+              'surface-container': '#f0eee6',
+              'tertiary-fixed-dim': '#5fdda2',
+              'on-secondary-fixed': '#001f29',
+              'sky-blue-muted': '#A5D8EA',
+              'surface-container-lowest': '#ffffff',
+              'on-secondary-container': '#09657f',
+              'inverse-surface': '#30312c',
+              'error-container': '#ffdad6',
+              'tertiary-fixed': '#7dfabd',
+              'secondary-fixed': '#baeaff',
+              primary: '#a1373a',
+              error: '#ba1a1a',
+              'inverse-on-surface': '#f3f1e9',
+              'on-primary-container': '#fffbff',
+              'surface-bright': '#fbf9f1',
+              'on-background': '#1b1c17',
+              'tertiary-container': '#008558',
+              'outline-variant': '#ddc0be',
+              'on-primary': '#ffffff',
+              'surface-variant': '#e4e3db',
+              'on-primary-fixed-variant': '#852227',
+              'on-tertiary-fixed-variant': '#005235',
+              'secondary-fixed-dim': '#89d0ed',
+              outline: '#8a7170',
+              'primary-fixed-dim': '#ffb3b0',
+              'on-tertiary': '#ffffff',
+              'surface-tint': '#a53a3c',
+              'on-surface-variant': '#574241',
+              'primary-container': '#c24f50',
+              'on-surface': '#1b1c17',
+              tertiary: '#006a45',
+              'deep-rose': '#8D2E2E',
+              'ink-black': '#2D2926',
+              'primary-fixed': '#ffdad8',
+              'on-primary-fixed': '#410007',
+              secondary: '#0c6780',
+              'on-secondary': '#ffffff',
+              'terra-cotta': '#C05247',
+              'secondary-container': '#9ae1ff',
+              surface: '#fbf9f1',
             },
-        }
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px',
+            },
+            spacing: {
+              base: '8px',
+              'container-margin': '20px',
+              gutter: '16px',
+              'section-gap': '40px',
+              'card-padding': '16px',
+            },
+            fontFamily: {
+              'body-md': ['Be Vietnam Pro'],
+              'headline-lg': ['Plus Jakarta Sans'],
+              'headline-xl': ['Plus Jakarta Sans'],
+              'label-sm': ['Be Vietnam Pro'],
+              'headline-lg-mobile': ['Plus Jakarta Sans'],
+              'body-lg': ['Be Vietnam Pro'],
+              'label-md': ['Be Vietnam Pro'],
+              'headline-md': ['Plus Jakarta Sans'],
+            },
+            fontSize: {
+              'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+              'headline-lg': [
+                '32px',
+                { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' },
+              ],
+              'headline-xl': [
+                '40px',
+                { lineHeight: '48px', letterSpacing: '-0.02em', fontWeight: '700' },
+              ],
+              'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+              'headline-lg-mobile': ['28px', { lineHeight: '34px', fontWeight: '700' }],
+              'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+              'label-md': [
+                '14px',
+                { lineHeight: '20px', letterSpacing: '0.02em', fontWeight: '600' },
+              ],
+              'headline-md': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+            },
+          },
+        },
+      };
     </script>
-</head>
-<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
-<!-- Top Navigation Bar -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md shadow-sm shadow-primary/5">
-<nav class="flex justify-between items-center px-container-margin py-4 max-w-[1200px] mx-auto w-full">
-<div class="font-headline-md text-headline-md text-deep-rose flex items-center gap-2">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_florist</span>
-                TouRose
-            </div>
-<div class="hidden md:flex items-center gap-8 font-body-md text-body-md">
-<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Catalogue</a>
-<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Soutenir</a>
-<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">À propos</a>
-</div>
-<button class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-md hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20">
-                Télécharger l'app
+  </head>
+  <body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+    <!-- Top Navigation Bar -->
+    <header
+      class="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md shadow-sm shadow-primary/5"
+    >
+      <nav
+        class="flex justify-between items-center px-container-margin py-4 max-w-[1200px] mx-auto w-full"
+      >
+        <div class="font-headline-md text-headline-md text-deep-rose flex items-center gap-2">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1"
+            >local_florist</span
+          >
+          TouRose
+        </div>
+        <div class="hidden md:flex items-center gap-8 font-body-md text-body-md">
+          <a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Catalogue</a>
+          <a class="text-on-surface-variant hover:text-primary transition-colors" href="#"
+            >Soutenir</a
+          >
+          <a class="text-on-surface-variant hover:text-primary transition-colors" href="#"
+            >À propos</a
+          >
+        </div>
+        <button
+          class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-md hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20"
+        >
+          Télécharger l'app
+        </button>
+      </nav>
+    </header>
+    <main class="pt-24 pb-section-gap min-h-screen">
+      <div class="max-w-[1200px] mx-auto px-container-margin">
+        <!-- Hero Header & Tabs -->
+        <div class="mb-10">
+          <h1 class="font-headline-xl text-headline-xl text-ink-black mb-6">Découvre ta ville.</h1>
+          <div
+            class="flex items-center gap-4 border-b border-outline-variant overflow-x-auto no-scrollbar"
+          >
+            <button
+              class="px-6 py-4 text-primary font-bold border-b-2 border-primary whitespace-nowrap active:scale-95 transition-transform"
+              onclick="switchTab(this, 'events')"
+            >
+              Événements
             </button>
-</nav>
-</header>
-<main class="pt-24 pb-section-gap min-h-screen">
-<div class="max-w-[1200px] mx-auto px-container-margin">
-<!-- Hero Header & Tabs -->
-<div class="mb-10">
-<h1 class="font-headline-xl text-headline-xl text-ink-black mb-6">Découvre ta ville.</h1>
-<div class="flex items-center gap-4 border-b border-outline-variant overflow-x-auto no-scrollbar">
-<button class="px-6 py-4 text-primary font-bold border-b-2 border-primary whitespace-nowrap active:scale-95 transition-transform" onclick="switchTab(this, 'events')">Événements</button>
-<button class="px-6 py-4 text-on-surface-variant hover:text-primary font-medium whitespace-nowrap active:scale-95 transition-transform" onclick="switchTab(this, 'places')">Lieux</button>
-<button class="px-6 py-4 text-on-surface-variant hover:text-primary font-medium whitespace-nowrap active:scale-95 transition-transform" onclick="switchTab(this, 'collections')">Collections</button>
-</div>
-</div>
-<!-- Search & Filters -->
-<div class="flex flex-col gap-6 mb-12">
-<div class="flex flex-col md:flex-row gap-4 items-center">
-<div class="relative w-full md:flex-1">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input class="w-full pl-12 pr-4 py-4 bg-soft-pink/10 border-none rounded-xl focus:ring-2 focus:ring-secondary/30 text-body-md text-ink-black placeholder:text-on-surface-variant/60" placeholder="Un secret bien gardé, une expo..." type="text"/>
-</div>
-<div class="flex items-center gap-2 w-full md:w-auto">
-<button class="flex items-center gap-2 px-5 py-3.5 bg-surface-container-high rounded-xl text-on-surface hover:bg-surface-container-highest transition-colors font-label-md">
-<span class="material-symbols-outlined text-[20px]">tune</span>
-                            Filtres
-                        </button>
-</div>
-</div>
-<div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
-<span class="text-label-md text-on-surface-variant mr-2 shrink-0">Populaire :</span>
-<button class="px-4 py-2 bg-sky-blue-muted/20 text-secondary border border-secondary/20 rounded-full font-label-sm hover:bg-secondary/10 transition-colors whitespace-nowrap">Ce week-end</button>
-<button class="px-4 py-2 bg-soft-pink/20 text-primary border border-primary/20 rounded-full font-label-sm hover:bg-primary/10 transition-colors whitespace-nowrap">Gratuit</button>
-<button class="px-4 py-2 bg-tertiary/10 text-tertiary border border-tertiary/20 rounded-full font-label-sm hover:bg-tertiary/20 transition-colors whitespace-nowrap">Extérieur</button>
-<button class="px-4 py-2 bg-surface-container-high text-on-surface-variant border border-outline-variant/30 rounded-full font-label-sm hover:bg-surface-container-highest transition-colors whitespace-nowrap">Distance</button>
-</div>
-<div class="flex justify-between items-center">
-<p class="text-body-md text-on-surface-variant"><span class="font-bold text-ink-black" id="result-count">12</span> pépites trouvées à Toulouse</p>
-<div class="flex items-center gap-2 text-label-md text-on-surface-variant">
-<span>Trier par :</span>
-<select class="bg-transparent border-none font-bold text-ink-black focus:ring-0 p-0 cursor-pointer">
-<option>Pertinence</option>
-<option>Plus récent</option>
-<option>Prix croissant</option>
-</select>
-</div>
-</div>
-</div>
-<!-- Content Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-gutter gap-y-10" id="catalog-grid">
-<!-- Card 1 -->
-<article class="group cursor-pointer">
-<div class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A sun-drenched close-up of pink terracotta brick walls in Toulouse, France. The warm golden light of late afternoon illuminates the texture of the old masonry. In the foreground, a vibrant green potted plant with lush leaves adds a natural contrast. The overall aesthetic is warm, local, and inviting, following a minimalist Mediterranean light-mode palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJvCwhAR_nb2L69SdFeJmEoHJLbH6bkxahxV1mymtb6q6r2TqFJa4qvaZIUtMVsOBeAoWaOMmhFmN0Jqpix1SFMUAqioGDvcXvJyYJWSNkt9J4PeFFm33BN337VFQ2A99yXJY5bjKr-z6tSPjxK-gwXVVHrtCzQGPKwHST2AnQ8PxenFi-EnwwrXHesqp74wVcP3TDuSzDwjn09Xi83YYLQR10m7xKe5nfWBYKy9z2wnqKaWGoJ1gl6SRbQkqsobwooSikxXGftEo"/>
-<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-primary font-bold">Gratuit</div>
-<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent">
-<span class="text-white/80 text-label-sm font-medium uppercase tracking-wider">Expo • Musée des Augustins</span>
-</div>
-</div>
-<h3 class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors">Les Secrets de la Brique Rose</h3>
-<p class="text-on-surface-variant text-body-md mt-1">Samedi 14 Octobre, 14:00</p>
-</article>
-<!-- Card 2 -->
-<article class="group cursor-pointer">
-<div class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A peaceful courtyard in a hidden mansion in Toulouse, featuring a central stone fountain and delicate climbing roses along the walls. The scene is bathed in soft, diffused morning light, creating a serene and private atmosphere. The color palette emphasizes soft pinks, cream, and deep greens, maintaining a high-end, tactile, and paper-like quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV-VuQdPbzTobX0E-ZNE9pzHtBorcZwYNN5N0Ec4VqR95O9-zqqVveFErTAYXEXX55pP8t55SualggHyLtmc-wq3sNmr5mPTA0zzBgc5tg-n5tzdVKh27Hx9xufVnw5nv4EWTkRplSBygoUZAPsjRLqwak2k6OsS6bwvt1pqedQ_wzZtgNVBdBj2oZOp_DMzAnpWOw52yXp_jhYqBPRHD5Mq8F0hWRVDfdm5ojkKmjjveHUCjXXmfkm9YNlzL7qrqfam3XOeHvOgQ"/>
-<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-secondary font-bold">8€</div>
-<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent">
-<span class="text-white/80 text-label-sm font-medium uppercase tracking-wider">Lieu Insolite • Carmes</span>
-</div>
-</div>
-<h3 class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors">Cour Intérieure du XVIIème</h3>
-<p class="text-on-surface-variant text-body-md mt-1">Ouvert ce dimanche</p>
-</article>
-<!-- Card 3 -->
-<article class="group cursor-pointer">
-<div class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A wide-angle landscape shot of the Garonne river at sunset, with the iconic Pont Neuf bridge spanning across the water. The sky is a beautiful blend of soft pink and orange hues. People are lounging on the grass banks, creating a relaxed, community-focused vibe. The lighting is golden and warm, capturing the essence of Toulouse as the Ville Rose in a minimalist digital art style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzJm3jGwko2sF0cARgBSSevKtmDp8n3cmtkgXaF_KP4kXOQJRIUDoMzrR3NK-Olv9fXtu6Sx6Ii_zi0NHPaCaQMz5VNWytXESQSkI0wTPyUmGk8SPifR0kvKYi64qPQ9Ylq07VRKPbGAUxis_bj4CbA8Ka_f3ezyie6KeEgC2mgjgmzVwSk5Cwb1Rm_ud8CvDT4KrV7onmoZ3c1wccMgubiaeW-cBaWqOzVtJiHwUl_e-9WH_x3aR11xoEt6Iz3eGfxAa52DtC9UQ"/>
-<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-primary font-bold">Gratuit</div>
-<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent">
-<span class="text-white/80 text-label-sm font-medium uppercase tracking-wider">Plein air • Quai de la Daurade</span>
-</div>
-</div>
-<h3 class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors">Pique-Nique Acoustique</h3>
-<p class="text-on-surface-variant text-body-md mt-1">Ce soir, 19:30</p>
-</article>
-<!-- Card 4 (Bento inspired layout variant) -->
-<article class="group cursor-pointer">
-<div class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close-up of local market goods at Marché Victor Hugo in Toulouse. Fresh purple figs, local cheeses, and artisanal bread are arranged beautifully on a rustic wooden table. The lighting is bright and natural, coming from high windows. The style is tactile, earthy, and warm, highlighting the human and community aspect of local food culture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnQxPaydrhYo7RhJNnoulCwJr4nbNleXe5tjdeFZtnX1vitgeDVr4BBxrj8RNSpI-JOhBIXsL8a5NSb5nMuNI-XR0PT7ZR_YDO15SeJBf1E4X1qKFlaT9WcQLMGXWuyJcKvR7mQCZlEspOm8JIIml2o1XBKCXvEKWpNJdOWudchjFUpBuUvB3QAZuFbkelN8Eu6_6mWuqu21o2SXlTVG9aMjJ6xLCP0AHyppgwUbQ_20aZDVqIV6qGb1DAazWZjxVT37jCf3dAQwY"/>
-<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-secondary font-bold">Sur place</div>
-<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent">
-<span class="text-white/80 text-label-sm font-medium uppercase tracking-wider">Dégustation • Victor Hugo</span>
-</div>
-</div>
-<h3 class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors">Matinée du Terroir</h3>
-<p class="text-on-surface-variant text-body-md mt-1">Demain, 09:00</p>
-</article>
-<!-- Card 5 -->
-<article class="group cursor-pointer">
-<div class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A modern, minimalist library interior with tall shelves and warm light. A cozy reading nook by a window overlooking a typical Toulouse street with red brick architecture. The atmosphere is quiet, intellectual, and inviting. The design utilizes deep reds, soft creams, and paper-ink textures to create a sophisticated, local feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg2GXgfUVVzioSUGjeVDV6G3B23AgEAHgJybxcksYwgx7lUbVzFtzYT-qoTy2CRo7r-O-ZPF0vKKaiJnkgcDXCKpLiqLAh8Cbcit3p-zDxvbIpfiFSFAcdzASTOw4V67m2bD6nO-mZPJKkGlINUmV46hcKHli4tKTK27recqx7edu1HbR5HJakvjHl6XPbxBjjpd56P1skZP3Xy8QKKXTs-PgWKU95_JCKkYPtSu_XyniJ-rjZ3FspTRY9RtrunoLSMKFtaosVbEo"/>
-<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-primary font-bold">Gratuit</div>
-<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent">
-<span class="text-white/80 text-label-sm font-medium uppercase tracking-wider">Culture • Médiathèque José Cabanis</span>
-</div>
-</div>
-<h3 class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors">Lecture de Contes Occitans</h3>
-<p class="text-on-surface-variant text-body-md mt-1">Mercredi 18 Octobre</p>
-</article>
-<!-- Card 6 -->
-<article class="group cursor-pointer">
-<div class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A street art mural on a brick wall in Toulouse, featuring vibrant yet harmonious colors that blend with the pink city aesthetic. The mural shows a local scene with a modern twist. The lighting is even and soft. The style is artistic, human-centric, and contemporary, reflecting the city's living culture through a sophisticated digital lens." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsy1yarn9A5htOImiZN8A-q4xTUnz7az5ReerPiJogMZxicpseyZqDlvOQ1e8DmYdsMKWfX-h-emX1lZnAbwD0pxXfdFqDuxKOGqGNSuXzRxVUFo-bG6L2yMmWNT_PWkzCYbOyzzcfKrkj4QLS23mV2tkUqip8sPQHqFHU478U5qH6GMc6WlohSI5UnfPScCJ7F1zAnkO6Qgd3rcqKTpndCpoXesjaIpZr-V-aUktqIv1Rqg0miEwdbKyA6p_OsflZ_xfcR8FttaI"/>
-<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-primary font-bold">Extérieur</div>
-<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent">
-<span class="text-white/80 text-label-sm font-medium uppercase tracking-wider">Balade • Arnaud Bernard</span>
-</div>
-</div>
-<h3 class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors">Parcours Graff & Briques</h3>
-<p class="text-on-surface-variant text-body-md mt-1">Tous les jours, accès libre</p>
-</article>
-</div>
-<!-- Empty State (Hidden by default) -->
-<div class="hidden flex-col items-center justify-center py-20 text-center" id="empty-state">
-<div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center mb-6">
-<span class="material-symbols-outlined text-[48px] text-on-surface-variant/40">sentiment_dissatisfied</span>
-</div>
-<h3 class="font-headline-md text-headline-md text-ink-black mb-2">Mince, aucune pépite ici.</h3>
-<p class="text-on-surface-variant text-body-md max-w-sm">Essaye de modifier tes filtres ou ta recherche pour trouver d'autres trésors toulousains.</p>
-<button class="mt-6 text-primary font-bold underline underline-offset-4 hover:text-deep-rose transition-colors" onclick="resetFilters()">Réinitialiser tout</button>
-</div>
-<!-- Load More -->
-<div class="mt-20 flex flex-col items-center gap-12">
-<button class="px-10 py-4 border-2 border-terra-cotta text-terra-cotta rounded-full font-label-md hover:bg-terra-cotta hover:text-white transition-all active:scale-95" id="load-more">
-                    Charger plus de pépites
-                </button>
-<!-- Sticky Note App Download -->
-<div class="bg-soft-pink/30 p-8 rounded-lg shadow-lg max-w-md w-full sticky-note border-2 border-soft-pink/50 relative overflow-hidden">
-<div class="absolute -right-4 -top-4 w-12 h-12 bg-background rotate-45 border-b-2 border-l-2 border-soft-pink/50"></div>
-<h4 class="font-headline-md text-headline-md text-deep-rose mb-3 flex items-center gap-2">
-<span class="material-symbols-outlined">push_pin</span>
-                        Garde le catalogue en poche
-                    </h4>
-<p class="text-body-md text-ink-black/80 mb-6 italic font-medium">"C'est comme avoir un ami toulousain qui connaît tous les coins secrets, directement dans ton téléphone."</p>
-<div class="flex gap-4">
-<button class="bg-ink-black text-white px-4 py-2 rounded-lg flex items-center gap-2 text-label-sm hover:bg-black/80 transition-colors">
-<span class="material-symbols-outlined text-[18px]">file_download</span>
-                            App Store
-                        </button>
-<button class="bg-ink-black text-white px-4 py-2 rounded-lg flex items-center gap-2 text-label-sm hover:bg-black/80 transition-colors">
-<span class="material-symbols-outlined text-[18px]">play_arrow</span>
-                            Play Store
-                        </button>
-</div>
-</div>
-</div>
-</div>
-</main>
-<!-- Footer -->
-<footer class="bg-surface-container-low border-t border-outline-variant">
-<div class="flex flex-col md:flex-row justify-between items-center px-container-margin py-section-gap max-w-[1200px] mx-auto w-full">
-<div class="mb-8 md:mb-0 text-center md:text-left">
-<div class="font-headline-md text-headline-md text-deep-rose mb-2">TouRose</div>
-<p class="font-label-sm text-label-sm text-on-surface-variant">© TouRose. Sans compte obligatoire, toujours.</p>
-</div>
-<div class="flex gap-8 font-label-sm text-label-sm">
-<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Crédits</a>
-<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Confidentialité</a>
-<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Contact</a>
-</div>
-</div>
-</footer>
-<script>
-        function switchTab(element, tabId) {
-            // Update UI
-            const buttons = element.parentElement.querySelectorAll('button');
-            buttons.forEach(btn => {
-                btn.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
-                btn.classList.add('text-on-surface-variant', 'font-medium');
-            });
-            
-            element.classList.remove('text-on-surface-variant', 'font-medium');
-            element.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
-
-            // Mock filtering logic
-            if (tabId === 'collections') {
-                document.getElementById('catalog-grid').classList.add('hidden');
-                document.getElementById('empty-state').classList.remove('hidden');
-                document.getElementById('result-count').innerText = '0';
-                document.getElementById('load-more').classList.add('hidden');
-            } else {
-                document.getElementById('catalog-grid').classList.remove('hidden');
-                document.getElementById('empty-state').classList.add('hidden');
-                document.getElementById('result-count').innerText = tabId === 'places' ? '28' : '12';
-                document.getElementById('load-more').classList.remove('hidden');
-            }
-        }
-
-        function resetFilters() {
-            const firstTab = document.querySelector('.border-b button:first-child');
-            switchTab(firstTab, 'events');
-        }
-
-        // Add visual feedback for interactions
-        document.querySelectorAll('article').forEach(card => {
-            card.addEventListener('click', () => {
-                card.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    card.style.transform = 'scale(1)';
-                }, 100);
-            });
+            <button
+              class="px-6 py-4 text-on-surface-variant hover:text-primary font-medium whitespace-nowrap active:scale-95 transition-transform"
+              onclick="switchTab(this, 'places')"
+            >
+              Lieux
+            </button>
+            <button
+              class="px-6 py-4 text-on-surface-variant hover:text-primary font-medium whitespace-nowrap active:scale-95 transition-transform"
+              onclick="switchTab(this, 'collections')"
+            >
+              Collections
+            </button>
+          </div>
+        </div>
+        <!-- Search & Filters -->
+        <div class="flex flex-col gap-6 mb-12">
+          <div class="flex flex-col md:flex-row gap-4 items-center">
+            <div class="relative w-full md:flex-1">
+              <span
+                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant"
+                >search</span
+              >
+              <input
+                class="w-full pl-12 pr-4 py-4 bg-soft-pink/10 border-none rounded-xl focus:ring-2 focus:ring-secondary/30 text-body-md text-ink-black placeholder:text-on-surface-variant/60"
+                placeholder="Un secret bien gardé, une expo..."
+                type="text"
+              />
+            </div>
+            <div class="flex items-center gap-2 w-full md:w-auto">
+              <button
+                class="flex items-center gap-2 px-5 py-3.5 bg-surface-container-high rounded-xl text-on-surface hover:bg-surface-container-highest transition-colors font-label-md"
+              >
+                <span class="material-symbols-outlined text-[20px]">tune</span>
+                Filtres
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+            <span class="text-label-md text-on-surface-variant mr-2 shrink-0">Populaire :</span>
+            <button
+              class="px-4 py-2 bg-sky-blue-muted/20 text-secondary border border-secondary/20 rounded-full font-label-sm hover:bg-secondary/10 transition-colors whitespace-nowrap"
+            >
+              Ce week-end
+            </button>
+            <button
+              class="px-4 py-2 bg-soft-pink/20 text-primary border border-primary/20 rounded-full font-label-sm hover:bg-primary/10 transition-colors whitespace-nowrap"
+            >
+              Gratuit
+            </button>
+            <button
+              class="px-4 py-2 bg-tertiary/10 text-tertiary border border-tertiary/20 rounded-full font-label-sm hover:bg-tertiary/20 transition-colors whitespace-nowrap"
+            >
+              Extérieur
+            </button>
+            <button
+              class="px-4 py-2 bg-surface-container-high text-on-surface-variant border border-outline-variant/30 rounded-full font-label-sm hover:bg-surface-container-highest transition-colors whitespace-nowrap"
+            >
+              Distance
+            </button>
+          </div>
+          <div class="flex justify-between items-center">
+            <p class="text-body-md text-on-surface-variant">
+              <span class="font-bold text-ink-black" id="result-count">12</span> pépites trouvées à
+              Toulouse
+            </p>
+            <div class="flex items-center gap-2 text-label-md text-on-surface-variant">
+              <span>Trier par :</span>
+              <select
+                class="bg-transparent border-none font-bold text-ink-black focus:ring-0 p-0 cursor-pointer"
+              >
+                <option>Pertinence</option>
+                <option>Plus récent</option>
+                <option>Prix croissant</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- Content Grid -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-gutter gap-y-10"
+          id="catalog-grid"
+        >
+          <!-- Card 1 -->
+          <article class="group cursor-pointer">
+            <div
+              class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20"
+            >
+              <img
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                data-alt="A sun-drenched close-up of pink terracotta brick walls in Toulouse, France. The warm golden light of late afternoon illuminates the texture of the old masonry. In the foreground, a vibrant green potted plant with lush leaves adds a natural contrast. The overall aesthetic is warm, local, and inviting, following a minimalist Mediterranean light-mode palette."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJvCwhAR_nb2L69SdFeJmEoHJLbH6bkxahxV1mymtb6q6r2TqFJa4qvaZIUtMVsOBeAoWaOMmhFmN0Jqpix1SFMUAqioGDvcXvJyYJWSNkt9J4PeFFm33BN337VFQ2A99yXJY5bjKr-z6tSPjxK-gwXVVHrtCzQGPKwHST2AnQ8PxenFi-EnwwrXHesqp74wVcP3TDuSzDwjn09Xi83YYLQR10m7xKe5nfWBYKy9z2wnqKaWGoJ1gl6SRbQkqsobwooSikxXGftEo"
+              />
+              <div
+                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-primary font-bold"
+              >
+                Gratuit
+              </div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent"
+              >
+                <span class="text-white/80 text-label-sm font-medium uppercase tracking-wider"
+                  >Expo • Musée des Augustins</span
+                >
+              </div>
+            </div>
+            <h3
+              class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors"
+            >
+              Les Secrets de la Brique Rose
+            </h3>
+            <p class="text-on-surface-variant text-body-md mt-1">Samedi 14 Octobre, 14:00</p>
+          </article>
+          <!-- Card 2 -->
+          <article class="group cursor-pointer">
+            <div
+              class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20"
+            >
+              <img
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                data-alt="A peaceful courtyard in a hidden mansion in Toulouse, featuring a central stone fountain and delicate climbing roses along the walls. The scene is bathed in soft, diffused morning light, creating a serene and private atmosphere. The color palette emphasizes soft pinks, cream, and deep greens, maintaining a high-end, tactile, and paper-like quality."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV-VuQdPbzTobX0E-ZNE9pzHtBorcZwYNN5N0Ec4VqR95O9-zqqVveFErTAYXEXX55pP8t55SualggHyLtmc-wq3sNmr5mPTA0zzBgc5tg-n5tzdVKh27Hx9xufVnw5nv4EWTkRplSBygoUZAPsjRLqwak2k6OsS6bwvt1pqedQ_wzZtgNVBdBj2oZOp_DMzAnpWOw52yXp_jhYqBPRHD5Mq8F0hWRVDfdm5ojkKmjjveHUCjXXmfkm9YNlzL7qrqfam3XOeHvOgQ"
+              />
+              <div
+                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-secondary font-bold"
+              >
+                8€
+              </div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent"
+              >
+                <span class="text-white/80 text-label-sm font-medium uppercase tracking-wider"
+                  >Lieu Insolite • Carmes</span
+                >
+              </div>
+            </div>
+            <h3
+              class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors"
+            >
+              Cour Intérieure du XVIIème
+            </h3>
+            <p class="text-on-surface-variant text-body-md mt-1">Ouvert ce dimanche</p>
+          </article>
+          <!-- Card 3 -->
+          <article class="group cursor-pointer">
+            <div
+              class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20"
+            >
+              <img
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                data-alt="A wide-angle landscape shot of the Garonne river at sunset, with the iconic Pont Neuf bridge spanning across the water. The sky is a beautiful blend of soft pink and orange hues. People are lounging on the grass banks, creating a relaxed, community-focused vibe. The lighting is golden and warm, capturing the essence of Toulouse as the Ville Rose in a minimalist digital art style."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzJm3jGwko2sF0cARgBSSevKtmDp8n3cmtkgXaF_KP4kXOQJRIUDoMzrR3NK-Olv9fXtu6Sx6Ii_zi0NHPaCaQMz5VNWytXESQSkI0wTPyUmGk8SPifR0kvKYi64qPQ9Ylq07VRKPbGAUxis_bj4CbA8Ka_f3ezyie6KeEgC2mgjgmzVwSk5Cwb1Rm_ud8CvDT4KrV7onmoZ3c1wccMgubiaeW-cBaWqOzVtJiHwUl_e-9WH_x3aR11xoEt6Iz3eGfxAa52DtC9UQ"
+              />
+              <div
+                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-primary font-bold"
+              >
+                Gratuit
+              </div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent"
+              >
+                <span class="text-white/80 text-label-sm font-medium uppercase tracking-wider"
+                  >Plein air • Quai de la Daurade</span
+                >
+              </div>
+            </div>
+            <h3
+              class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors"
+            >
+              Pique-Nique Acoustique
+            </h3>
+            <p class="text-on-surface-variant text-body-md mt-1">Ce soir, 19:30</p>
+          </article>
+          <!-- Card 4 (Bento inspired layout variant) -->
+          <article class="group cursor-pointer">
+            <div
+              class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20"
+            >
+              <img
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                data-alt="Close-up of local market goods at Marché Victor Hugo in Toulouse. Fresh purple figs, local cheeses, and artisanal bread are arranged beautifully on a rustic wooden table. The lighting is bright and natural, coming from high windows. The style is tactile, earthy, and warm, highlighting the human and community aspect of local food culture."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnQxPaydrhYo7RhJNnoulCwJr4nbNleXe5tjdeFZtnX1vitgeDVr4BBxrj8RNSpI-JOhBIXsL8a5NSb5nMuNI-XR0PT7ZR_YDO15SeJBf1E4X1qKFlaT9WcQLMGXWuyJcKvR7mQCZlEspOm8JIIml2o1XBKCXvEKWpNJdOWudchjFUpBuUvB3QAZuFbkelN8Eu6_6mWuqu21o2SXlTVG9aMjJ6xLCP0AHyppgwUbQ_20aZDVqIV6qGb1DAazWZjxVT37jCf3dAQwY"
+              />
+              <div
+                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-secondary font-bold"
+              >
+                Sur place
+              </div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent"
+              >
+                <span class="text-white/80 text-label-sm font-medium uppercase tracking-wider"
+                  >Dégustation • Victor Hugo</span
+                >
+              </div>
+            </div>
+            <h3
+              class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors"
+            >
+              Matinée du Terroir
+            </h3>
+            <p class="text-on-surface-variant text-body-md mt-1">Demain, 09:00</p>
+          </article>
+          <!-- Card 5 -->
+          <article class="group cursor-pointer">
+            <div
+              class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20"
+            >
+              <img
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                data-alt="A modern, minimalist library interior with tall shelves and warm light. A cozy reading nook by a window overlooking a typical Toulouse street with red brick architecture. The atmosphere is quiet, intellectual, and inviting. The design utilizes deep reds, soft creams, and paper-ink textures to create a sophisticated, local feel."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg2GXgfUVVzioSUGjeVDV6G3B23AgEAHgJybxcksYwgx7lUbVzFtzYT-qoTy2CRo7r-O-ZPF0vKKaiJnkgcDXCKpLiqLAh8Cbcit3p-zDxvbIpfiFSFAcdzASTOw4V67m2bD6nO-mZPJKkGlINUmV46hcKHli4tKTK27recqx7edu1HbR5HJakvjHl6XPbxBjjpd56P1skZP3Xy8QKKXTs-PgWKU95_JCKkYPtSu_XyniJ-rjZ3FspTRY9RtrunoLSMKFtaosVbEo"
+              />
+              <div
+                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-primary font-bold"
+              >
+                Gratuit
+              </div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent"
+              >
+                <span class="text-white/80 text-label-sm font-medium uppercase tracking-wider"
+                  >Culture • Médiathèque José Cabanis</span
+                >
+              </div>
+            </div>
+            <h3
+              class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors"
+            >
+              Lecture de Contes Occitans
+            </h3>
+            <p class="text-on-surface-variant text-body-md mt-1">Mercredi 18 Octobre</p>
+          </article>
+          <!-- Card 6 -->
+          <article class="group cursor-pointer">
+            <div
+              class="relative rounded-2xl overflow-hidden aspect-[4/5] mb-4 card-shadow border border-soft-pink/20"
+            >
+              <img
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                data-alt="A street art mural on a brick wall in Toulouse, featuring vibrant yet harmonious colors that blend with the pink city aesthetic. The mural shows a local scene with a modern twist. The lighting is even and soft. The style is artistic, human-centric, and contemporary, reflecting the city's living culture through a sophisticated digital lens."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsy1yarn9A5htOImiZN8A-q4xTUnz7az5ReerPiJogMZxicpseyZqDlvOQ1e8DmYdsMKWfX-h-emX1lZnAbwD0pxXfdFqDuxKOGqGNSuXzRxVUFo-bG6L2yMmWNT_PWkzCYbOyzzcfKrkj4QLS23mV2tkUqip8sPQHqFHU478U5qH6GMc6WlohSI5UnfPScCJ7F1zAnkO6Qgd3rcqKTpndCpoXesjaIpZr-V-aUktqIv1Rqg0miEwdbKyA6p_OsflZ_xfcR8FttaI"
+              />
+              <div
+                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-label-sm text-primary font-bold"
+              >
+                Extérieur
+              </div>
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-ink-black/80 to-transparent"
+              >
+                <span class="text-white/80 text-label-sm font-medium uppercase tracking-wider"
+                  >Balade • Arnaud Bernard</span
+                >
+              </div>
+            </div>
+            <h3
+              class="font-headline-md text-headline-md text-ink-black group-hover:text-primary transition-colors"
+            >
+              Parcours Graff & Briques
+            </h3>
+            <p class="text-on-surface-variant text-body-md mt-1">Tous les jours, accès libre</p>
+          </article>
+        </div>
+        <!-- Empty State (Hidden by default) -->
+        <div class="hidden flex-col items-center justify-center py-20 text-center" id="empty-state">
+          <div
+            class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center mb-6"
+          >
+            <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40"
+              >sentiment_dissatisfied</span
+            >
+          </div>
+          <h3 class="font-headline-md text-headline-md text-ink-black mb-2">
+            Mince, aucune pépite ici.
+          </h3>
+          <p class="text-on-surface-variant text-body-md max-w-sm">
+            Essaye de modifier tes filtres ou ta recherche pour trouver d'autres trésors
+            toulousains.
+          </p>
+          <button
+            class="mt-6 text-primary font-bold underline underline-offset-4 hover:text-deep-rose transition-colors"
+            onclick="resetFilters()"
+          >
+            Réinitialiser tout
+          </button>
+        </div>
+        <!-- Load More -->
+        <div class="mt-20 flex flex-col items-center gap-12">
+          <button
+            class="px-10 py-4 border-2 border-terra-cotta text-terra-cotta rounded-full font-label-md hover:bg-terra-cotta hover:text-white transition-all active:scale-95"
+            id="load-more"
+          >
+            Charger plus de pépites
+          </button>
+          <!-- Sticky Note App Download -->
+          <div
+            class="bg-soft-pink/30 p-8 rounded-lg shadow-lg max-w-md w-full sticky-note border-2 border-soft-pink/50 relative overflow-hidden"
+          >
+            <div
+              class="absolute -right-4 -top-4 w-12 h-12 bg-background rotate-45 border-b-2 border-l-2 border-soft-pink/50"
+            ></div>
+            <h4
+              class="font-headline-md text-headline-md text-deep-rose mb-3 flex items-center gap-2"
+            >
+              <span class="material-symbols-outlined">push_pin</span>
+              Garde le catalogue en poche
+            </h4>
+            <p class="text-body-md text-ink-black/80 mb-6 italic font-medium">
+              "C'est comme avoir un ami toulousain qui connaît tous les coins secrets, directement
+              dans ton téléphone."
+            </p>
+            <div class="flex gap-4">
+              <button
+                class="bg-ink-black text-white px-4 py-2 rounded-lg flex items-center gap-2 text-label-sm hover:bg-black/80 transition-colors"
+              >
+                <span class="material-symbols-outlined text-[18px]">file_download</span>
+                App Store
+              </button>
+              <button
+                class="bg-ink-black text-white px-4 py-2 rounded-lg flex items-center gap-2 text-label-sm hover:bg-black/80 transition-colors"
+              >
+                <span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                Play Store
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-surface-container-low border-t border-outline-variant">
+      <div
+        class="flex flex-col md:flex-row justify-between items-center px-container-margin py-section-gap max-w-[1200px] mx-auto w-full"
+      >
+        <div class="mb-8 md:mb-0 text-center md:text-left">
+          <div class="font-headline-md text-headline-md text-deep-rose mb-2">TouRose</div>
+          <p class="font-label-sm text-label-sm text-on-surface-variant">
+            © TouRose. Sans compte obligatoire, toujours.
+          </p>
+        </div>
+        <div class="flex gap-8 font-label-sm text-label-sm">
+          <a class="text-on-surface-variant hover:text-secondary transition-colors" href="#"
+            >Crédits</a
+          >
+          <a class="text-on-surface-variant hover:text-secondary transition-colors" href="#"
+            >Confidentialité</a
+          >
+          <a class="text-on-surface-variant hover:text-secondary transition-colors" href="#"
+            >Contact</a
+          >
+        </div>
+      </div>
+    </footer>
+    <script>
+      function switchTab(element, tabId) {
+        // Update UI
+        const buttons = element.parentElement.querySelectorAll('button');
+        buttons.forEach((btn) => {
+          btn.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+          btn.classList.add('text-on-surface-variant', 'font-medium');
         });
+
+        element.classList.remove('text-on-surface-variant', 'font-medium');
+        element.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+
+        // Mock filtering logic
+        if (tabId === 'collections') {
+          document.getElementById('catalog-grid').classList.add('hidden');
+          document.getElementById('empty-state').classList.remove('hidden');
+          document.getElementById('result-count').innerText = '0';
+          document.getElementById('load-more').classList.add('hidden');
+        } else {
+          document.getElementById('catalog-grid').classList.remove('hidden');
+          document.getElementById('empty-state').classList.add('hidden');
+          document.getElementById('result-count').innerText = tabId === 'places' ? '28' : '12';
+          document.getElementById('load-more').classList.remove('hidden');
+        }
+      }
+
+      function resetFilters() {
+        const firstTab = document.querySelector('.border-b button:first-child');
+        switchTab(firstTab, 'events');
+      }
+
+      // Add visual feedback for interactions
+      document.querySelectorAll('article').forEach((card) => {
+        card.addEventListener('click', () => {
+          card.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+            card.style.transform = 'scale(1)';
+          }, 100);
+        });
+      });
     </script>
-</body></html>
+  </body>
+</html>

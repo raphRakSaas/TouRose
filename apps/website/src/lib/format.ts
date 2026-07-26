@@ -71,7 +71,11 @@ export function formatEventDateCompact(isoDate: string | null | undefined): stri
   const eventDate = new Date(isoDate);
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const eventDayStart = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+  const eventDayStart = new Date(
+    eventDate.getFullYear(),
+    eventDate.getMonth(),
+    eventDate.getDate(),
+  );
   const dayDiff = Math.round((eventDayStart.getTime() - todayStart.getTime()) / 86_400_000);
 
   if (dayDiff === 0) {
@@ -110,7 +114,10 @@ export function formatEventSchedule(
   let timeLabel = startTime;
 
   if (endsAt) {
-    const endTime = new Date(endsAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    const endTime = new Date(endsAt).toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
     timeLabel = `${startTime} — ${endTime}`;
   }
 
