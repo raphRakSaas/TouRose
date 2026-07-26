@@ -1,5 +1,6 @@
 ---
 import AppScreenshotCarousel from '../components/AppScreenshotCarousel.astro';
+import HomeMobile from '../components/HomeMobile.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import {
   STITCH_APP_STORE_BADGE,
@@ -12,7 +13,9 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
 ---
 
 <BaseLayout title={`TouRose — ${SITE_TAGLINE}`}>
-  <div class="overflow-x-hidden">
+  <HomeMobile />
+
+  <div class="home-desktop hidden overflow-x-hidden md:block">
     <section class="relative flex min-h-[90vh] items-center px-container-margin pt-24 pb-20">
       <div class="absolute inset-0 z-0">
         <img
@@ -314,6 +317,9 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const desktopHome = document.querySelector('.home-desktop');
+      if (!desktopHome) return;
+
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -327,7 +333,7 @@ import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/s
         { threshold: 0.15, rootMargin: '0px 0px -50px 0px' },
       );
 
-      document.querySelectorAll('section > div').forEach((element) => {
+      desktopHome.querySelectorAll('section > div').forEach((element) => {
         element.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-12');
         observer.observe(element);
       });

@@ -11,6 +11,12 @@
       "path": "DESIGN/stitch-tourose-website/accueil.html"
     },
     {
+      "screenId": "d91173f592d94ed4a0794ea7582fa69b",
+      "fileName": "accueil-mobile.html",
+      "title": "Accueil (Mobile)",
+      "path": "DESIGN/stitch-tourose-website/accueil-mobile.html"
+    },
+    {
       "screenId": "55c4a24b97b5496383da9fcb384bbd7e",
       "fileName": "catalogue.html",
       "title": "Catalogue",

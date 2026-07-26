@@ -18,6 +18,11 @@ const outputDir = join(
 
 const screens = [
   { screenId: '7c778d4fdde1492a8c5ebe0c4ef1f0b1', fileName: 'accueil.html', title: 'Accueil' },
+  {
+    screenId: 'd91173f592d94ed4a0794ea7582fa69b',
+    fileName: 'accueil-mobile.html',
+    title: 'Accueil (Mobile)',
+  },
   { screenId: '55c4a24b97b5496383da9fcb384bbd7e', fileName: 'catalogue.html', title: 'Catalogue' },
   { screenId: '487a83eb749a4a4b82ec9a35f1b6200d', fileName: 'apropos.html', title: 'À propos' },
   { screenId: 'b8824ccc2d9945f1ab9801918e3a2900', fileName: 'soutien.html', title: 'Soutenir' },

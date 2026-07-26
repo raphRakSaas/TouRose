@@ -1,15 +1,28 @@
 ---
 import { APP_SCREENSHOTS } from '../lib/app-screenshots';
+
+interface Props {
+  dotTone?: 'light' | 'dark';
+  compact?: boolean;
+}
+
+const { dotTone = 'dark', compact = false } = Astro.props;
+const dotActiveClass = dotTone === 'light' ? 'bg-deep-rose' : 'bg-white';
+const dotInactiveClass = dotTone === 'light' ? 'bg-deep-rose/30' : 'bg-white/30';
+const imageClass = compact
+  ? 'h-auto w-[220px] max-w-[58vw] drop-shadow-lg'
+  : 'h-auto w-[280px] max-w-[72vw] drop-shadow-2xl';
+const carouselClass = compact ? 'w-full max-w-[240px]' : 'w-full max-w-[340px]';
 ---
 
-<div class="app-screenshot-carousel w-full max-w-[340px]" data-app-screenshot-carousel>
+<div class:list={['app-screenshot-carousel', carouselClass]} data-app-screenshot-carousel data-dot-active={dotActiveClass} data-dot-inactive={dotInactiveClass}>
   <div class="app-screenshot-viewport overflow-hidden">
     <div class="app-screenshot-track flex w-max gap-8">
       {
         APP_SCREENSHOTS.map((screenshot) => (
           <div class="app-screenshot-slide shrink-0">
             <img
-              class="h-auto w-[280px] max-w-[72vw] drop-shadow-2xl"
+              class={imageClass}
               src={screenshot.src}
               alt={screenshot.alt}
               loading="lazy"
@@ -27,7 +40,11 @@ import { APP_SCREENSHOTS } from '../lib/app-screenshots';
       APP_SCREENSHOTS.map((screenshot, index) => (
         <button
           type="button"
-          class="app-screenshot-dot h-2 w-2 rounded-full bg-white/30 transition-all"
+          class:list={[
+            'app-screenshot-dot h-2 w-2 rounded-full transition-all',
+            index === 0 ? dotActiveClass : dotInactiveClass,
+            index === 0 ? 'w-6' : 'w-2',
+          ]}
           data-screenshot-dot={index}
           aria-label={screenshot.alt}
           aria-selected={index === 0 ? 'true' : 'false'}
@@ -39,6 +56,8 @@ import { APP_SCREENSHOTS } from '../lib/app-screenshots';
 
 <script>
   document.querySelectorAll('[data-app-screenshot-carousel]').forEach((carouselRoot) => {
+    if (!(carouselRoot instanceof HTMLElement)) return;
+
     const track = carouselRoot.querySelector('.app-screenshot-track') as HTMLElement | null;
     const dots = Array.from(carouselRoot.querySelectorAll('[data-screenshot-dot]')) as HTMLButtonElement[];
     if (!track || dots.length === 0) {
@@ -58,13 +77,16 @@ import { APP_SCREENSHOTS } from '../lib/app-screenshots';
       return firstSlide.offsetWidth + gap;
     };
 
+    const dotActiveClass = carouselRoot.dataset.dotActive ?? 'bg-white';
+    const dotInactiveClass = carouselRoot.dataset.dotInactive ?? 'bg-white/30';
+
     const updateDots = (index: number) => {
       dots.forEach((dot, dotIndex) => {
         const isActive = dotIndex === index;
         dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
-        dot.classList.toggle('bg-white', isActive);
+        dot.classList.toggle(dotActiveClass, isActive);
         dot.classList.toggle('w-6', isActive);
-        dot.classList.toggle('bg-white/30', !isActive);
+        dot.classList.toggle(dotInactiveClass, !isActive);
         dot.classList.toggle('w-2', !isActive);
       });
     };
