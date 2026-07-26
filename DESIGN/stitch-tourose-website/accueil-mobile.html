@@ -1,388 +1,560 @@
-<!DOCTYPE html>
+<!doctype html>
 
-<html class="light" lang="fr"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>TouRose - Toulouse à voir, à vivre, à aimer</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .text-shadow-sm {
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .texture-paper {
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
-        }
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        .bento-item-large {
-            grid-column: span 2;
-        }
+<html class="light" lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>TouRose - Toulouse à voir, à vivre, à aimer</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      .text-shadow-sm {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .texture-paper {
+        background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+      }
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .bento-item-large {
+        grid-column: span 2;
+      }
     </style>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "outline": "#8a7170",
-                        "surface-tint": "#a53a3c",
-                        "sky-blue-muted": "#A5D8EA",
-                        "error": "#ba1a1a",
-                        "surface-dim": "#dcdad2",
-                        "error-container": "#ffdad6",
-                        "surface-bright": "#fbf9f1",
-                        "on-primary-fixed-variant": "#852227",
-                        "on-tertiary-container": "#f6fff6",
-                        "outline-variant": "#ddc0be",
-                        "inverse-on-surface": "#f3f1e9",
-                        "on-primary-fixed": "#410007",
-                        "on-secondary-fixed-variant": "#004d62",
-                        "surface-container": "#f0eee6",
-                        "primary-fixed": "#ffdad8",
-                        "inverse-surface": "#30312c",
-                        "on-surface-variant": "#574241",
-                        "background": "#fbf9f1",
-                        "surface-container-high": "#eae8e0",
-                        "tertiary-container": "#008558",
-                        "surface": "#fbf9f1",
-                        "on-error-container": "#93000a",
-                        "secondary-fixed-dim": "#89d0ed",
-                        "terra-cotta": "#C05247",
-                        "on-tertiary-fixed-variant": "#005235",
-                        "on-tertiary-fixed": "#002113",
-                        "on-surface": "#1b1c17",
-                        "soft-pink": "#F4B9B2",
-                        "secondary": "#0c6780",
-                        "surface-container-highest": "#e4e3db",
-                        "surface-variant": "#e4e3db",
-                        "primary": "#a1373a",
-                        "tertiary": "#006a45",
-                        "on-error": "#ffffff",
-                        "primary-container": "#c24f50",
-                        "ink-black": "#2D2926",
-                        "secondary-container": "#9ae1ff",
-                        "on-background": "#1b1c17",
-                        "on-secondary-fixed": "#001f29",
-                        "tertiary-fixed-dim": "#5fdda2",
-                        "surface-container-low": "#f5f4ec",
-                        "tertiary-fixed": "#7dfabd",
-                        "on-secondary-container": "#09657f",
-                        "primary-fixed-dim": "#ffb3b0",
-                        "surface-container-lowest": "#ffffff",
-                        "inverse-primary": "#ffb3b0",
-                        "on-primary-container": "#fffbff",
-                        "deep-rose": "#8D2E2E",
-                        "on-secondary": "#ffffff",
-                        "secondary-fixed": "#baeaff",
-                        "on-primary": "#ffffff",
-                        "on-tertiary": "#ffffff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "2xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "container-margin": "20px",
-                        "section-gap": "40px",
-                        "card-padding": "16px",
-                        "base": "8px",
-                        "gutter": "16px"
-                    },
-                    "fontFamily": {
-                        "label-sm": ["Be Vietnam Pro"],
-                        "headline-xl": ["Plus Jakarta Sans"],
-                        "headline-md": ["Plus Jakarta Sans"],
-                        "body-md": ["Be Vietnam Pro"],
-                        "headline-lg-mobile": ["Plus Jakarta Sans"],
-                        "headline-lg": ["Plus Jakarta Sans"],
-                        "body-lg": ["Be Vietnam Pro"],
-                        "label-md": ["Be Vietnam Pro"]
-                    },
-                    "fontSize": {
-                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
-                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
-                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}]
-                    }
-                },
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              outline: '#8a7170',
+              'surface-tint': '#a53a3c',
+              'sky-blue-muted': '#A5D8EA',
+              error: '#ba1a1a',
+              'surface-dim': '#dcdad2',
+              'error-container': '#ffdad6',
+              'surface-bright': '#fbf9f1',
+              'on-primary-fixed-variant': '#852227',
+              'on-tertiary-container': '#f6fff6',
+              'outline-variant': '#ddc0be',
+              'inverse-on-surface': '#f3f1e9',
+              'on-primary-fixed': '#410007',
+              'on-secondary-fixed-variant': '#004d62',
+              'surface-container': '#f0eee6',
+              'primary-fixed': '#ffdad8',
+              'inverse-surface': '#30312c',
+              'on-surface-variant': '#574241',
+              background: '#fbf9f1',
+              'surface-container-high': '#eae8e0',
+              'tertiary-container': '#008558',
+              surface: '#fbf9f1',
+              'on-error-container': '#93000a',
+              'secondary-fixed-dim': '#89d0ed',
+              'terra-cotta': '#C05247',
+              'on-tertiary-fixed-variant': '#005235',
+              'on-tertiary-fixed': '#002113',
+              'on-surface': '#1b1c17',
+              'soft-pink': '#F4B9B2',
+              secondary: '#0c6780',
+              'surface-container-highest': '#e4e3db',
+              'surface-variant': '#e4e3db',
+              primary: '#a1373a',
+              tertiary: '#006a45',
+              'on-error': '#ffffff',
+              'primary-container': '#c24f50',
+              'ink-black': '#2D2926',
+              'secondary-container': '#9ae1ff',
+              'on-background': '#1b1c17',
+              'on-secondary-fixed': '#001f29',
+              'tertiary-fixed-dim': '#5fdda2',
+              'surface-container-low': '#f5f4ec',
+              'tertiary-fixed': '#7dfabd',
+              'on-secondary-container': '#09657f',
+              'primary-fixed-dim': '#ffb3b0',
+              'surface-container-lowest': '#ffffff',
+              'inverse-primary': '#ffb3b0',
+              'on-primary-container': '#fffbff',
+              'deep-rose': '#8D2E2E',
+              'on-secondary': '#ffffff',
+              'secondary-fixed': '#baeaff',
+              'on-primary': '#ffffff',
+              'on-tertiary': '#ffffff',
             },
-        }
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              '2xl': '1.5rem',
+              full: '9999px',
+            },
+            spacing: {
+              'container-margin': '20px',
+              'section-gap': '40px',
+              'card-padding': '16px',
+              base: '8px',
+              gutter: '16px',
+            },
+            fontFamily: {
+              'label-sm': ['Be Vietnam Pro'],
+              'headline-xl': ['Plus Jakarta Sans'],
+              'headline-md': ['Plus Jakarta Sans'],
+              'body-md': ['Be Vietnam Pro'],
+              'headline-lg-mobile': ['Plus Jakarta Sans'],
+              'headline-lg': ['Plus Jakarta Sans'],
+              'body-lg': ['Be Vietnam Pro'],
+              'label-md': ['Be Vietnam Pro'],
+            },
+            fontSize: {
+              'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+              'headline-xl': [
+                '40px',
+                { lineHeight: '48px', letterSpacing: '-0.02em', fontWeight: '700' },
+              ],
+              'headline-md': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+              'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+              'headline-lg-mobile': ['28px', { lineHeight: '34px', fontWeight: '700' }],
+              'headline-lg': [
+                '32px',
+                { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' },
+              ],
+              'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+              'label-md': [
+                '14px',
+                { lineHeight: '20px', letterSpacing: '0.02em', fontWeight: '600' },
+              ],
+            },
+          },
+        },
+      };
     </script>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
+    <style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
   </head>
-<body class="bg-background text-on-surface font-body-md selection:bg-soft-pink selection:text-deep-rose">
-<!-- Top Navigation Bar -->
-<header class="bg-surface sticky top-0 z-40 flex items-center justify-between px-container-margin h-16 w-full">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="menu">menu</span>
-<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-deep-rose">TouRose</h1>
-</div>
-<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-soft-pink/30">
-<img class="w-full h-full object-cover" data-alt="A warm, inviting close-up portrait of a friendly local guide in Toulouse, smiling at the camera with the pink brick architecture blurred in the background. The lighting is soft and golden hour style, emphasizing a welcoming, community-driven brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu2QRU9IImLIkf00HyJWCSC0BI2zR5dAl4XVs1TPm9rGw56j2Zr8-PK-Dg27pAQIV5ILff5JPFxMYxA2tP2HbF-R_El-qlqEzDeg25ROY2LEsRke2UrgriXxAcxOCD2WxqJuEv1jX8XdHuxJLJkbCfrObD4gVQft2btzm3RnO5SFHoAVBQs9FEbApepRbjhrXie8WlHsB9TGdLawTRfaO8FvruK8CpfDvJYID5LwIOpw1mtW1c023My3OeT6Me2B-VPf3w6cKOLjQ"/>
-</div>
-</header>
-<main class="pb-24">
-<!-- Hero Section -->
-<section class="relative h-[751px] flex flex-col justify-end px-container-margin pb-12 overflow-hidden">
-<div class="absolute inset-0 z-0">
-<img class="w-full h-full object-cover brightness-[0.7]" data-alt="A panoramic, romantic view of the Pont Neuf bridge in Toulouse at sunset, reflecting in the Garonne river. The sky is a blend of soft pinks and oranges, and the characteristic red terracotta bricks of the city are glowing. The style is cinematic yet grounded, evoking discovery and warmth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRUP4tZsbEwp0mPUk5v3V4dEABkjdwBDMiE7sryYd1FuS9LIRQD1NJEVxP3gwifa3I54n6LFjPCTd_3IZ1Un-GwecEgO2hDszJjVKU_g_h1Uc7ebw9n6oNiCzEg-BI9wqLX4XfSQPCgcz5lHvYA4TZQC86u8aOKoC-z72d0RPynznyTuR7R8FO549OJAGPFeoagzDKrixy68LD3IAcI7pc9-JeWbShkZx4fjqQ_HahxodsLElt7TSJY16qDT7Hz3X_XU_lvj65K3A"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-</div>
-<div class="relative z-10 space-y-6">
-<h2 class="font-headline-xl text-white text-shadow-sm leading-tight">Toulouse à voir, à vivre, à aimer</h2>
-<p class="text-white/90 font-body-lg">Redécouvre la Ville Rose à travers le regard de ceux qui l'aiment vraiment.</p>
-<div class="flex flex-col gap-3">
-<button class="bg-deep-rose text-white py-4 px-8 rounded-xl font-label-md flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform">
-<span class="material-symbols-outlined" data-icon="download">download</span>
-                        Télécharger l'App
-                    </button>
-<button class="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white py-4 px-8 rounded-xl font-label-md flex items-center justify-center gap-2 active:scale-95 transition-transform">
-                        Voir le catalogue
-                        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</button>
-</div>
-</div>
-</section>
-<!-- Paradoxe du Choix Section -->
-<section class="py-12 bg-surface-container-low px-container-margin">
-<div class="mb-8">
-<h3 class="font-headline-md text-deep-rose">Le paradoxe du choix ? On l'a résolu.</h3>
-<p class="text-on-surface-variant mt-2">Plus besoin de scroller des heures, on a sélectionné l'essentiel.</p>
-</div>
-<div class="grid grid-cols-3 gap-3">
-<!-- Category 1: Goût -->
-<div class="flex flex-col items-center gap-2">
-<div class="w-full aspect-square rounded-2xl bg-primary-container/20 border border-soft-pink flex items-center justify-center shadow-sm overflow-hidden relative">
-<span class="material-symbols-outlined text-primary text-3xl z-10" data-icon="restaurant" data-weight="fill" style="font-variation-settings: 'FILL' 1;">restaurant</span>
-<div class="absolute inset-0 opacity-20">
-<img class="w-full h-full object-cover" data-alt="A close-up shot of a traditional French pastry or a steaming hot cassoulet dish, emphasizing textures and appetizing warm colors typical of Toulouse cuisine. Minimalist composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQSpvO4k-hB1ZMFa74f3kdTaiyAlmZccyH3JidHa-NWH02fDH_vpYteFmGi1PaKcUkUhdF8jm_gCRltZqdpVQjCWNkHR4drJCgJ-D6gq1F1RJLgY8hAxqTt-xZOO5rFnWmYmu6ddVRji0vbOMx3uJgaHDjzPOK5cI9s5Zn1RViJtz9eLnwOt3eVf3788l90KEIHtTQl9deXmAwBGlKxgg6oIaqaIUlnIAFbxUrjzSWxS0WWuBbg45aOSgifNyA8HzmOU1rwjr8oI4"/>
-</div>
-</div>
-<span class="font-label-md text-on-surface">Goût</span>
-</div>
-<!-- Category 2: Balade -->
-<div class="flex flex-col items-center gap-2">
-<div class="w-full aspect-square rounded-2xl bg-secondary-container/20 border border-sky-blue-muted flex items-center justify-center shadow-sm overflow-hidden relative">
-<span class="material-symbols-outlined text-secondary text-3xl z-10" data-icon="directions_walk" data-weight="fill" style="font-variation-settings: 'FILL' 1;">directions_walk</span>
-<div class="absolute inset-0 opacity-20">
-<img class="w-full h-full object-cover" data-alt="A narrow, picturesque street in old Toulouse with pink bricks and blooming flowers under a clear blue sky. Low-angle perspective highlighting the city's architecture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGhcyDfODZNPjoGSR3q0ctCPLOk-TvQ6YZox46AqUy8-5za9Zoq8d_bOnCeWXymAe7x2cuL1iXpSnYf7a9fxi9V9MwWfuA908Hbgj5XOaTVRsG3PO4kWnRXkQUBKYsB1cYs9BS0RBc9sHSxouquP182f30N8-nEx9W7nDpMWmBU_atUvNfsoM42SiwUpXn4wNbjdk6Ywy7i5WQbSm0ZvKyNtoQs5jVes-637mqczw25C7ePsclwJKRPTkD1z3jkux0H_AvOeyoWAg"/>
-</div>
-</div>
-<span class="font-label-md text-on-surface">Balade</span>
-</div>
-<!-- Category 3: Culture -->
-<div class="flex flex-col items-center gap-2">
-<div class="w-full aspect-square rounded-2xl bg-tertiary-container/20 border border-tertiary-fixed-dim flex items-center justify-center shadow-sm overflow-hidden relative">
-<span class="material-symbols-outlined text-tertiary text-3xl z-10" data-icon="museum" data-weight="fill" style="font-variation-settings: 'FILL' 1;">museum</span>
-<div class="absolute inset-0 opacity-20">
-<img class="w-full h-full object-cover" data-alt="Artistic detail of a historical facade or a contemporary art piece in a Toulouse gallery. Warm lighting, sophisticated mood, clean edges." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCojlq26p2PoYA3ONlhtCciyNK7TRQpkhE83yoFHbKo2_-U2OuW1qrq7qrs2L7WU6rEK2aQyTA6MJaV2YAfKdX2rbEaE2Mi4rEXqdRvOtUU2K0CQF2_NtwUgE-gxUOIs2JfGipO5oCCL3j76um2i_1Qv1GjShA2_eDfoJCZxbSzT2YeCryoV6gbKt6I44S9N-vkP3CLlxOqiSD_Rq8YKJEb636-wc7H087xKqAWH_JBd_YiTAGAUrKDjQYSdOVKp_CCdYcDSV_RZEY"/>
-</div>
-</div>
-<span class="font-label-md text-on-surface">Culture</span>
-</div>
-</div>
-</section>
-<!-- Hésitations Card -->
-<section class="px-container-margin py-8">
-<div class="bg-primary-container text-on-primary-container p-6 rounded-2xl shadow-xl texture-paper border border-white/20">
-<h4 class="font-headline-md mb-4">Finies les hésitations</h4>
-<ul class="space-y-4">
-<li class="flex items-start gap-3">
-<span class="material-symbols-outlined bg-white/20 p-1 rounded-lg" data-icon="verified">verified</span>
-<div>
-<span class="font-bold block">Testé par nous</span>
-<span class="text-sm opacity-90">Pas d'avis truqués, seulement des vraies expériences toulousaines.</span>
-</div>
-</li>
-<li class="flex items-start gap-3">
-<span class="material-symbols-outlined bg-white/20 p-1 rounded-lg" data-icon="schedule">schedule</span>
-<div>
-<span class="font-bold block">Gagne du temps</span>
-<span class="text-sm opacity-90">L'itinéraire parfait généré en moins de 10 secondes.</span>
-</div>
-</li>
-<li class="flex items-start gap-3">
-<span class="material-symbols-outlined bg-white/20 p-1 rounded-lg" data-icon="local_offer">local_offer</span>
-<div>
-<span class="font-bold block">Bons plans exclusifs</span>
-<span class="text-sm opacity-90">Des avantages chez nos artisans partenaires préférés.</span>
-</div>
-</li>
-</ul>
-</div>
-</section>
-<!-- Bento Grid: Cœur Battant -->
-<section class="py-12 bg-surface px-container-margin">
-<div class="mb-6 flex justify-between items-end">
-<div>
-<h3 class="font-headline-md text-ink-black">Le cœur battant de Toulouse</h3>
-<p class="text-on-surface-variant text-sm">Les pépites du moment.</p>
-</div>
-<button class="text-primary font-label-md">Tout voir</button>
-</div>
-<div class="bento-grid">
-<div class="bento-item-large relative h-48 rounded-2xl overflow-hidden group">
-<img class="w-full h-full object-cover" data-alt="A cozy, authentic Toulouse bistro with red-checkered tablecloths and local wines displayed on shelves. The warm ambient light creates a welcoming atmosphere. High-end food photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4tKojzD5cMYe7i7nr89obt14s6OYu33oq4gTnoble1e2yFI5RllvicrZQ_xAgirdjai4IpTpstLKSPV5L2rZACB3sk1ueNg96PcjvSidkAWWzoLRrQJDao-qc_g4DnZIL-VqjmQO2yVezcChW-6pwRCkovFYCappaM71kphrv00P4uJafQvKzQ752FPdRZziGHdHeW0LTX2VrF-k4lspt09flj-r5UJRQ1-ERSA5kxtUJrG4qR5cui-oSvf8LII_TSvsD3ABI8W8"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-<div class="absolute bottom-4 left-4 text-white">
-<span class="bg-terra-cotta text-[10px] uppercase font-bold px-2 py-0.5 rounded-full mb-2 inline-block">Coup de cœur</span>
-<p class="font-bold">Chez Émile : Le vrai Cassoulet</p>
-</div>
-</div>
-<div class="relative h-40 rounded-2xl overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="Close-up of vibrant street art in the Arnaud Bernard district of Toulouse. Colorful murals against old brick walls, urban and artistic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEG4sBnWROtL4rg0OVBBMmk3X09pY6regxVG1saLRX_rZDecKD10aZQps3FeiXyrSNW0Gk8Emh0TWqeLSK-YuHWoOrVQuqVkz_WXrLitEOoPO54XvewKztIiLN0kkvlBXm6ngOI28A8iNehR24z7CWwv0d3eCaqp2NDBkHE67t_5X0lIzOCm0vn2HtKlFfnt5s24yy33Nizpsv4HfSfzY7IfuHzAli0qqbUVVCXba6Cd98jx11PYQVTmvFqu-xg9Qw7QCETwqBEXs"/>
-<div class="absolute bottom-3 left-3 text-white text-xs font-bold">Art de Rue</div>
-</div>
-<div class="relative h-40 rounded-2xl overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="A hidden interior courtyard in a private mansion (Hôtel Particulier) in Toulouse with Renaissance architecture and a peaceful garden. Soft shadows and elegant details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoPwfOT6JZT4fWU9WJ-FJF9nplrvFIuoCRwtKqiap9AdnQezSLUlimJ-S42zBpBzxgCeRV7R6o4dF_WpCjnyzrlDsHx8qCK4NoQLLuMIu0eG_SDGYI9RnXg2OxE_Z1lv5IGFuv9v8-Y-Nklpwgei3kBQv3EFXWSc9hUjRbrA99-2BQ_7JaoyaDABkuHKq9-bBaw-NcuQgXPeq5eZ4CyRba8VMaVEpbAkzspIAzlGoP8ZLJjRcp3M6MR4Jmq8XxeeDo_IOwwy3Ywd8"/>
-<div class="absolute bottom-3 left-3 text-white text-xs font-bold">Cours Secrètes</div>
-</div>
-</div>
-</section>
-<!-- Pioneer CTA -->
-<section class="mx-container-margin my-12 p-8 rounded-3xl bg-soft-pink/20 border-2 border-dashed border-soft-pink relative overflow-hidden text-center">
-<div class="absolute top-0 right-0 w-24 h-24 bg-soft-pink/30 rounded-full -mr-12 -mt-12"></div>
-<h3 class="font-headline-lg-mobile text-deep-rose mb-4">Tu es un pionnier ?</h3>
-<p class="text-on-surface-variant mb-6">Aide-nous à construire le guide parfait. Donne ton avis sur nos parcours et gagne des récompenses.</p>
-<button class="bg-deep-rose text-white px-8 py-3 rounded-full font-label-md shadow-lg active:scale-95 transition-transform">
-                Je participe !
+  <body
+    class="bg-background text-on-surface font-body-md selection:bg-soft-pink selection:text-deep-rose"
+  >
+    <!-- Top Navigation Bar -->
+    <header
+      class="bg-surface sticky top-0 z-40 flex items-center justify-between px-container-margin h-16 w-full"
+    >
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary cursor-pointer" data-icon="menu"
+          >menu</span
+        >
+        <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-deep-rose">TouRose</h1>
+      </div>
+      <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-soft-pink/30">
+        <img
+          class="w-full h-full object-cover"
+          data-alt="A warm, inviting close-up portrait of a friendly local guide in Toulouse, smiling at the camera with the pink brick architecture blurred in the background. The lighting is soft and golden hour style, emphasizing a welcoming, community-driven brand identity."
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu2QRU9IImLIkf00HyJWCSC0BI2zR5dAl4XVs1TPm9rGw56j2Zr8-PK-Dg27pAQIV5ILff5JPFxMYxA2tP2HbF-R_El-qlqEzDeg25ROY2LEsRke2UrgriXxAcxOCD2WxqJuEv1jX8XdHuxJLJkbCfrObD4gVQft2btzm3RnO5SFHoAVBQs9FEbApepRbjhrXie8WlHsB9TGdLawTRfaO8FvruK8CpfDvJYID5LwIOpw1mtW1c023My3OeT6Me2B-VPf3w6cKOLjQ"
+        />
+      </div>
+    </header>
+    <main class="pb-24">
+      <!-- Hero Section -->
+      <section
+        class="relative h-[751px] flex flex-col justify-end px-container-margin pb-12 overflow-hidden"
+      >
+        <div class="absolute inset-0 z-0">
+          <img
+            class="w-full h-full object-cover brightness-[0.7]"
+            data-alt="A panoramic, romantic view of the Pont Neuf bridge in Toulouse at sunset, reflecting in the Garonne river. The sky is a blend of soft pinks and oranges, and the characteristic red terracotta bricks of the city are glowing. The style is cinematic yet grounded, evoking discovery and warmth."
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRUP4tZsbEwp0mPUk5v3V4dEABkjdwBDMiE7sryYd1FuS9LIRQD1NJEVxP3gwifa3I54n6LFjPCTd_3IZ1Un-GwecEgO2hDszJjVKU_g_h1Uc7ebw9n6oNiCzEg-BI9wqLX4XfSQPCgcz5lHvYA4TZQC86u8aOKoC-z72d0RPynznyTuR7R8FO549OJAGPFeoagzDKrixy68LD3IAcI7pc9-JeWbShkZx4fjqQ_HahxodsLElt7TSJY16qDT7Hz3X_XU_lvj65K3A"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"
+          ></div>
+        </div>
+        <div class="relative z-10 space-y-6">
+          <h2 class="font-headline-xl text-white text-shadow-sm leading-tight">
+            Toulouse à voir, à vivre, à aimer
+          </h2>
+          <p class="text-white/90 font-body-lg">
+            Redécouvre la Ville Rose à travers le regard de ceux qui l'aiment vraiment.
+          </p>
+          <div class="flex flex-col gap-3">
+            <button
+              class="bg-deep-rose text-white py-4 px-8 rounded-xl font-label-md flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform"
+            >
+              <span class="material-symbols-outlined" data-icon="download">download</span>
+              Télécharger l'App
             </button>
-</section>
-<!-- App Mockup Section -->
-<section class="py-12 bg-surface-container px-container-margin overflow-hidden">
-<h3 class="font-headline-md text-center mb-8">Tes suggestions du jour</h3>
-<div class="relative max-w-[280px] mx-auto bg-ink-black rounded-[3rem] p-3 shadow-2xl border-4 border-surface-container-highest">
-<!-- Phone Inner Screen -->
-<div class="bg-background rounded-[2.5rem] overflow-hidden min-h-[500px] flex flex-col">
-<!-- App Header -->
-<div class="pt-8 px-4 pb-4 bg-primary text-white">
-<p class="text-[10px] opacity-80 uppercase tracking-widest">Aujourd'hui</p>
-<h4 class="text-lg font-bold">Hello, Explorateur !</h4>
-</div>
-<!-- App Feed -->
-<div class="flex-1 p-4 space-y-4">
-<div class="bg-white rounded-xl p-3 shadow-sm flex items-center gap-3 border-l-4 border-terra-cotta">
-<div class="w-12 h-12 bg-soft-pink/20 rounded-lg flex items-center justify-center">
-<span class="material-symbols-outlined text-primary" data-icon="coffee">coffee</span>
-</div>
-<div>
-<p class="text-xs font-bold">Petit déj aux Carmes</p>
-<p class="text-[10px] text-on-surface-variant italic">À 5 min de toi</p>
-</div>
-</div>
-<div class="bg-white rounded-xl p-3 shadow-sm flex items-center gap-3 border-l-4 border-secondary">
-<div class="w-12 h-12 bg-sky-blue-muted/20 rounded-lg flex items-center justify-center">
-<span class="material-symbols-outlined text-secondary" data-icon="park">park</span>
-</div>
-<div>
-<p class="text-xs font-bold">Sieste au Jardin Royal</p>
-<p class="text-[10px] text-on-surface-variant italic">Ombrage parfait</p>
-</div>
-</div>
-<div class="bg-white rounded-xl p-3 shadow-sm flex items-center gap-3 border-l-4 border-tertiary">
-<div class="w-12 h-12 bg-tertiary-fixed/20 rounded-lg flex items-center justify-center">
-<span class="material-symbols-outlined text-tertiary" data-icon="visibility">visibility</span>
-</div>
-<div>
-<p class="text-xs font-bold">Coucher de soleil Quai de la Daurade</p>
-<p class="text-[10px] text-on-surface-variant italic">Incontournable</p>
-</div>
-</div>
-</div>
-</div>
-<!-- Floating Element -->
-<div class="absolute -right-6 top-1/4 bg-white shadow-xl p-4 rounded-2xl border border-soft-pink transform rotate-3 max-w-[120px]">
-<p class="text-[10px] font-bold text-deep-rose mb-1">Météo Tip</p>
-<p class="text-[9px] leading-tight">Prends ton chapeau, le soleil tape Place du Capitole ! ☀️</p>
-</div>
-</div>
-</section>
-</main>
-<!-- Bottom Navigation Bar -->
-<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container shadow-[0_-2px_10px_rgba(141,46,46,0.05)] flex justify-around items-center py-2 px-4 h-16">
-<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-transform scale-95 active:scale-90" href="#">
-<span class="material-symbols-outlined" data-icon="explore">explore</span>
-<span class="font-label-sm text-label-sm">Explorer</span>
-</a>
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-soft-pink/10 transition-transform scale-95 active:scale-90" href="#">
-<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
-<span class="font-label-sm text-label-sm">Favoris</span>
-</a>
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-soft-pink/10 transition-transform scale-95 active:scale-90" href="#">
-<span class="material-symbols-outlined" data-icon="event">event</span>
-<span class="font-label-sm text-label-sm">Events</span>
-</a>
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-soft-pink/10 transition-transform scale-95 active:scale-90" href="#">
-<span class="material-symbols-outlined" data-icon="person">person</span>
-<span class="font-label-sm text-label-sm">Profil</span>
-</a>
-</nav>
-<!-- Footer -->
-<footer class="bg-surface-container-highest px-container-margin py-8 pb-24 text-center">
-<h5 class="font-headline-md text-deep-rose mb-4 italic">TouRose</h5>
-<div class="flex justify-center gap-6 mb-6">
-<span class="material-symbols-outlined text-primary" data-icon="share">share</span>
-<span class="material-symbols-outlined text-primary" data-icon="mail">mail</span>
-<span class="material-symbols-outlined text-primary" data-icon="language">language</span>
-</div>
-<p class="text-xs text-on-surface-variant mb-4">Fait avec amour par des Toulousains, pour les Toulousains et ceux qui le deviennent.</p>
-<div class="text-[10px] text-on-surface-variant/60 flex justify-center gap-4 uppercase tracking-tighter">
-<span>CGU</span>
-<span>Confidentialité</span>
-<span>Contact</span>
-</div>
-</footer>
-<script>
-        // Micro-interaction for category selection
-        document.querySelectorAll('.flex-col.items-center.gap-2').forEach(item => {
-            item.addEventListener('click', function() {
-                this.classList.toggle('scale-105');
-                const icon = this.querySelector('.material-symbols-outlined');
-                icon.style.transition = 'transform 0.3s ease';
-                icon.style.transform = 'rotate(10deg)';
-                setTimeout(() => {
-                    icon.style.transform = 'rotate(0deg)';
-                }, 300);
-            });
+            <button
+              class="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white py-4 px-8 rounded-xl font-label-md flex items-center justify-center gap-2 active:scale-95 transition-transform"
+            >
+              Voir le catalogue
+              <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      </section>
+      <!-- Paradoxe du Choix Section -->
+      <section class="py-12 bg-surface-container-low px-container-margin">
+        <div class="mb-8">
+          <h3 class="font-headline-md text-deep-rose">Le paradoxe du choix ? On l'a résolu.</h3>
+          <p class="text-on-surface-variant mt-2">
+            Plus besoin de scroller des heures, on a sélectionné l'essentiel.
+          </p>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <!-- Category 1: Goût -->
+          <div class="flex flex-col items-center gap-2">
+            <div
+              class="w-full aspect-square rounded-2xl bg-primary-container/20 border border-soft-pink flex items-center justify-center shadow-sm overflow-hidden relative"
+            >
+              <span
+                class="material-symbols-outlined text-primary text-3xl z-10"
+                data-icon="restaurant"
+                data-weight="fill"
+                style="font-variation-settings: 'FILL' 1"
+                >restaurant</span
+              >
+              <div class="absolute inset-0 opacity-20">
+                <img
+                  class="w-full h-full object-cover"
+                  data-alt="A close-up shot of a traditional French pastry or a steaming hot cassoulet dish, emphasizing textures and appetizing warm colors typical of Toulouse cuisine. Minimalist composition."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQSpvO4k-hB1ZMFa74f3kdTaiyAlmZccyH3JidHa-NWH02fDH_vpYteFmGi1PaKcUkUhdF8jm_gCRltZqdpVQjCWNkHR4drJCgJ-D6gq1F1RJLgY8hAxqTt-xZOO5rFnWmYmu6ddVRji0vbOMx3uJgaHDjzPOK5cI9s5Zn1RViJtz9eLnwOt3eVf3788l90KEIHtTQl9deXmAwBGlKxgg6oIaqaIUlnIAFbxUrjzSWxS0WWuBbg45aOSgifNyA8HzmOU1rwjr8oI4"
+                />
+              </div>
+            </div>
+            <span class="font-label-md text-on-surface">Goût</span>
+          </div>
+          <!-- Category 2: Balade -->
+          <div class="flex flex-col items-center gap-2">
+            <div
+              class="w-full aspect-square rounded-2xl bg-secondary-container/20 border border-sky-blue-muted flex items-center justify-center shadow-sm overflow-hidden relative"
+            >
+              <span
+                class="material-symbols-outlined text-secondary text-3xl z-10"
+                data-icon="directions_walk"
+                data-weight="fill"
+                style="font-variation-settings: 'FILL' 1"
+                >directions_walk</span
+              >
+              <div class="absolute inset-0 opacity-20">
+                <img
+                  class="w-full h-full object-cover"
+                  data-alt="A narrow, picturesque street in old Toulouse with pink bricks and blooming flowers under a clear blue sky. Low-angle perspective highlighting the city's architecture."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGhcyDfODZNPjoGSR3q0ctCPLOk-TvQ6YZox46AqUy8-5za9Zoq8d_bOnCeWXymAe7x2cuL1iXpSnYf7a9fxi9V9MwWfuA908Hbgj5XOaTVRsG3PO4kWnRXkQUBKYsB1cYs9BS0RBc9sHSxouquP182f30N8-nEx9W7nDpMWmBU_atUvNfsoM42SiwUpXn4wNbjdk6Ywy7i5WQbSm0ZvKyNtoQs5jVes-637mqczw25C7ePsclwJKRPTkD1z3jkux0H_AvOeyoWAg"
+                />
+              </div>
+            </div>
+            <span class="font-label-md text-on-surface">Balade</span>
+          </div>
+          <!-- Category 3: Culture -->
+          <div class="flex flex-col items-center gap-2">
+            <div
+              class="w-full aspect-square rounded-2xl bg-tertiary-container/20 border border-tertiary-fixed-dim flex items-center justify-center shadow-sm overflow-hidden relative"
+            >
+              <span
+                class="material-symbols-outlined text-tertiary text-3xl z-10"
+                data-icon="museum"
+                data-weight="fill"
+                style="font-variation-settings: 'FILL' 1"
+                >museum</span
+              >
+              <div class="absolute inset-0 opacity-20">
+                <img
+                  class="w-full h-full object-cover"
+                  data-alt="Artistic detail of a historical facade or a contemporary art piece in a Toulouse gallery. Warm lighting, sophisticated mood, clean edges."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCojlq26p2PoYA3ONlhtCciyNK7TRQpkhE83yoFHbKo2_-U2OuW1qrq7qrs2L7WU6rEK2aQyTA6MJaV2YAfKdX2rbEaE2Mi4rEXqdRvOtUU2K0CQF2_NtwUgE-gxUOIs2JfGipO5oCCL3j76um2i_1Qv1GjShA2_eDfoJCZxbSzT2YeCryoV6gbKt6I44S9N-vkP3CLlxOqiSD_Rq8YKJEb636-wc7H087xKqAWH_JBd_YiTAGAUrKDjQYSdOVKp_CCdYcDSV_RZEY"
+                />
+              </div>
+            </div>
+            <span class="font-label-md text-on-surface">Culture</span>
+          </div>
+        </div>
+      </section>
+      <!-- Hésitations Card -->
+      <section class="px-container-margin py-8">
+        <div
+          class="bg-primary-container text-on-primary-container p-6 rounded-2xl shadow-xl texture-paper border border-white/20"
+        >
+          <h4 class="font-headline-md mb-4">Finies les hésitations</h4>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span
+                class="material-symbols-outlined bg-white/20 p-1 rounded-lg"
+                data-icon="verified"
+                >verified</span
+              >
+              <div>
+                <span class="font-bold block">Testé par nous</span>
+                <span class="text-sm opacity-90"
+                  >Pas d'avis truqués, seulement des vraies expériences toulousaines.</span
+                >
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="material-symbols-outlined bg-white/20 p-1 rounded-lg"
+                data-icon="schedule"
+                >schedule</span
+              >
+              <div>
+                <span class="font-bold block">Gagne du temps</span>
+                <span class="text-sm opacity-90"
+                  >L'itinéraire parfait généré en moins de 10 secondes.</span
+                >
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span
+                class="material-symbols-outlined bg-white/20 p-1 rounded-lg"
+                data-icon="local_offer"
+                >local_offer</span
+              >
+              <div>
+                <span class="font-bold block">Bons plans exclusifs</span>
+                <span class="text-sm opacity-90"
+                  >Des avantages chez nos artisans partenaires préférés.</span
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- Bento Grid: Cœur Battant -->
+      <section class="py-12 bg-surface px-container-margin">
+        <div class="mb-6 flex justify-between items-end">
+          <div>
+            <h3 class="font-headline-md text-ink-black">Le cœur battant de Toulouse</h3>
+            <p class="text-on-surface-variant text-sm">Les pépites du moment.</p>
+          </div>
+          <button class="text-primary font-label-md">Tout voir</button>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-item-large relative h-48 rounded-2xl overflow-hidden group">
+            <img
+              class="w-full h-full object-cover"
+              data-alt="A cozy, authentic Toulouse bistro with red-checkered tablecloths and local wines displayed on shelves. The warm ambient light creates a welcoming atmosphere. High-end food photography style."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4tKojzD5cMYe7i7nr89obt14s6OYu33oq4gTnoble1e2yFI5RllvicrZQ_xAgirdjai4IpTpstLKSPV5L2rZACB3sk1ueNg96PcjvSidkAWWzoLRrQJDao-qc_g4DnZIL-VqjmQO2yVezcChW-6pwRCkovFYCappaM71kphrv00P4uJafQvKzQ752FPdRZziGHdHeW0LTX2VrF-k4lspt09flj-r5UJRQ1-ERSA5kxtUJrG4qR5cui-oSvf8LII_TSvsD3ABI8W8"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 text-white">
+              <span
+                class="bg-terra-cotta text-[10px] uppercase font-bold px-2 py-0.5 rounded-full mb-2 inline-block"
+                >Coup de cœur</span
+              >
+              <p class="font-bold">Chez Émile : Le vrai Cassoulet</p>
+            </div>
+          </div>
+          <div class="relative h-40 rounded-2xl overflow-hidden">
+            <img
+              class="w-full h-full object-cover"
+              data-alt="Close-up of vibrant street art in the Arnaud Bernard district of Toulouse. Colorful murals against old brick walls, urban and artistic aesthetic."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEG4sBnWROtL4rg0OVBBMmk3X09pY6regxVG1saLRX_rZDecKD10aZQps3FeiXyrSNW0Gk8Emh0TWqeLSK-YuHWoOrVQuqVkz_WXrLitEOoPO54XvewKztIiLN0kkvlBXm6ngOI28A8iNehR24z7CWwv0d3eCaqp2NDBkHE67t_5X0lIzOCm0vn2HtKlFfnt5s24yy33Nizpsv4HfSfzY7IfuHzAli0qqbUVVCXba6Cd98jx11PYQVTmvFqu-xg9Qw7QCETwqBEXs"
+            />
+            <div class="absolute bottom-3 left-3 text-white text-xs font-bold">Art de Rue</div>
+          </div>
+          <div class="relative h-40 rounded-2xl overflow-hidden">
+            <img
+              class="w-full h-full object-cover"
+              data-alt="A hidden interior courtyard in a private mansion (Hôtel Particulier) in Toulouse with Renaissance architecture and a peaceful garden. Soft shadows and elegant details."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoPwfOT6JZT4fWU9WJ-FJF9nplrvFIuoCRwtKqiap9AdnQezSLUlimJ-S42zBpBzxgCeRV7R6o4dF_WpCjnyzrlDsHx8qCK4NoQLLuMIu0eG_SDGYI9RnXg2OxE_Z1lv5IGFuv9v8-Y-Nklpwgei3kBQv3EFXWSc9hUjRbrA99-2BQ_7JaoyaDABkuHKq9-bBaw-NcuQgXPeq5eZ4CyRba8VMaVEpbAkzspIAzlGoP8ZLJjRcp3M6MR4Jmq8XxeeDo_IOwwy3Ywd8"
+            />
+            <div class="absolute bottom-3 left-3 text-white text-xs font-bold">Cours Secrètes</div>
+          </div>
+        </div>
+      </section>
+      <!-- Pioneer CTA -->
+      <section
+        class="mx-container-margin my-12 p-8 rounded-3xl bg-soft-pink/20 border-2 border-dashed border-soft-pink relative overflow-hidden text-center"
+      >
+        <div
+          class="absolute top-0 right-0 w-24 h-24 bg-soft-pink/30 rounded-full -mr-12 -mt-12"
+        ></div>
+        <h3 class="font-headline-lg-mobile text-deep-rose mb-4">Tu es un pionnier ?</h3>
+        <p class="text-on-surface-variant mb-6">
+          Aide-nous à construire le guide parfait. Donne ton avis sur nos parcours et gagne des
+          récompenses.
+        </p>
+        <button
+          class="bg-deep-rose text-white px-8 py-3 rounded-full font-label-md shadow-lg active:scale-95 transition-transform"
+        >
+          Je participe !
+        </button>
+      </section>
+      <!-- App Mockup Section -->
+      <section class="py-12 bg-surface-container px-container-margin overflow-hidden">
+        <h3 class="font-headline-md text-center mb-8">Tes suggestions du jour</h3>
+        <div
+          class="relative max-w-[280px] mx-auto bg-ink-black rounded-[3rem] p-3 shadow-2xl border-4 border-surface-container-highest"
+        >
+          <!-- Phone Inner Screen -->
+          <div class="bg-background rounded-[2.5rem] overflow-hidden min-h-[500px] flex flex-col">
+            <!-- App Header -->
+            <div class="pt-8 px-4 pb-4 bg-primary text-white">
+              <p class="text-[10px] opacity-80 uppercase tracking-widest">Aujourd'hui</p>
+              <h4 class="text-lg font-bold">Hello, Explorateur !</h4>
+            </div>
+            <!-- App Feed -->
+            <div class="flex-1 p-4 space-y-4">
+              <div
+                class="bg-white rounded-xl p-3 shadow-sm flex items-center gap-3 border-l-4 border-terra-cotta"
+              >
+                <div class="w-12 h-12 bg-soft-pink/20 rounded-lg flex items-center justify-center">
+                  <span class="material-symbols-outlined text-primary" data-icon="coffee"
+                    >coffee</span
+                  >
+                </div>
+                <div>
+                  <p class="text-xs font-bold">Petit déj aux Carmes</p>
+                  <p class="text-[10px] text-on-surface-variant italic">À 5 min de toi</p>
+                </div>
+              </div>
+              <div
+                class="bg-white rounded-xl p-3 shadow-sm flex items-center gap-3 border-l-4 border-secondary"
+              >
+                <div
+                  class="w-12 h-12 bg-sky-blue-muted/20 rounded-lg flex items-center justify-center"
+                >
+                  <span class="material-symbols-outlined text-secondary" data-icon="park"
+                    >park</span
+                  >
+                </div>
+                <div>
+                  <p class="text-xs font-bold">Sieste au Jardin Royal</p>
+                  <p class="text-[10px] text-on-surface-variant italic">Ombrage parfait</p>
+                </div>
+              </div>
+              <div
+                class="bg-white rounded-xl p-3 shadow-sm flex items-center gap-3 border-l-4 border-tertiary"
+              >
+                <div
+                  class="w-12 h-12 bg-tertiary-fixed/20 rounded-lg flex items-center justify-center"
+                >
+                  <span class="material-symbols-outlined text-tertiary" data-icon="visibility"
+                    >visibility</span
+                  >
+                </div>
+                <div>
+                  <p class="text-xs font-bold">Coucher de soleil Quai de la Daurade</p>
+                  <p class="text-[10px] text-on-surface-variant italic">Incontournable</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Floating Element -->
+          <div
+            class="absolute -right-6 top-1/4 bg-white shadow-xl p-4 rounded-2xl border border-soft-pink transform rotate-3 max-w-[120px]"
+          >
+            <p class="text-[10px] font-bold text-deep-rose mb-1">Météo Tip</p>
+            <p class="text-[9px] leading-tight">
+              Prends ton chapeau, le soleil tape Place du Capitole ! ☀️
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Bottom Navigation Bar -->
+    <nav
+      class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container shadow-[0_-2px_10px_rgba(141,46,46,0.05)] flex justify-around items-center py-2 px-4 h-16"
+    >
+      <a
+        class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-transform scale-95 active:scale-90"
+        href="#"
+      >
+        <span class="material-symbols-outlined" data-icon="explore">explore</span>
+        <span class="font-label-sm text-label-sm">Explorer</span>
+      </a>
+      <a
+        class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-soft-pink/10 transition-transform scale-95 active:scale-90"
+        href="#"
+      >
+        <span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+        <span class="font-label-sm text-label-sm">Favoris</span>
+      </a>
+      <a
+        class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-soft-pink/10 transition-transform scale-95 active:scale-90"
+        href="#"
+      >
+        <span class="material-symbols-outlined" data-icon="event">event</span>
+        <span class="font-label-sm text-label-sm">Events</span>
+      </a>
+      <a
+        class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-soft-pink/10 transition-transform scale-95 active:scale-90"
+        href="#"
+      >
+        <span class="material-symbols-outlined" data-icon="person">person</span>
+        <span class="font-label-sm text-label-sm">Profil</span>
+      </a>
+    </nav>
+    <!-- Footer -->
+    <footer class="bg-surface-container-highest px-container-margin py-8 pb-24 text-center">
+      <h5 class="font-headline-md text-deep-rose mb-4 italic">TouRose</h5>
+      <div class="flex justify-center gap-6 mb-6">
+        <span class="material-symbols-outlined text-primary" data-icon="share">share</span>
+        <span class="material-symbols-outlined text-primary" data-icon="mail">mail</span>
+        <span class="material-symbols-outlined text-primary" data-icon="language">language</span>
+      </div>
+      <p class="text-xs text-on-surface-variant mb-4">
+        Fait avec amour par des Toulousains, pour les Toulousains et ceux qui le deviennent.
+      </p>
+      <div
+        class="text-[10px] text-on-surface-variant/60 flex justify-center gap-4 uppercase tracking-tighter"
+      >
+        <span>CGU</span>
+        <span>Confidentialité</span>
+        <span>Contact</span>
+      </div>
+    </footer>
+    <script>
+      // Micro-interaction for category selection
+      document.querySelectorAll('.flex-col.items-center.gap-2').forEach((item) => {
+        item.addEventListener('click', function () {
+          this.classList.toggle('scale-105');
+          const icon = this.querySelector('.material-symbols-outlined');
+          icon.style.transition = 'transform 0.3s ease';
+          icon.style.transform = 'rotate(10deg)';
+          setTimeout(() => {
+            icon.style.transform = 'rotate(0deg)';
+          }, 300);
         });
+      });
 
-        // Simple scroll reveal effect
-        const observerOptions = {
-            threshold: 0.1
-        };
+      // Simple scroll reveal effect
+      const observerOptions = {
+        threshold: 0.1,
+      };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('opacity-100', 'translate-y-0');
-                    entry.target.classList.remove('opacity-0', 'translate-y-8');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('section').forEach(section => {
-            section.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-8');
-            observer.observe(section);
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            entry.target.classList.remove('opacity-0', 'translate-y-8');
+          }
         });
+      }, observerOptions);
+
+      document.querySelectorAll('section').forEach((section) => {
+        section.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-8');
+        observer.observe(section);
+      });
     </script>
-</body></html>
+  </body>
+</html>
