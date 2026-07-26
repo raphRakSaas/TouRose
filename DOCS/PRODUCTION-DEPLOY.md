@@ -77,15 +77,30 @@ Repo → **Settings → Environments → New environment** → `production`
 
 ### 2.4 Variables GitHub (Settings → Variables)
 
-| Variable                           | Valeur                | Effet                                        |
-| ---------------------------------- | --------------------- | -------------------------------------------- |
-| `SUPABASE_DEPLOY_ENABLED`          | `true`                | Active le déploiement Supabase au tag        |
-| `PUBLIC_SITE_URL`                  | `https://tourose.app` | URL canonique du site                        |
-| `OPENAGENDA_CRON_ENABLED`          | `true`                | Active le cron GitHub OpenAgenda             |
-| `WEBSITE_DEPLOY_ENABLED`           | `true`                | Publie le site sur Cloudflare Pages          |
-| `ADMIN_DEPLOY_ENABLED`             | `false`               | Publie l’admin (souvent restreint / interne) |
-| `CLOUDFLARE_PAGES_PROJECT_WEBSITE` | nom projet            | Projet Pages pour le site                    |
-| `CLOUDFLARE_PAGES_PROJECT_ADMIN`   | nom projet            | Projet Pages pour l’admin                    |
+| Variable                             | Valeur                  | Effet                                                    |
+| ------------------------------------ | ----------------------- | -------------------------------------------------------- |
+| `SUPABASE_DEPLOY_ENABLED`            | `true`                  | Active le déploiement Supabase au tag                    |
+| `PUBLIC_SITE_URL`                    | `https://tourose.app`   | URL canonique du site                                    |
+| `OPENAGENDA_CRON_ENABLED`            | `true`                  | Active le cron GitHub OpenAgenda                         |
+| `WEBSITE_DEPLOY_ENABLED`             | `true`                  | Publie le site sur Cloudflare Pages                      |
+| `ADMIN_DEPLOY_ENABLED`               | `false`                 | Publie l’admin (souvent restreint / interne)             |
+| `CLOUDFLARE_PAGES_PROJECT_WEBSITE`   | `tourose`               | Projet Pages pour le site                                |
+| `CLOUDFLARE_PAGES_PROJECT_ADMIN`     | nom projet              | Projet Pages pour l’admin                                |
+| `CLOUDFLARE_PAGES_STAGING_BRANCH`    | `main` (défaut)         | Branche Cloudflare pour push `main` (preview)            |
+| `CLOUDFLARE_PAGES_PRODUCTION_BRANCH` | `production` (défaut)   | Branche Cloudflare pour tag `v*` (prod)                  |
+| `PUBLIC_STAGING_SITE_URL`            | URL preview optionnelle | URL canonique du build staging (sinon `PUBLIC_SITE_URL`) |
+
+**Staging vs production (Cloudflare Pages)** : push sur `main` → workflow `preview.yml` → déploiement **preview** (ex. `aa4dc5e4.tourose.pages.dev`). Tag `v*` → workflow `release.yml` → déploiement **production** (`https://tourose.pages.dev`). Sur un projet _Direct Upload_, définir une fois la branche de prod :
+
+```bash
+curl --request PATCH \
+  --url "https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/pages/projects/tourose" \
+  --header "Authorization: Bearer <CLOUDFLARE_API_TOKEN>" \
+  --header "Content-Type: application/json" \
+  --data '{"production_branch":"production"}'
+```
+
+Sans cette config, `main` peut être traité comme production ou tout rester en preview.
 
 Sans `SUPABASE_DEPLOY_ENABLED=true`, le workflow release ne déploie rien (quality gate seulement).
 
@@ -149,14 +164,14 @@ where email = 'ton-email@example.com';
 
 ## 6. Dépannage
 
-| Symptôme                                               | Piste                                                                                              |
-| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| Job Supabase ignoré                                    | `SUPABASE_DEPLOY_ENABLED` ≠ `true`                                                                 |
-| `db push` échoue avec `password authentication failed` | Le secret `SUPABASE_DB_PASSWORD` est incorrect — voir ci-dessous                                   |
-| `db push` échoue (autre)                               | Drift schéma, migrations en conflit                                                                |
-| Health check KO                                        | Functions pas déployées ou projet en pause                                                         |
-| Site build OK mais pas en ligne                        | `WEBSITE_DEPLOY_ENABLED` ou secrets Cloudflare manquants                                           |
-| Cron import inactif                                    | `OPENAGENDA_CRON_ENABLED=true` + secrets `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `IMPORT_CRON_SECRET` |
+| Symptôme                                               | Piste                                                                                                               |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Job Supabase ignoré                                    | `SUPABASE_DEPLOY_ENABLED` ≠ `true`                                                                                  |
+| `db push` échoue avec `password authentication failed` | Le secret `SUPABASE_DB_PASSWORD` est incorrect — voir ci-dessous                                                    |
+| `db push` échoue (autre)                               | Drift schéma, migrations en conflit                                                                                 |
+| Health check KO                                        | Functions pas déployées ou projet en pause                                                                          |
+| Site build OK mais pas en ligne                        | `WEBSITE_DEPLOY_ENABLED` ou secrets Cloudflare manquants ; ou déploiement en preview seulement (tag `v*` pour prod) |
+| Cron import inactif                                    | `OPENAGENDA_CRON_ENABLED=true` + secrets `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `IMPORT_CRON_SECRET`                  |
 
 Voir aussi : [`ENV-VARS.md`](./ENV-VARS.md), [`SUPABASE-LOCAL.md`](./SUPABASE-LOCAL.md), [`ADMIN-AUTH-AND-SECURITY.md`](./ADMIN-AUTH-AND-SECURITY.md).
 
