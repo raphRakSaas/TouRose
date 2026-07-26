@@ -1,7 +1,7 @@
 {
   "name": "tourose",
   "private": true,
-  "version": "0.1.7",
+  "version": "0.1.8",
   "type": "module",
   "description": "TouRose monorepo — Toulouse à voir, à vivre, à aimer.",
   "packageManager": "pnpm@10.14.0",
