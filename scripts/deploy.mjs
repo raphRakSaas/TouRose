@@ -280,6 +280,9 @@ async function runQualityGate(rl) {
     return;
   }
 
+  log('Formatage automatique (Prettier)…');
+  runOrFail('pnpm', ['run', 'format']);
+
   log('Contrôles qualité en cours (format, lint, typecheck, test, build)…');
   runOrFail('pnpm', ['run', 'check']);
   success('Contrôles qualité OK.');

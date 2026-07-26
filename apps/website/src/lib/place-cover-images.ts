@@ -43,5 +43,9 @@ export function resolvePlaceCoverImage(
   if (placeRow.image_url) {
     return placeRow.image_url;
   }
-  return COVER_BY_SLUG[placeRow.slug] ?? COVER_BY_PLACE_TYPE[placeRow.place_type] ?? LOCAL_TOULOUSE_PHOTOS.hero;
+  return (
+    COVER_BY_SLUG[placeRow.slug] ??
+    COVER_BY_PLACE_TYPE[placeRow.place_type] ??
+    LOCAL_TOULOUSE_PHOTOS.hero
+  );
 }
