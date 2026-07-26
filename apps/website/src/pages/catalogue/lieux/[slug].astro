@@ -1,9 +1,11 @@
 ---
+import Button from '../../../components/Button.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { loadPublicPlaceBySlug, loadPublicPlaceSlugs } from '../../../lib/catalog';
+import { formatPlaceType, formatPriceType } from '../../../lib/format';
 
 export async function getStaticPaths() {
-  const slugs = await loadPublicPlaceSlugs();
+  const slugs = await loadPublicPlaceSlugs(300);
   return slugs.map((slug) => ({ params: { slug } }));
 }
 
@@ -18,27 +20,65 @@ if (!placeRow) {
 <BaseLayout
   title={placeRow ? `${placeRow.name} — TouRose` : 'Lieu introuvable — TouRose'}
   description={placeRow?.summary ?? 'Fiche lieu TouRose.'}
+  ogImage={placeRow?.image_url ?? undefined}
 >
-  <article class="grid gap-4 pt-8">
-    <p class="text-sm">
-      <a href="/catalogue" class="text-garonne-700 no-underline hover:underline">← Catalogue</a>
-    </p>
+  <article class="site-shell pb-24 pt-6">
+    <a href="/catalogue#lieux" class="text-sm font-medium text-ink-500 no-underline hover:text-brick-700">← Catalogue</a>
+
     {
       placeRow ? (
-        <>
-          <h1 class="brand text-4xl text-ink-800">{placeRow.name}</h1>
-          <p class="text-sm text-garonne-700">
-            {placeRow.place_type} · {placeRow.city ?? 'Toulouse'} · {placeRow.price_type}
-          </p>
-          <p class="max-w-2xl text-ink-600">{placeRow.summary ?? 'Sans résumé'}</p>
-          {placeRow.latitude != null && placeRow.longitude != null ? (
-            <p class="text-xs text-ink-500">
-              {placeRow.latitude.toFixed(5)}, {placeRow.longitude.toFixed(5)}
+        <div class="mt-8 grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <div>
+            <p class="site-label mb-4">{formatPlaceType(placeRow.place_type)}</p>
+            <h1 class="brand text-4xl font-bold tracking-tight text-ink-800 md:text-5xl">{placeRow.name}</h1>
+            <p class="mt-4 text-lg text-ink-500">{placeRow.city ?? 'Toulouse'}</p>
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="rounded-full bg-white px-3 py-1 text-sm font-medium text-ink-600 shadow-sm">{formatPriceType(placeRow.price_type)}</span>
+              <span class="rounded-full bg-white px-3 py-1 text-sm font-medium text-ink-600 shadow-sm">{placeRow.indoor_outdoor}</span>
+            </div>
+            <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-500">
+              {placeRow.summary ?? 'Un lieu à découvrir à Toulouse.'}
             </p>
-          ) : null}
-        </>
+            {placeRow.description ? (
+              <div class="prose mt-6 max-w-2xl">
+                <p>{placeRow.description}</p>
+              </div>
+            ) : null}
+            {placeRow.address ? (
+              <p class="mt-4 text-sm text-ink-500">Adresse : {placeRow.address}</p>
+            ) : null}
+            <div class="mt-8 flex flex-wrap gap-3">
+              {placeRow.website_url ? (
+                <Button href={placeRow.website_url} variant="secondary">
+                  Site web
+                </Button>
+              ) : null}
+              <Button href="/catalogue" variant="outline">
+                Voir le catalogue
+              </Button>
+            </div>
+          </div>
+          <div class="surface-card overflow-hidden">
+            {placeRow.image_url ? (
+              <img
+                src={placeRow.image_url}
+                alt={placeRow.image_alt ?? placeRow.name}
+                class="aspect-[4/3] w-full object-cover"
+              />
+            ) : (
+              <div class="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-garonne-100 to-violet-100 text-ink-500">
+                Lieu
+              </div>
+            )}
+            {placeRow.latitude != null && placeRow.longitude != null ? (
+              <p class="border-t border-sand-200 px-5 py-4 text-sm text-ink-600">
+                Coordonnées : {placeRow.latitude.toFixed(5)}, {placeRow.longitude.toFixed(5)}
+              </p>
+            ) : null}
+          </div>
+        </div>
       ) : (
-        <p class="text-ink-600">Ce lieu n’existe pas ou n’est pas publié.</p>
+        <p class="mt-6 text-ink-600">Ce lieu n’existe pas ou n’est pas publié.</p>
       )
     }
   </article>

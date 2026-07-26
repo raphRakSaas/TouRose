@@ -1,0 +1,104 @@
+---
+import type { PublicEventRow } from '@tourose/contracts';
+import {
+  formatEventDateCompact,
+  formatEventDateTime,
+  formatPriceBadge,
+} from '../lib/format';
+
+interface Props {
+  eventRow: PublicEventRow;
+  variant?: 'catalogue' | 'bento-featured' | 'bento-row';
+}
+
+const { eventRow, variant = 'catalogue' } = Astro.props;
+const dateLabel = formatEventDateCompact(eventRow.next_starts_at) ?? formatEventDateTime(eventRow.next_starts_at);
+const priceBadge = formatPriceBadge(eventRow.price_type);
+const categoryLabel = eventRow.categories[0]?.replaceAll('_', ' ') ?? 'Événement';
+const metaLine = categoryLabel;
+const href = `/catalogue/evenements/${eventRow.slug}`;
+const priceToneClass = priceBadge.tone === 'free' ? 'text-primary' : 'text-secondary';
+---
+
+{
+  variant === 'bento-featured' ? (
+    <a href={href} class="group relative block overflow-hidden rounded-[32px] shadow-2xl md:col-span-2 md:row-span-2">
+      <div class="relative min-h-[320px] md:min-h-full">
+        {eventRow.image_url ? (
+          <img
+            src={eventRow.image_url}
+            alt={eventRow.image_alt ?? eventRow.title}
+            loading="lazy"
+            class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          />
+        ) : (
+          <div class="absolute inset-0 bg-gradient-to-br from-soft-pink/40 via-secondary/20 to-terra-cotta/30" />
+        )}
+        <div class="absolute inset-0 bg-gradient-to-t from-ink-black/90 via-ink-black/20 to-transparent" />
+        <div class="absolute bottom-0 left-0 p-10">
+          <span class="mb-4 inline-block rounded-full bg-sky-blue-muted px-4 py-1.5 font-label-sm text-label-sm font-bold text-secondary">
+            ÉVÉNEMENT
+          </span>
+          <h3 class="font-headline-xl text-headline-xl mb-3 text-white">{eventRow.title}</h3>
+          {eventRow.summary ? <p class="font-body-md text-lg text-white/80">{eventRow.summary}</p> : null}
+        </div>
+      </div>
+    </a>
+  ) : variant === 'bento-row' ? (
+    <a href={href} class="group relative block h-[280px] overflow-hidden rounded-[32px] shadow-xl">
+      {eventRow.image_url ? (
+        <img
+          src={eventRow.image_url}
+          alt={eventRow.image_alt ?? eventRow.title}
+          loading="lazy"
+          class="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+        />
+      ) : (
+        <div class="absolute inset-0 bg-gradient-to-br from-soft-pink/30 to-secondary/20" />
+      )}
+      <div class="absolute inset-0 bg-gradient-to-t from-ink-black/80 to-transparent" />
+      <div class="absolute bottom-0 left-0 p-8">
+        <span class="mb-3 inline-block rounded-full bg-soft-pink px-4 py-1.5 font-label-sm text-label-sm font-bold text-deep-rose">
+          {priceBadge.label.toUpperCase()}
+        </span>
+        <h3 class="font-headline-md text-headline-md text-white">{eventRow.title}</h3>
+      </div>
+    </a>
+  ) : (
+    <a href={href} class="group block no-underline">
+      <article>
+        <div class="relative mb-4 aspect-[4/5] overflow-hidden rounded-2xl border border-soft-pink/20 card-shadow-sm">
+          {eventRow.image_url ? (
+            <img
+              src={eventRow.image_url}
+              alt={eventRow.image_alt ?? eventRow.title}
+              loading="lazy"
+              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div class="flex h-full items-center justify-center bg-gradient-to-br from-soft-pink/20 via-sky-blue-muted/20 to-secondary/10 font-label-sm text-on-surface-variant">
+              TouRose
+            </div>
+          )}
+          <div
+            class:list={[
+              'absolute top-4 right-4 rounded-full bg-white/90 px-3 py-1 font-label-sm text-label-sm font-bold backdrop-blur-sm',
+              priceToneClass,
+            ]}
+          >
+            {priceBadge.label}
+          </div>
+          <div class="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-ink-black/80 to-transparent p-6">
+            <span class="font-label-sm text-label-sm font-medium tracking-wider text-white/80 uppercase">
+              {metaLine}
+            </span>
+          </div>
+        </div>
+        <h3 class="font-headline-md text-headline-md text-ink-black transition-colors group-hover:text-primary">
+          {eventRow.title}
+        </h3>
+        {dateLabel ? <p class="mt-1 font-body-md text-body-md text-on-surface-variant">{dateLabel}</p> : null}
+      </article>
+    </a>
+  )
+}

@@ -1,57 +1,264 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { loadPublicEventBySlug, loadPublicEventSlugs } from '../../../lib/catalog';
+import { loadPublicEventBySlug, loadPublicEventSlugs, loadPublicPlaceById } from '../../../lib/catalog';
+import {
+  formatCategoryLabel,
+  formatEventDateCard,
+  formatEventPriceDisplay,
+  formatEventSchedule,
+  formatIndoorOutdoor,
+  formatLastVerifiedAt,
+} from '../../../lib/format';
+import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL } from '../../../lib/site-config';
 
 export async function getStaticPaths() {
-  const slugs = await loadPublicEventSlugs();
+  const slugs = await loadPublicEventSlugs(300);
   return slugs.map((slug) => ({ params: { slug } }));
 }
 
 const { slug } = Astro.params;
 const eventRow = slug ? await loadPublicEventBySlug(slug) : null;
+const placeRow = eventRow?.place_id ? await loadPublicPlaceById(eventRow.place_id) : null;
 
 if (!eventRow) {
   Astro.response.status = 404;
 }
+
+const schedule = eventRow ? formatEventSchedule(eventRow.next_starts_at, eventRow.next_ends_at) : null;
+const dateCardLabel = eventRow ? (formatEventDateCard(eventRow.next_starts_at) ?? 'Date à confirmer') : null;
+const categoryLabel = eventRow?.categories[0] ? formatCategoryLabel(eventRow.categories[0]) : 'Événement';
+const priceLabel = eventRow ? formatEventPriceDisplay(eventRow.price_type) : null;
+const indoorOutdoorLabel = eventRow ? formatIndoorOutdoor(eventRow.indoor_outdoor) : null;
+const lastVerifiedLabel = eventRow ? formatLastVerifiedAt(eventRow.last_verified_at) : null;
+
+const addressLine = placeRow
+  ? [placeRow.address, [placeRow.postal_code, placeRow.city ?? 'Toulouse'].filter(Boolean).join(' ')]
+      .filter(Boolean)
+      .join(', ')
+  : eventRow?.latitude != null && eventRow.longitude != null
+    ? 'Toulouse'
+    : null;
+
+const mapLatitude = placeRow?.latitude ?? eventRow?.latitude ?? null;
+const mapLongitude = placeRow?.longitude ?? eventRow?.longitude ?? null;
+const mapImageUrl =
+  mapLatitude != null && mapLongitude != null
+    ? `https://staticmap.openstreetmap.de/staticmap.php?center=${mapLatitude},${mapLongitude}&zoom=15&size=600x300&markers=${mapLatitude},${mapLongitude},red`
+    : null;
+
+const descriptionParagraphs = eventRow
+  ? (eventRow.description ?? eventRow.summary ?? 'Découvre cette sortie à Toulouse.')
+      .split(/\n\n+/)
+      .map((paragraph) => paragraph.trim())
+      .filter((paragraph) => paragraph.length > 0)
+  : [];
+
+const tagLabels = eventRow
+  ? [
+      ...eventRow.categories.map((categorySlug) => formatCategoryLabel(categorySlug)),
+      eventRow.price_type === 'free' ? 'Gratuit' : null,
+      indoorOutdoorLabel,
+    ].filter((label): label is string => Boolean(label))
+  : [];
+
+const reportMailto = eventRow
+  ? `mailto:${SITE_CONTACT_EMAIL}?subject=${encodeURIComponent(`Signalement — ${eventRow.title}`)}`
+  : `mailto:${SITE_CONTACT_EMAIL}`;
 ---
 
 <BaseLayout
   title={eventRow ? `${eventRow.title} — TouRose` : 'Événement introuvable — TouRose'}
   description={eventRow?.summary ?? 'Fiche événement TouRose.'}
+  ogImage={eventRow?.image_url ?? undefined}
 >
-  <article class="grid gap-4 pt-8">
-    <p class="text-sm">
-      <a href="/catalogue" class="text-garonne-700 no-underline hover:underline">← Catalogue</a>
-    </p>
+  <main class="mx-auto max-w-[1200px] px-container-margin pt-24 pb-section-gap">
+    <nav class="mb-8">
+      <a class="group flex items-center gap-2 font-label-md text-terra-cotta transition-all" href="/catalogue">
+        <span class="material-symbols-outlined transition-transform group-hover:-translate-x-1">arrow_back</span>
+        Retour au catalogue
+      </a>
+    </nav>
+
     {
       eventRow ? (
         <>
-          <h1 class="brand text-4xl text-ink-800">{eventRow.title}</h1>
-          {eventRow.next_starts_at ? (
-            <p class="text-sm text-garonne-700">
-              {new Date(eventRow.next_starts_at).toLocaleString('fr-FR')}
-            </p>
-          ) : null}
-          <p class="text-sm text-ink-500">
-            {eventRow.price_type} · {eventRow.indoor_outdoor}
-          </p>
-          <p class="max-w-2xl text-ink-600">{eventRow.summary ?? 'Sans résumé'}</p>
-          {eventRow.official_url ? (
-            <p>
-              <a
-                href={eventRow.official_url}
-                class="text-brick-600 no-underline hover:underline"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Site officiel
-              </a>
-            </p>
-          ) : null}
+          <div class="mb-section-gap grid grid-cols-1 gap-8 lg:grid-cols-12">
+            <div class="paper-shadow relative aspect-video h-[300px] overflow-hidden rounded-3xl lg:col-span-8 lg:aspect-auto lg:h-[500px]">
+              {eventRow.image_url ? (
+                <img
+                  class="h-full w-full object-cover"
+                  src={eventRow.image_url}
+                  alt={eventRow.image_alt ?? eventRow.title}
+                />
+              ) : (
+                <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-soft-pink/40 to-sky-blue-muted/40 font-headline-md text-deep-rose">
+                  TouRose
+                </div>
+              )}
+              <div class="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 to-transparent p-8">
+                <div class="space-y-2">
+                  <span class="inline-block rounded-full bg-sky-blue-muted px-4 py-1 font-label-sm text-label-sm tracking-wider text-ink-black uppercase">
+                    {categoryLabel}
+                  </span>
+                  <h1 class="max-w-2xl font-headline-xl text-headline-xl leading-tight text-white">{eventRow.title}</h1>
+                </div>
+              </div>
+            </div>
+
+            <aside class="flex flex-col gap-6 lg:col-span-4">
+              <div class="paper-shadow flex-grow space-y-6 rounded-3xl border border-soft-pink/30 bg-white p-8">
+                <div class="flex items-start justify-between">
+                  <div class="rounded-2xl border border-outline-variant/30 bg-surface-container-low p-4">
+                    <span class="material-symbols-outlined scale-125 text-deep-rose">event</span>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-label-sm text-label-sm text-on-surface-variant">Date de l'événement</p>
+                    <p class="font-headline-md text-headline-md font-bold text-ink-black">{dateCardLabel}</p>
+                  </div>
+                </div>
+
+                <div class="space-y-4">
+                  {schedule ? (
+                    <div class="flex items-center gap-4 text-on-surface-variant">
+                      <span class="material-symbols-outlined">schedule</span>
+                      <span class="font-body-md">{schedule.timeLabel}</span>
+                    </div>
+                  ) : null}
+                  {addressLine ? (
+                    <div class="flex items-center gap-4 text-on-surface-variant">
+                      <span class="material-symbols-outlined">location_on</span>
+                      <span class="font-body-md">{addressLine}</span>
+                    </div>
+                  ) : null}
+                  {priceLabel ? (
+                    <div class="flex items-center gap-4 text-on-surface-variant">
+                      <span class="material-symbols-outlined">payments</span>
+                      <span class={`font-body-md ${eventRow.price_type === 'free' ? 'font-bold text-terra-cotta' : ''}`}>
+                        {priceLabel}
+                      </span>
+                    </div>
+                  ) : null}
+                </div>
+
+                {eventRow.official_url ? (
+                  <a
+                    class="flex w-full items-center justify-center gap-2 rounded-xl bg-deep-rose py-4 text-center font-label-md text-white shadow-lg shadow-deep-rose/20 transition-colors hover:bg-primary"
+                    href={eventRow.official_url}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Site officiel de l'organisateur
+                    <span class="material-symbols-outlined text-sm">open_in_new</span>
+                  </a>
+                ) : null}
+              </div>
+
+              <div class="sticky-note rounded-2xl border-2 border-dashed border-soft-pink/50 bg-soft-pink/20 p-6">
+                <p class="mb-2 font-headline-md text-deep-rose">Envie de plus ?</p>
+                <p class="mb-4 font-body-md text-body-md text-on-surface-variant">
+                  Télécharge TouRose pour retrouver cet événement et recevoir des idées de sorties à Toulouse.
+                </p>
+                <a
+                  class="inline-block rounded-lg bg-ink-black px-4 py-2 font-label-sm text-white"
+                  href={APP_APK_DOWNLOAD_URL}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Ouvrir l'app
+                </a>
+              </div>
+            </aside>
+          </div>
+
+          <div class="grid grid-cols-1 gap-12 lg:grid-cols-12">
+            <div class="space-y-12 lg:col-span-8">
+              <section>
+                <h2 class="mb-6 border-b border-soft-pink/30 pb-4 font-headline-lg text-headline-lg text-ink-black">
+                  À propos de cet événement
+                </h2>
+                <div class="space-y-4 font-body-lg text-body-lg leading-relaxed text-on-surface-variant">
+                  {descriptionParagraphs.map((paragraph) => (
+                    <p>{paragraph}</p>
+                  ))}
+                </div>
+                {eventRow.image_attribution ? (
+                  <p class="mt-6 font-label-sm text-label-sm text-on-surface-variant">{eventRow.image_attribution}</p>
+                ) : null}
+              </section>
+
+              <section class="rounded-3xl border border-outline-variant/20 bg-surface-container-low p-8">
+                <div class="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+                  <div>
+                    <h3 class="mb-2 flex items-center gap-2 font-label-md text-ink-black">
+                      <span class="material-symbols-outlined text-terra-cotta">verified</span>
+                      Sources &amp; Transparence
+                    </h3>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant">
+                      Données fournies par <strong>OpenAgenda</strong> et sources ouvertes.
+                    </p>
+                    {lastVerifiedLabel ? (
+                      <p class="mt-1 font-label-sm text-label-sm text-on-surface-variant">
+                        Dernière vérification : {lastVerifiedLabel}
+                      </p>
+                    ) : null}
+                  </div>
+                  <a
+                    class="flex items-center gap-2 rounded-xl border border-error px-5 py-2.5 font-label-md text-error transition-colors hover:bg-error/5"
+                    href={reportMailto}
+                  >
+                    <span class="material-symbols-outlined text-base">report</span>
+                    Signaler une erreur
+                  </a>
+                </div>
+              </section>
+            </div>
+
+            <div class="space-y-8 lg:col-span-4">
+              {tagLabels.length > 0 ? (
+                <div>
+                  <h4 class="mb-4 font-label-md uppercase tracking-widest text-ink-black">Catégories</h4>
+                  <div class="flex flex-wrap gap-2">
+                    {tagLabels.map((tagLabel) => (
+                      <span class="rounded-full bg-surface-variant px-4 py-2 font-label-sm text-label-sm text-on-surface-variant">
+                        {tagLabel}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              {addressLine || mapImageUrl ? (
+                <div class="paper-shadow rounded-2xl border border-soft-pink/30 bg-white p-6">
+                  <h4 class="mb-4 font-label-md text-ink-black">Emplacement</h4>
+                  {mapImageUrl ? (
+                    <div class="mb-4 h-48 overflow-hidden rounded-xl bg-surface-container-high">
+                      <img
+                        class="h-full w-full object-cover grayscale transition-all duration-700 hover:grayscale-0"
+                        src={mapImageUrl}
+                        alt={`Carte — ${addressLine ?? 'Toulouse'}`}
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : null}
+                  {addressLine ? (
+                    <p class="font-label-sm text-label-sm text-on-surface-variant">{addressLine}</p>
+                  ) : null}
+                  {placeRow?.slug ? (
+                    <a
+                      class="mt-3 inline-block font-label-md text-primary underline underline-offset-2 hover:text-deep-rose"
+                      href={`/catalogue/lieux/${placeRow.slug}`}
+                    >
+                      Voir le lieu
+                    </a>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+          </div>
         </>
       ) : (
-        <p class="text-ink-600">Cet événement n’existe pas ou n’est pas publié.</p>
+        <p class="font-body-md text-on-surface-variant">Cet événement n'existe pas ou n'est pas publié.</p>
       )
     }
-  </article>
+  </main>
 </BaseLayout>

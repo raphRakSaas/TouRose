@@ -29,6 +29,7 @@
     "import:openagenda:cloud": "node ./scripts/trigger-openagenda-import.mjs",
     "cron:tick": "node ./scripts/cron-tick.mjs",
     "check:cloud-catalog": "node ./scripts/check-cloud-catalog.mjs",
+    "export:stitch-website": "node ./scripts/export-stitch-website.mjs",
     "cron:sync-runtime": "node ./scripts/sync-cron-runtime.mjs",
     "release": "node ./scripts/deploy.mjs",
     "deploy:supabase": "node ./scripts/deploy-supabase.mjs",

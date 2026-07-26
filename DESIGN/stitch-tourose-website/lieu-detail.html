@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Détails du Lieu | TouRose</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#f6fff6",
+                    "soft-pink": "#F4B9B2",
+                    "background": "#fbf9f1",
+                    "inverse-primary": "#ffb3b0",
+                    "on-tertiary-fixed": "#002113",
+                    "on-secondary-fixed-variant": "#004d62",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#dcdad2",
+                    "surface-container-high": "#eae8e0",
+                    "surface-container-low": "#f5f4ec",
+                    "surface-container-highest": "#e4e3db",
+                    "on-error": "#ffffff",
+                    "surface-container": "#f0eee6",
+                    "tertiary-fixed-dim": "#5fdda2",
+                    "on-secondary-fixed": "#001f29",
+                    "sky-blue-muted": "#A5D8EA",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#09657f",
+                    "inverse-surface": "#30312c",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#7dfabd",
+                    "secondary-fixed": "#baeaff",
+                    "primary": "#a1373a",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f3f1e9",
+                    "on-primary-container": "#fffbff",
+                    "surface-bright": "#fbf9f1",
+                    "on-background": "#1b1c17",
+                    "tertiary-container": "#008558",
+                    "outline-variant": "#ddc0be",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e4e3db",
+                    "on-primary-fixed-variant": "#852227",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed-dim": "#89d0ed",
+                    "outline": "#8a7170",
+                    "primary-fixed-dim": "#ffb3b0",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#a53a3c",
+                    "on-surface-variant": "#574241",
+                    "primary-container": "#c24f50",
+                    "on-surface": "#1b1c17",
+                    "tertiary": "#006a45",
+                    "deep-rose": "#8D2E2E",
+                    "ink-black": "#2D2926",
+                    "primary-fixed": "#ffdad8",
+                    "on-primary-fixed": "#410007",
+                    "secondary": "#0c6780",
+                    "on-secondary": "#ffffff",
+                    "terra-cotta": "#C05247",
+                    "secondary-container": "#9ae1ff",
+                    "surface": "#fbf9f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "container-margin": "20px",
+                    "gutter": "16px",
+                    "section-gap": "40px",
+                    "card-padding": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Be Vietnam Pro"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .paper-shadow {
+            shadow-sm shadow-primary/5;
+            box-shadow: 0 4px 20px -2px rgba(141, 46, 46, 0.05);
+        }
+        .sticky-note {
+            transform: rotate(-1deg);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #fbf9f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #F4B9B2;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-soft-pink selection:text-deep-rose">
+<!-- TopNavBar -->
+<header class="fixed top-0 z-50 w-full bg-background/90 backdrop-blur-md shadow-sm shadow-primary/5">
+<div class="flex justify-between items-center px-container-margin py-4 max-w-[1200px] mx-auto w-full">
+<div class="flex items-center gap-8">
+<a class="font-headline-md text-headline-md text-deep-rose tracking-tight font-extrabold" href="#">TouRose</a>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="#">Catalogue</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Soutenir</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">À propos</a>
+</nav>
+</div>
+<button class="bg-deep-rose text-white px-6 py-3 rounded-full font-label-md text-label-md hover:scale-105 active:scale-95 transition-all shadow-lg shadow-deep-rose/20">
+                Télécharger l'app
+            </button>
+</div>
+</header>
+<main class="pt-24 pb-20 px-container-margin max-w-[1200px] mx-auto">
+<!-- Back Link Mobile -->
+<a class="inline-flex items-center gap-2 mb-6 text-on-surface-variant hover:text-primary md:hidden" href="#">
+<span class="material-symbols-outlined">arrow_back</span>
+<span class="font-label-md">Retour au catalogue</span>
+</a>
+<!-- Hero Section: Bento Inspired Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-8 mb-12">
+<!-- Main Imagery -->
+<div class="lg:col-span-8 relative group">
+<div class="aspect-[16/9] rounded-xl overflow-hidden paper-shadow border border-soft-pink/30">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A cinematic, wide-angle photograph of the historic Capitole de Toulouse at sunset. The warm, golden hour light reflects off the iconic pink brick facade, creating a soft and welcoming glow. The courtyard is peaceful, with minimal human presence to emphasize the grandeur of the architecture. The style is natural, human-centric, and vibrant, capturing the 'Ville Rose' essence in high detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7p_0ucxCM1k3vg3zbIuDbAhLpwX0nLtVwvA7inxBaFlo0UyB80KiFMAlpzIo2nXzF9gWk_A-Iw2PE7dh3-2eoAckc9UX_ZSV1-ppO-UcUpVujkDmXRQqnPhLZ8TEhpdwqP14FmxfFKjCVlQ4y_enw7BqY-Ykkbk4DYOjKzPwQ2dUDw4AXy-ZFaIJL49wDP17UBG0ut7JC91ADjU49lWWVKwMHiW3UK2iIucTjdhwGgIDcP_jp_x_T7ww0k-c-rpVBerkkzf6uJeg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-white">
+<div class="flex gap-2 mb-3">
+<span class="bg-sky-blue-muted text-ink-black px-3 py-1 rounded-full text-label-sm font-label-sm">Monument</span>
+<span class="bg-soft-pink text-deep-rose px-3 py-1 rounded-full text-label-sm font-label-sm">Incontournable</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl lg:text-headline-xl-mobile mb-1">Le Capitole</h1>
+<p class="text-white/90 flex items-center gap-1 font-body-md">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+                            Toulouse, Place du Capitole
+                        </p>
+</div>
+</div>
+</div>
+<!-- Summary Sidebar (Sticky Note style) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="bg-white p-card-padding rounded-xl paper-shadow border border-soft-pink/30 flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md text-deep-rose mb-4">L'essentiel</h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-terra-cotta">schedule</span>
+<div>
+<p class="font-label-md text-on-surface">Horaires d'ouverture</p>
+<p class="text-on-surface-variant text-label-sm">Lun-Ven : 8h30 - 19h00<br/>Dimanche : 10h00 - 19h00</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-terra-cotta">payments</span>
+<div>
+<p class="font-label-md text-on-surface">Tarif</p>
+<p class="text-on-surface-variant text-label-sm">Accès gratuit à la Cour Henri-IV et aux salles d'apparat.</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-terra-cotta">directions_bus</span>
+<div>
+<p class="font-label-md text-on-surface">Accès</p>
+<p class="text-on-surface-variant text-label-sm">Métro A (Capitole), Parking sous la place.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="mt-6 pt-6 border-t border-outline-variant/30">
+<button class="w-full bg-deep-rose text-white py-4 rounded-xl font-label-md flex items-center justify-center gap-2 hover:bg-primary transition-colors shadow-lg shadow-deep-rose/10 group">
+                            Ouvrir dans l'app
+                            <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- CTA Card Small -->
+<div class="bg-soft-pink/20 p-6 rounded-xl border-2 border-dashed border-soft-pink relative overflow-hidden sticky-note">
+<p class="font-label-md text-deep-rose italic mb-2">"Un lieu chargé d'histoire où chaque salle raconte une page de la vie toulousaine."</p>
+<p class="text-label-sm text-on-surface-variant">— Le conseil de l'équipe TouRose</p>
+</div>
+</div>
+</div>
+<!-- Content Grid: Asymmetric Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+<!-- Description -->
+<div class="md:col-span-7 space-y-8">
+<section>
+<h2 class="font-headline-lg text-headline-lg text-ink-black mb-6">À propos du lieu</h2>
+<div class="space-y-4 text-on-surface-variant leading-relaxed text-body-lg font-body-lg">
+<p>Dominant la célèbre place éponyme, le Capitole est le cœur battant de Toulouse depuis plus de huit siècles. Ce chef-d'œuvre architectural abrite à la fois l'Hôtel de Ville et le prestigieux Théâtre du Capitole.</p>
+<p>La façade monumentale en briques roses et pierres blanches, longue de 128 mètres, est ornée de huit colonnes de marbre symbolisant les anciens capitouls. Ne manquez pas de traverser la cour Henri-IV pour découvrir le portail sculpté de la Renaissance, avant de grimper l'escalier d'honneur menant aux salles d'apparat, dont l'éblouissante Salle des Illustres.</p>
+</div>
+</section>
+<section class="bg-surface-container-low p-8 rounded-2xl border border-outline-variant/20">
+<h3 class="font-headline-md text-headline-md text-ink-black mb-4">Bon à savoir</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="text-label-md">Les salles d'apparat sont parfois fermées lors de réceptions officielles.</p>
+</div>
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">camera_alt</span>
+<p class="text-label-md">Photos autorisées sans flash à l'intérieur des salles historiques.</p>
+</div>
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">accessible</span>
+<p class="text-label-md">Accès PMR complet via l'entrée principale et ascenseurs.</p>
+</div>
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">language</span>
+<p class="text-label-md">Audioguides disponibles en 5 langues à l'accueil.</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Location & Secondary Info -->
+<div class="md:col-span-5 space-y-8">
+<section>
+<h2 class="font-headline-md text-headline-md text-ink-black mb-6">Localisation</h2>
+<div class="rounded-2xl overflow-hidden h-72 paper-shadow border border-soft-pink/30 relative">
+<img class="w-full h-full object-cover" data-alt="A stylized, minimalist map showing the center of Toulouse, specifically focusing on the Place du Capitole. The map features soft pastel colors, with the Capitole building highlighted in a warm terra-cotta tone. Street names are subtle and the overall aesthetic is clean and modern, matching a 'paper-and-ink' tactile design system." data-location="Place du Capitole, Toulouse, France" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARQbQN0Pf44noi4gUQBXhoLOnP148UPXSigAHZcEgpEJfDaKC6xqed7_vQxI2zHKhQPKC5bD4_J0sghiNw-5F-niF4gfxtlsgxNb_AQEdHFYetfrrKmN8UGzocz9Mu6xkJejDFc-eIUueHfJ3dvQGQL3mjBuyZ5L8TaKbkGnf0ZFQwk-Q6zGM_lp_iJ1ehkFdT3c5wufWlSNn5oTmaxX8Z-F7_hxY4aubcDxjpbp7OQZEkbOGtbE8Y0Q54-DJ0DYXw9gO1Gh7B8T0"/>
+<div class="absolute inset-0 bg-deep-rose/5 pointer-events-none"></div>
+<!-- Custom Map Marker -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+<div class="relative flex items-center justify-center">
+<div class="absolute w-8 h-8 bg-deep-rose/30 rounded-full animate-ping"></div>
+<span class="material-symbols-outlined text-deep-rose text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<p class="text-label-sm text-on-surface-variant italic">Données : OpenStreetMap Contributors</p>
+<a class="text-primary font-label-md flex items-center gap-1 hover:underline" href="#">
+                            Y aller
+                            <span class="material-symbols-outlined text-sm">directions</span>
+</a>
+</div>
+</section>
+<section class="bg-white p-6 rounded-2xl paper-shadow border border-soft-pink/30">
+<h3 class="font-label-md text-deep-rose uppercase tracking-wider mb-4">Crédits & Sources</h3>
+<ul class="space-y-2 text-label-sm text-on-surface-variant">
+<li class="flex justify-between">
+<span>Photographie</span>
+<span class="text-on-surface font-medium">Archives Municipales</span>
+</li>
+<li class="flex justify-between">
+<span>Texte</span>
+<span class="text-on-surface font-medium">Office de Tourisme</span>
+</li>
+<li class="flex justify-between">
+<span>Mise à jour</span>
+<span class="text-on-surface font-medium">12 Octobre 2023</span>
+</li>
+</ul>
+</section>
+</div>
+</div>
+<!-- Related Places / Discovery Slider -->
+<section class="mt-20">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-ink-black">À proximité</h2>
+<p class="text-on-surface-variant">D'autres trésors à découvrir en quelques pas.</p>
+</div>
+<button class="text-primary font-label-md flex items-center gap-1 group">
+                    Tout voir
+                    <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+</div>
+<div class="flex overflow-x-auto gap-gutter pb-6 custom-scrollbar -mx-container-margin px-container-margin md:mx-0 md:px-0">
+<!-- Card 1 -->
+<div class="min-w-[280px] md:min-w-[320px] bg-white rounded-xl paper-shadow border border-soft-pink/20 overflow-hidden group">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="A warm, atmospheric photo of the Couvent des Jacobins in Toulouse. Focus on the famous palm-tree column with soft light filtering through stained glass. The aesthetic is clean, historical, and inviting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVtnJdBJpgHzJNPDYxiMUXz8XfG0SKwJ0_FxXcwLeA0Ws8sAdO7eaIBi_vfLYlZrGU8g87ppgY0PTRnFMMmruJmo-8zyz7YGLOPzxJIuBypvbnQJ7xe4u4E6uQ7msHl5W9nbplNoFf9g9Rj0U6vsJ6NrJkfkRKeQoTept9yKt2iBk8lOndDeeAquarzfJo0ps62W3hCxAnFtiBn3lK3aj_3ZpDJY2T5qq9uzHYsQ9oHc6QYIcQGfKxIz3JRUJM4jPvUtphrh_wWdw"/>
+<span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-ink-black text-label-sm px-2 py-1 rounded-lg">400m</span>
+</div>
+<div class="p-4">
+<span class="text-label-sm text-terra-cotta font-medium">Patrimoine</span>
+<h4 class="font-headline-md text-headline-md mt-1 mb-2">Couvent des Jacobins</h4>
+<div class="flex items-center gap-1 text-on-surface-variant text-label-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                            Ferme à 18h00
+                        </div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[280px] md:min-w-[320px] bg-white rounded-xl paper-shadow border border-soft-pink/20 overflow-hidden group">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="Modern facade of the Théâtre du Capitole during the day. Locals walking by, casual urban vibe, bright morning sun reflecting off clean windows and historic brick." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-HKaellpVmrdDW7Carq6y7-yQVdG3Y_Li_99xO2TDrofu0qIrfMWBMVqwhmIMhE273NL1xmmaAOAq6v1djArfCYsQqbrWOMcF0EiKGAWHIaDZPb26EcZYXsPZt5DrwTEPS5Mk5QzEDE060RrxLx3s7QEHKadD0-gs2M6XR2b2lgbk_4G2THjx0ysc4TR4uyH16qJK1KqhXWPDNKZVhsTqdd0fzQJpoGtqIdYO2jaejrtnTscsxpXaRVIe4eBoblY1_6gugG34EbE"/>
+<span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-ink-black text-label-sm px-2 py-1 rounded-lg">50m</span>
+</div>
+<div class="p-4">
+<span class="text-label-sm text-terra-cotta font-medium">Culture</span>
+<h4 class="font-headline-md text-headline-md mt-1 mb-2">Théâtre du Capitole</h4>
+<div class="flex items-center gap-1 text-on-surface-variant text-label-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                            Selon programmation
+                        </div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[280px] md:min-w-[320px] bg-white rounded-xl paper-shadow border border-soft-pink/20 overflow-hidden group">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform" data-alt="The vibrant and busy Rue d'Alsace-Lorraine in Toulouse with its Haussmann-style architecture. People shopping, blue sky above, dynamic city energy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBGuXtAQuYWesG3UHgX9ByzkSHcPRpDL8kInK-QoDLYsw2mxFu98Rur-D2iIISM5wEYh60Senm0YY6tM7GDxfaG_KbUWMszsGR9QO9ZV4wqmlRZrKQGRxPCes7PihwsQpbCiM3J8OVBEVHxK70o7YVIU0sWUeRZskvEwnkOI0a-8q7KFOjRfMpeUjxDZaiG22WFmGQ6MsR1wxb68xuXEhYTVGnbE2FhzxZwvRxaHiOf2uLlv7LeuKcuuAYnd19sp1zBkjMKLY0pp0"/>
+<span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-ink-black text-label-sm px-2 py-1 rounded-lg">150m</span>
+</div>
+<div class="p-4">
+<span class="text-label-sm text-terra-cotta font-medium">Shopping</span>
+<h4 class="font-headline-md text-headline-md mt-1 mb-2">Rue Alsace-Lorraine</h4>
+<div class="flex items-center gap-1 text-on-surface-variant text-label-sm">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                            Accès libre
+                        </div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-margin py-section-gap max-w-[1200px] mx-auto w-full">
+<div class="mb-6 md:mb-0">
+<span class="font-headline-md text-headline-md text-deep-rose font-extrabold tracking-tight">TouRose</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-2">© TouRose. Sans compte obligatoire, toujours.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-on-surface-variant hover:text-secondary transition-colors font-label-sm text-label-sm" href="#">Crédits</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors font-label-sm text-label-sm" href="#">Confidentialité</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors font-label-sm text-label-sm" href="#">Contact</a>
+</div>
+</div>
+</footer>
+<!-- Simple Interactivity for the scroll experience -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simple fade-in effect for the main container
+            const main = document.querySelector('main');
+            main.style.opacity = '0';
+            main.style.transform = 'translateY(10px)';
+            main.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            
+            setTimeout(() => {
+                main.style.opacity = '1';
+                main.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Interaction for CTA button
+            const ctaBtn = document.querySelector('button.bg-deep-rose');
+            ctaBtn.addEventListener('click', () => {
+                ctaBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Ouverture...';
+                setTimeout(() => {
+                    ctaBtn.innerHTML = 'Ouvrir dans l\'app <span class="material-symbols-outlined">open_in_new</span>';
+                }, 2000);
+            });
+        });
+    </script>
+</body></html>

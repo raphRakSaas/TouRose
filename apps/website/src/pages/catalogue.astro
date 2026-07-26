@@ -1,172 +1,383 @@
 ---
-import type { CatalogSearchHit, PublicCollectionRow, PublicEventRow, PublicPlaceRow } from '@tourose/contracts';
+import type { PublicCollectionRow, PublicEventRow, PublicPlaceRow } from '@tourose/contracts';
+import CollectionCard from '../components/CollectionCard.astro';
+import EventCard from '../components/EventCard.astro';
+import PlaceCard from '../components/PlaceCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import {
-  loadCatalogSearch,
-  loadPublicCollections,
-  loadPublicPlaces,
-  loadUpcomingEvents,
-} from '../lib/catalog';
-
-const searchQuery = Astro.url.searchParams.get('q')?.trim() ?? '';
+import { APP_APK_DOWNLOAD_URL } from '../lib/site-config';
+import { loadPublicCollections, loadPublicPlaces, loadUpcomingEvents } from '../lib/catalog';
 
 let events: PublicEventRow[] = [];
 let places: PublicPlaceRow[] = [];
 let collections: PublicCollectionRow[] = [];
-let searchHits: CatalogSearchHit[] = [];
 let loadError: string | null = null;
 
 try {
-  [events, places, collections, searchHits] = await Promise.all([
-    loadUpcomingEvents(20),
-    loadPublicPlaces(50),
-    loadPublicCollections(10),
-    searchQuery.length >= 2 ? loadCatalogSearch(searchQuery) : Promise.resolve([]),
+  [events, places, collections] = await Promise.all([
+    loadUpcomingEvents(60),
+    loadPublicPlaces(60),
+    loadPublicCollections(12),
   ]);
 } catch (error) {
   loadError = error instanceof Error ? error.message : 'Chargement impossible';
 }
+
+const totalResults = events.length + places.length + collections.length;
 ---
 
 <BaseLayout
   title="Catalogue — TouRose"
-  description="Événements et lieux publiés à Toulouse, issus du catalogue TouRose."
+  description="Événements, lieux et collections à Toulouse — toujours à jour."
 >
-  <section class="grid gap-8 pt-8">
-    <div>
-      <h1 class="brand text-4xl text-ink-800">Catalogue</h1>
-      <p class="mt-2 max-w-2xl text-ink-600">
-        Lecture publique des contenus publiés via les vues et RPC Supabase. Les brouillons admin
-        n’apparaissent pas ici.
-      </p>
-      <form class="mt-4 flex max-w-xl gap-2" method="get" action="/catalogue">
-        <label class="absolute -left-[9999px]" for="catalogue-search">Rechercher</label>
-        <input
-          id="catalogue-search"
-          type="search"
-          name="q"
-          value={searchQuery}
-          placeholder="Rechercher un lieu ou un événement…"
-          class="flex-1 rounded-md border border-sand-200 bg-white px-3 py-2 text-ink-800"
-        />
-        <button
-          type="submit"
-          class="rounded-md bg-brick-500 px-4 py-2 text-white"
-        >
-          Rechercher
-        </button>
-      </form>
-    </div>
-
-    {
-      loadError ? (
-        <p class="rounded-lg bg-sand-100 px-4 py-3 text-sm text-brick-700">
-          {loadError} — vérifie <code>pnpm dev:up</code> et <code>.env.local</code>.
-        </p>
-      ) : null
-    }
-
-    {
-      searchQuery.length >= 2 ? (
-        <div class="grid gap-4">
-          <h2 class="text-2xl font-semibold text-brick-700">
-            Résultats pour « {searchQuery} »
-          </h2>
-          {searchHits.length === 0 ? (
-            <p class="text-sm text-ink-500">Aucun résultat.</p>
-          ) : (
-            <ul class="grid gap-3">
-              {searchHits.map((hit) => (
-                <li class="rounded-lg bg-white/70 p-4">
-                  <p class="text-xs uppercase text-brick-600">{hit.entity_type}</p>
-                  <a
-                    class="font-semibold text-ink-800 no-underline hover:underline"
-                    href={
-                      hit.entity_type === 'place'
-                        ? `/catalogue/lieux/${hit.slug}`
-                        : `/catalogue/evenements/${hit.slug}`
-                    }
-                  >
-                    {hit.title}
-                  </a>
-                  <p class="mt-1 text-sm text-ink-600">{hit.summary ?? ''}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ) : null
-    }
-
-    {
-      !loadError && events.length === 0 && places.length === 0 ? (
-        <p class="text-sm text-ink-500">
-          Catalogue vide ou clés Supabase manquantes. Lance le stack local puis republie depuis
-          l’admin.
-        </p>
-      ) : null
-    }
-
-    {
-      collections.length > 0 ? (
-        <div class="grid gap-4">
-          <h2 class="text-2xl font-semibold text-brick-700">Collections</h2>
-          <ul class="grid gap-3">
-            {collections.map((collectionRow) => (
-              <li class="rounded-lg bg-white/70 p-4">
-                <p class="font-semibold text-ink-800">{collectionRow.title}</p>
-                <p class="mt-1 text-sm text-ink-600">{collectionRow.summary ?? ''}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null
-    }
-
-    <div class="grid gap-4">
-      <h2 class="text-2xl font-semibold text-brick-700">Événements à venir</h2>
-      <ul class="grid gap-3">
-        {
-          events.map((eventRow) => (
-            <li class="rounded-lg bg-white/70 p-4">
-              <a
-                class="font-semibold text-ink-800 no-underline hover:underline"
-                href={`/catalogue/evenements/${eventRow.slug}`}
+  <div class="min-h-screen px-container-margin pt-24 pb-section-gap">
+    <div class="mx-auto max-w-[1200px]">
+      {
+        loadError ? (
+          <div class="py-20 text-center">
+            <div class="mb-2 font-headline-md text-headline-md text-deep-rose">Connexion impossible</div>
+            <p class="mb-6 font-body-md text-on-surface-variant">On n'arrive pas à charger le catalogue pour l'instant.</p>
+            <a href="/catalogue" class="font-label-md text-primary underline underline-offset-4">
+              Réessayer
+            </a>
+          </div>
+        ) : (
+          <>
+            <div class="mb-10">
+              <h1 class="mb-6 font-headline-xl text-headline-xl text-ink-black">Découvre ta ville.</h1>
+              <div
+                class="no-scrollbar flex items-center gap-4 overflow-x-auto border-b border-outline-variant"
+                role="tablist"
+                aria-label="Type de catalogue"
               >
-                {eventRow.title}
-              </a>
-              <p class="mt-1 text-sm text-ink-600">{eventRow.summary ?? 'Sans résumé'}</p>
-              {eventRow.next_starts_at ? (
-                <p class="mt-2 text-xs text-garonne-700">
-                  {new Date(eventRow.next_starts_at).toLocaleString('fr-FR')}
+                <button
+                  type="button"
+                  class="catalogue-tab whitespace-nowrap border-b-2 border-primary px-6 py-4 font-bold text-primary transition-transform active:scale-95"
+                  data-tab="events"
+                  role="tab"
+                  aria-selected="true"
+                >
+                  Événements
+                </button>
+                <button
+                  type="button"
+                  class="catalogue-tab whitespace-nowrap px-6 py-4 font-medium text-on-surface-variant transition-transform hover:text-primary active:scale-95"
+                  data-tab="places"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Lieux
+                </button>
+                <button
+                  type="button"
+                  class="catalogue-tab whitespace-nowrap px-6 py-4 font-medium text-on-surface-variant transition-transform hover:text-primary active:scale-95"
+                  data-tab="collections"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Collections
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-12 flex flex-col gap-6">
+              <div class="flex flex-col items-center gap-4 md:flex-row">
+                <label class="relative w-full md:flex-1">
+                  <span class="material-symbols-outlined absolute top-1/2 left-4 -translate-y-1/2 text-on-surface-variant">
+                    search
+                  </span>
+                  <input
+                    id="catalogue-search"
+                    type="search"
+                    placeholder="Un secret bien gardé, une expo..."
+                    autocomplete="off"
+                    class="w-full rounded-xl border-none bg-soft-pink/10 py-4 pr-4 pl-12 font-body-md text-body-md text-ink-black placeholder:text-on-surface-variant/60 focus:ring-2 focus:ring-secondary/30"
+                  />
+                </label>
+              </div>
+
+              <div id="catalogue-filters" class="no-scrollbar flex items-center gap-3 overflow-x-auto py-1">
+                <span class="mr-2 shrink-0 font-label-md text-label-md text-on-surface-variant">Populaire :</span>
+                <button
+                  type="button"
+                  class="catalogue-chip whitespace-nowrap rounded-full border border-secondary/20 bg-sky-blue-muted/20 px-4 py-2 font-label-sm text-label-sm text-secondary transition-colors hover:bg-secondary/10"
+                  data-filter="weekend"
+                >
+                  Ce week-end
+                </button>
+                <button
+                  type="button"
+                  class="catalogue-chip whitespace-nowrap rounded-full border border-primary/20 bg-soft-pink/20 px-4 py-2 font-label-sm text-label-sm text-primary transition-colors hover:bg-primary/10"
+                  data-filter="free"
+                >
+                  Gratuit
+                </button>
+                <button
+                  type="button"
+                  class="catalogue-chip whitespace-nowrap rounded-full border border-tertiary/20 bg-tertiary/10 px-4 py-2 font-label-sm text-label-sm text-tertiary transition-colors hover:bg-tertiary/20"
+                  data-filter="outdoor"
+                >
+                  Extérieur
+                </button>
+                <button
+                  type="button"
+                  id="catalogue-reset-filters"
+                  class="hidden whitespace-nowrap font-label-md text-primary underline underline-offset-4"
+                >
+                  Réinitialiser
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                  <span id="catalogue-count" class="font-bold text-ink-black">{totalResults}</span> pépites trouvées à
+                  Toulouse
                 </p>
-              ) : null}
-            </li>
-          ))
-        }
-      </ul>
-    </div>
+                <div class="hidden items-center gap-2 font-label-md text-label-md text-on-surface-variant sm:flex">
+                  <span>Trier par :</span>
+                  <span class="cursor-default font-bold text-ink-black">Date</span>
+                </div>
+              </div>
+            </div>
 
-    <div class="grid gap-4">
-      <h2 class="text-2xl font-semibold text-brick-700">Lieux</h2>
-      <ul class="grid gap-3">
-        {
-          places.map((placeRow) => (
-            <li class="rounded-lg bg-white/70 p-4">
-              <a
-                class="font-semibold text-ink-800 no-underline hover:underline"
-                href={`/catalogue/lieux/${placeRow.slug}`}
-              >
-                {placeRow.name}
-              </a>
-              <p class="mt-1 text-sm text-ink-600">{placeRow.summary ?? 'Sans résumé'}</p>
-              <p class="mt-2 text-xs text-garonne-700">
-                {placeRow.place_type} · {placeRow.city ?? 'Toulouse'}
+            <div id="catalogue-empty" class="hidden flex-col items-center py-20 text-center">
+              <div class="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-surface-container-high">
+                <span class="material-symbols-outlined text-[48px] text-on-surface-variant/40">sentiment_dissatisfied</span>
+              </div>
+              <h3 class="mb-2 font-headline-md text-headline-md text-ink-black">Mince, aucune pépite ici.</h3>
+              <p class="max-w-sm font-body-md text-body-md text-on-surface-variant">
+                Essaie de modifier tes filtres ou ta recherche pour trouver d'autres trésors toulousains.
               </p>
-            </li>
-          ))
-        }
-      </ul>
+              <button
+                type="button"
+                id="catalogue-empty-reset"
+                class="mt-6 font-bold text-primary underline underline-offset-4 transition-colors hover:text-deep-rose"
+              >
+                Réinitialiser tout
+              </button>
+            </div>
+
+            <div id="catalogue-panel-events" class="catalogue-panel">
+              <div class="grid grid-cols-1 gap-x-gutter gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+                {events.map((eventRow) => (
+                  <div
+                    class="catalogue-event-item"
+                    data-price-type={eventRow.price_type}
+                    data-indoor-outdoor={eventRow.indoor_outdoor}
+                    data-starts-at={eventRow.next_starts_at ?? ''}
+                    data-title={eventRow.title}
+                    data-summary={eventRow.summary ?? ''}
+                  >
+                    <EventCard eventRow={eventRow} />
+                  </div>
+                ))}
+              </div>
+              <div class="mt-20 flex flex-col items-center gap-12">
+                <button
+                  type="button"
+                  id="catalogue-load-more"
+                  class="rounded-full border-2 border-terra-cotta px-10 py-4 font-label-md text-label-md text-terra-cotta transition-all hover:bg-terra-cotta hover:text-white active:scale-95"
+                >
+                  Charger plus de pépites
+                </button>
+                <div class="sticky-note relative w-full max-w-md overflow-hidden rounded-lg border-2 border-soft-pink/50 bg-soft-pink/30 p-8 shadow-lg">
+                  <div class="absolute -top-4 -right-4 h-12 w-12 rotate-45 border-b-2 border-l-2 border-soft-pink/50 bg-background" />
+                  <h4 class="mb-3 flex items-center gap-2 font-headline-md text-headline-md text-deep-rose">
+                    <span class="material-symbols-outlined">push_pin</span>
+                    Garde le catalogue en poche
+                  </h4>
+                  <p class="mb-6 font-body-md text-body-md font-medium text-ink-black/80 italic">
+                    « C'est comme avoir un ami toulousain qui connaît tous les coins secrets, directement dans ton
+                    téléphone. »
+                  </p>
+                  <a
+                    href={APP_APK_DOWNLOAD_URL}
+                    class="inline-flex items-center gap-2 rounded-lg bg-ink-black px-4 py-2 font-label-sm text-label-sm text-white transition-colors hover:bg-black/80"
+                  >
+                    <span class="material-symbols-outlined text-[18px]">file_download</span>
+                    Télécharger l'app
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div id="catalogue-panel-places" class="catalogue-panel hidden">
+              <div class="grid grid-cols-1 gap-x-gutter gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+                {places.map((placeRow) => (
+                  <div
+                    class="catalogue-place-item"
+                    data-price-type={placeRow.price_type}
+                    data-indoor-outdoor={placeRow.indoor_outdoor}
+                    data-title={placeRow.name}
+                    data-summary={placeRow.summary ?? ''}
+                  >
+                    <PlaceCard placeRow={placeRow} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div id="catalogue-panel-collections" class="catalogue-panel hidden">
+              <div id="collections" class="grid grid-cols-1 gap-x-gutter gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+                {collections.map((collectionRow) => (
+                  <div
+                    class="catalogue-collection-item"
+                    data-title={collectionRow.title}
+                    data-summary={collectionRow.summary ?? ''}
+                  >
+                    <CollectionCard collectionRow={collectionRow} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )
+      }
     </div>
-  </section>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('catalogue-search');
+    const countElement = document.getElementById('catalogue-count');
+    const emptyState = document.getElementById('catalogue-empty');
+    const resetFiltersButton = document.getElementById('catalogue-reset-filters');
+    const emptyResetButton = document.getElementById('catalogue-empty-reset');
+    const loadMoreButton = document.getElementById('catalogue-load-more');
+    const filterButtons = document.querySelectorAll('.catalogue-chip');
+    const tabButtons = document.querySelectorAll('.catalogue-tab');
+    const panels = {
+      events: document.getElementById('catalogue-panel-events'),
+      places: document.getElementById('catalogue-panel-places'),
+      collections: document.getElementById('catalogue-panel-collections'),
+    };
+
+    if (searchInput && countElement && emptyState) {
+      const activeFilters = new Set();
+      let activeTab = 'events';
+      let visibleLimit = 12;
+
+      function normalizeQuery(value) {
+        return value
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim();
+      }
+
+      function isWeekend(dateValue) {
+        if (!dateValue) return false;
+        const day = new Date(dateValue).getDay();
+        return day === 0 || day === 6;
+      }
+
+      function matchesFilters(itemElement) {
+        const query = normalizeQuery(searchInput.value);
+        const title = normalizeQuery(itemElement.getAttribute('data-title') ?? '');
+        const summary = normalizeQuery(itemElement.getAttribute('data-summary') ?? '');
+
+        if (query.length >= 2 && !`${title} ${summary}`.includes(query)) return false;
+        if (activeFilters.has('free') && itemElement.getAttribute('data-price-type') !== 'free') return false;
+        if (activeFilters.has('outdoor') && itemElement.getAttribute('data-indoor-outdoor') !== 'outdoor') return false;
+        if (activeFilters.has('weekend') && !isWeekend(itemElement.getAttribute('data-starts-at'))) return false;
+        return true;
+      }
+
+      function getActiveItems() {
+        if (activeTab === 'events') return Array.from(document.querySelectorAll('.catalogue-event-item'));
+        if (activeTab === 'places') return Array.from(document.querySelectorAll('.catalogue-place-item'));
+        return Array.from(document.querySelectorAll('.catalogue-collection-item'));
+      }
+
+      function updateChipStyles() {
+        filterButtons.forEach((chipButton) => {
+          const filterName = chipButton.getAttribute('data-filter');
+          const isActive = filterName ? activeFilters.has(filterName) : false;
+          chipButton.classList.toggle('ring-2', isActive);
+          chipButton.classList.toggle('ring-deep-rose/40', isActive);
+          chipButton.classList.toggle('font-bold', isActive);
+        });
+        resetFiltersButton?.classList.toggle('hidden', activeFilters.size === 0);
+      }
+
+      function updateTabStyles() {
+        tabButtons.forEach((tabButton) => {
+          const isSelected = tabButton.getAttribute('data-tab') === activeTab;
+          tabButton.setAttribute('aria-selected', String(isSelected));
+          tabButton.classList.toggle('border-b-2', isSelected);
+          tabButton.classList.toggle('border-primary', isSelected);
+          tabButton.classList.toggle('font-bold', isSelected);
+          tabButton.classList.toggle('text-primary', isSelected);
+          tabButton.classList.toggle('text-on-surface-variant', !isSelected);
+          tabButton.classList.toggle('font-medium', !isSelected);
+        });
+      }
+
+      function renderCatalogue() {
+        const items = getActiveItems();
+        const matchedItems = items.filter((itemElement) => matchesFilters(itemElement));
+
+        items.forEach((itemElement) => itemElement.classList.add('hidden'));
+        matchedItems.slice(0, visibleLimit).forEach((itemElement) => itemElement.classList.remove('hidden'));
+
+        countElement.textContent = String(matchedItems.length);
+        emptyState.classList.toggle('hidden', matchedItems.length > 0);
+        emptyState.classList.toggle('flex', matchedItems.length === 0);
+
+        Object.values(panels).forEach((panelElement) => {
+          panelElement?.classList.toggle('hidden', panelElement.id !== `catalogue-panel-${activeTab}`);
+        });
+
+        loadMoreButton?.classList.toggle('hidden', activeTab !== 'events' || matchedItems.length <= visibleLimit);
+        updateChipStyles();
+        updateTabStyles();
+      }
+
+      function setActiveTab(tabName) {
+        activeTab = tabName;
+        visibleLimit = 12;
+        document.getElementById('catalogue-filters')?.classList.toggle('hidden', tabName === 'collections');
+        renderCatalogue();
+      }
+
+      function resetFilters() {
+        activeFilters.clear();
+        visibleLimit = 12;
+        if (searchInput instanceof HTMLInputElement) searchInput.value = '';
+        renderCatalogue();
+      }
+
+      tabButtons.forEach((tabButton) => {
+        tabButton.addEventListener('click', () => {
+          const tabName = tabButton.getAttribute('data-tab');
+          if (tabName === 'events' || tabName === 'places' || tabName === 'collections') setActiveTab(tabName);
+        });
+      });
+
+      filterButtons.forEach((chipButton) => {
+        chipButton.addEventListener('click', () => {
+          const filterName = chipButton.getAttribute('data-filter');
+          if (!filterName) return;
+          if (activeFilters.has(filterName)) activeFilters.delete(filterName);
+          else activeFilters.add(filterName);
+          visibleLimit = 12;
+          renderCatalogue();
+        });
+      });
+
+      searchInput.addEventListener('input', () => {
+        visibleLimit = 12;
+        renderCatalogue();
+      });
+
+      resetFiltersButton?.addEventListener('click', resetFilters);
+      emptyResetButton?.addEventListener('click', resetFilters);
+      loadMoreButton?.addEventListener('click', () => {
+        visibleLimit += 12;
+        renderCatalogue();
+      });
+
+      if (window.location.hash === '#lieux') setActiveTab('places');
+      else if (window.location.hash === '#collections') setActiveTab('collections');
+      else renderCatalogue();
+    }
+  </script>
 </BaseLayout>

@@ -1,0 +1,31 @@
+---
+import type { PublicCollectionRow } from '@tourose/contracts';
+
+interface Props {
+  collectionRow: PublicCollectionRow;
+}
+
+const { collectionRow } = Astro.props;
+const gradientClass =
+  collectionRow.title.length % 4 === 0
+    ? 'from-brick-400/80 to-garonne-500/70'
+    : collectionRow.title.length % 4 === 1
+      ? 'from-garonne-400/70 to-violet-500/60'
+      : collectionRow.title.length % 4 === 2
+        ? 'from-violet-400/70 to-brick-400/70'
+        : 'from-sand-300/80 to-garonne-400/70';
+---
+
+<div class="group overflow-hidden rounded-2xl border border-soft-pink/20 card-shadow-sm">
+  <div class:list={['aspect-[4/5] bg-gradient-to-br transition duration-500 group-hover:scale-105', gradientClass]}>
+  </div>
+  <div class="p-4">
+    <p class="font-label-sm text-label-sm font-medium tracking-wider text-on-surface-variant uppercase">Collection</p>
+    <p class="mt-1 font-headline-md text-headline-md text-ink-black transition-colors group-hover:text-primary">
+      {collectionRow.title}
+    </p>
+    {collectionRow.summary ? (
+      <p class="mt-2 line-clamp-2 text-sm text-ink-500">{collectionRow.summary}</p>
+    ) : null}
+  </div>
+</div>

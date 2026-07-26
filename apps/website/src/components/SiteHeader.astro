@@ -1,0 +1,126 @@
+---
+import { APP_APK_DOWNLOAD_URL } from '../lib/site-config';
+
+const currentPath = Astro.url.pathname;
+
+const isHomePage = currentPath === '/';
+
+const navItems = isHomePage
+  ? [
+      { href: '/catalogue', label: 'Catalogue' },
+      { href: '/soutien', label: 'Soutenir' },
+      { href: '/#concept', label: 'Le Concept' },
+    ]
+  : [
+      { href: '/catalogue', label: 'Catalogue' },
+      { href: '/soutien', label: 'Soutenir' },
+      { href: '/apropos', label: 'À propos' },
+    ];
+
+function isActive(href: string): boolean {
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+}
+---
+
+<header class="fixed top-0 right-0 left-0 z-50 border-b border-soft-pink/10 bg-background/90 backdrop-blur-lg">
+  <nav class="mx-auto flex w-full max-w-[1280px] items-center justify-between px-container-margin py-5">
+    <a
+      href="/"
+      class="group flex items-center gap-2 font-headline-md text-headline-md font-extrabold tracking-tight text-deep-rose no-underline"
+      aria-label="TouRose — accueil"
+    >
+      <img
+        src="/brand/logo-icon.png"
+        alt=""
+        width="36"
+        height="36"
+        class="h-9 w-9 transition-transform group-hover:rotate-12"
+      />
+      <span>TouRose</span>
+    </a>
+
+    <div class="stitch-desktop-nav hidden items-center gap-10 md:flex" aria-label="Navigation principale">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'group relative font-label-md text-label-md no-underline transition-colors',
+              isActive(item.href)
+                ? 'font-bold text-primary'
+                : 'text-on-surface-variant hover:text-primary',
+            ]}
+          >
+            {item.label}
+            {
+              isActive(item.href) ? (
+                <span class="absolute -bottom-1 left-0 h-0.5 w-full bg-primary" />
+              ) : (
+                <span class="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all group-hover:w-full" />
+              )
+            }
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="flex items-center gap-2">
+      <a
+        href={APP_APK_DOWNLOAD_URL}
+        class="stitch-desktop-nav hidden rounded-full bg-deep-rose px-7 py-3.5 font-label-md text-label-md text-white no-underline shadow-xl shadow-deep-rose/30 transition-all hover:bg-primary active:scale-95 md:inline-flex"
+      >
+        Télécharger l'app
+      </a>
+      <button
+        type="button"
+        id="mobile-menu-toggle"
+        class="stitch-mobile-toggle hidden h-11 w-11 items-center justify-center rounded-xl border border-outline-variant/30 bg-white/80 text-ink-black md:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu-panel"
+        aria-label="Ouvrir le menu"
+      >
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
+  </nav>
+
+  <div id="mobile-menu-panel" class="hidden border-t border-soft-pink/10 bg-background/95 px-container-margin py-4 backdrop-blur-lg md:hidden">
+    <div class="flex flex-col gap-1">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'rounded-xl px-4 py-3 font-label-md text-label-md no-underline',
+              isActive(item.href) ? 'bg-deep-rose text-white' : 'text-on-surface-variant hover:bg-white/70',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a href="/credits" class="rounded-xl px-4 py-3 font-label-md text-label-md text-on-surface-variant no-underline hover:bg-white/70">
+        Crédits
+      </a>
+      <a
+        href={APP_APK_DOWNLOAD_URL}
+        class="mt-2 rounded-xl bg-deep-rose py-3 text-center font-label-md text-label-md text-white no-underline"
+      >
+        Télécharger l'app
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const menuToggle = document.getElementById('mobile-menu-toggle');
+  const menuPanel = document.getElementById('mobile-menu-panel');
+
+  if (menuToggle && menuPanel) {
+    menuToggle.addEventListener('click', () => {
+      const isOpen = !menuPanel.classList.contains('hidden');
+      menuPanel.classList.toggle('hidden', isOpen);
+      menuToggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+  }
+</script>

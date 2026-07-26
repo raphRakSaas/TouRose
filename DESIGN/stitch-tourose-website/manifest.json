@@ -1,0 +1,62 @@
+{
+  "projectId": "5841602793663413564",
+  "projectTitle": "TouRose Public Web Platform",
+  "stitchUrl": "https://stitch.withgoogle.com/",
+  "exportedAt": "2026-07-26T15:52:18.887Z",
+  "screens": [
+    {
+      "screenId": "7c778d4fdde1492a8c5ebe0c4ef1f0b1",
+      "fileName": "accueil.html",
+      "title": "Accueil",
+      "path": "DESIGN/stitch-tourose-website/accueil.html"
+    },
+    {
+      "screenId": "55c4a24b97b5496383da9fcb384bbd7e",
+      "fileName": "catalogue.html",
+      "title": "Catalogue",
+      "path": "DESIGN/stitch-tourose-website/catalogue.html"
+    },
+    {
+      "screenId": "487a83eb749a4a4b82ec9a35f1b6200d",
+      "fileName": "apropos.html",
+      "title": "À propos",
+      "path": "DESIGN/stitch-tourose-website/apropos.html"
+    },
+    {
+      "screenId": "b8824ccc2d9945f1ab9801918e3a2900",
+      "fileName": "soutien.html",
+      "title": "Soutenir",
+      "path": "DESIGN/stitch-tourose-website/soutien.html"
+    },
+    {
+      "screenId": "16746238386441ffb7de4efd3ddb95fa",
+      "fileName": "credits.html",
+      "title": "Crédits",
+      "path": "DESIGN/stitch-tourose-website/credits.html"
+    },
+    {
+      "screenId": "81c7f4ef9b5043fd913b6305961f4936",
+      "fileName": "confidentialite.html",
+      "title": "Confidentialité",
+      "path": "DESIGN/stitch-tourose-website/confidentialite.html"
+    },
+    {
+      "screenId": "785543a6d801444ebc4c1699590e6cc6",
+      "fileName": "evenement-detail.html",
+      "title": "Fiche événement",
+      "path": "DESIGN/stitch-tourose-website/evenement-detail.html"
+    },
+    {
+      "screenId": "3a032bbe7d0a4699a9c0e7c75667d9bc",
+      "fileName": "lieu-detail.html",
+      "title": "Fiche lieu",
+      "path": "DESIGN/stitch-tourose-website/lieu-detail.html"
+    },
+    {
+      "screenId": "cdca858b129d4992896178adda31335d",
+      "fileName": "soutien-merci.html",
+      "title": "Merci",
+      "path": "DESIGN/stitch-tourose-website/soutien-merci.html"
+    }
+  ]
+}

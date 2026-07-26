@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Paiement annulé — TouRose" description="Paiement TouRose annulé.">
+  <section class="mx-auto max-w-[600px] px-container-margin pt-32 pb-24 text-center">
+    <div class="paper-card rounded-2xl px-6 py-12">
+      <h1 class="mb-4 font-headline-xl text-headline-xl text-deep-rose">Paiement annulé</h1>
+      <p class="mb-8 font-body-lg text-body-lg leading-relaxed text-on-surface-variant">
+        Aucun montant n'a été débité. Tu peux réessayer quand tu veux.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a
+          href="/soutien"
+          class="rounded-2xl bg-deep-rose px-8 py-4 font-label-md text-label-md text-white shadow-lg transition-all hover:bg-primary"
+        >
+          Revenir au soutien
+        </a>
+        <a
+          href="/"
+          class="rounded-2xl border-2 border-outline px-8 py-4 font-label-md text-label-md text-on-surface-variant transition-all hover:bg-surface-container"
+        >
+          Accueil
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

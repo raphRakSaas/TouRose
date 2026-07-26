@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TouRose | Toulouse à voir, à vivre, à aimer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .paper-texture {
+            background-color: #fbf9f1;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: minmax(220px, auto);
+            gap: 1.5rem;
+        }
+        .card-shadow {
+            box-shadow: 0 20px 40px -10px rgba(161, 55, 58, 0.1);
+        }
+        .polaroid {
+            background: white;
+            padding: 12px 12px 40px 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 20;
+        }
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#f6fff6",
+                        "soft-pink": "#F4B9B2",
+                        "background": "#fbf9f1",
+                        "inverse-primary": "#ffb3b0",
+                        "on-tertiary-fixed": "#002113",
+                        "on-secondary-fixed-variant": "#004d62",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#dcdad2",
+                        "surface-container-high": "#eae8e0",
+                        "surface-container-low": "#f5f4ec",
+                        "surface-container-highest": "#e4e3db",
+                        "on-error": "#ffffff",
+                        "surface-container": "#f0eee6",
+                        "tertiary-fixed-dim": "#5fdda2",
+                        "on-secondary-fixed": "#001f29",
+                        "sky-blue-muted": "#A5D8EA",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#09657f",
+                        "inverse-surface": "#30312c",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#7dfabd",
+                        "secondary-fixed": "#baeaff",
+                        "primary": "#a1373a",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f3f1e9",
+                        "on-primary-container": "#fffbff",
+                        "surface-bright": "#fbf9f1",
+                        "on-background": "#1b1c17",
+                        "tertiary-container": "#008558",
+                        "outline-variant": "#ddc0be",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e4e3db",
+                        "on-primary-fixed-variant": "#852227",
+                        "on-tertiary-fixed-variant": "#005235",
+                        "secondary-fixed-dim": "#89d0ed",
+                        "outline": "#8a7170",
+                        "primary-fixed-dim": "#ffb3b0",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#a53a3c",
+                        "on-surface-variant": "#574241",
+                        "primary-container": "#c24f50",
+                        "on-surface": "#1b1c17",
+                        "tertiary": "#006a45",
+                        "deep-rose": "#8D2E2E",
+                        "ink-black": "#2D2926",
+                        "primary-fixed": "#ffdad8",
+                        "on-primary-fixed": "#410007",
+                        "secondary": "#0c6780",
+                        "on-secondary": "#ffffff",
+                        "terra-cotta": "#C05247",
+                        "secondary-container": "#9ae1ff",
+                        "surface": "#fbf9f1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "container-margin": "20px",
+                        "gutter": "16px",
+                        "section-gap": "40px",
+                        "card-padding": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="paper-texture text-on-background selection:bg-soft-pink selection:text-deep-rose">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-soft-pink/10">
+<nav class="flex justify-between items-center px-container-margin py-5 max-w-[1280px] mx-auto w-full">
+<a class="font-headline-md text-headline-md text-deep-rose flex items-center gap-2 group" href="#">
+<span class="material-symbols-outlined text-4xl transition-transform group-hover:rotate-12">qr_code_2</span>
+<span class="tracking-tight font-extrabold">TouRose</span>
+</a>
+<div class="hidden md:flex items-center gap-10">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors relative group" href="#catalogue">
+                Catalogue
+                <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors relative group" href="#soutenir">
+                Soutenir
+                <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors relative group" href="#concept">
+                Le Concept
+                <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+</a>
+</div>
+<button class="bg-deep-rose text-white px-7 py-3.5 rounded-full font-label-md text-label-md hover:bg-primary transition-all active:scale-95 shadow-xl shadow-deep-rose/30">
+            Télécharger l'app
+        </button>
+</nav>
+</header>
+<main class="overflow-x-hidden">
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex items-center pt-24 pb-20 px-container-margin">
+<!-- Hero Background Immersive Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Panoramic view of Toulouse at sunset" class="w-full h-full object-cover brightness-[0.85] contrast-[1.1]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc2JS0mfFZ3JTQP2spcmYDUtFitMttDo2R5Gjx203TBLjCzMTELmrqw-5Qx4OWvpo4Nk4hlc0V_Z1LCpZ2mmvsjiES3bSdnwGdlGh3FRh0ZsgR5CsLgojx3P030wCd2u9cGW_X6SCVMthB3KsAhYguxst3KnH7UyrQIgLE82Wye8KCCPMrtvnNyj8U5JppXNd7PmlvMw8ZayXhGZjzBIOnjI3jPS5pBYd40NuOvBSpeIySbrLKmxJoj-tVwvtbCjEnxMrivanUyNw"/>
+<div class="absolute inset-0 bg-gradient-to-b from-background/40 via-background/20 to-background"></div>
+</div>
+<div class="relative z-10 max-w-[1200px] mx-auto w-full text-center lg:text-left">
+<div class="grid lg:grid-cols-5 gap-16 items-center">
+<div class="lg:col-span-3">
+<span class="inline-block px-5 py-2 bg-white/90 backdrop-blur text-deep-rose rounded-full font-label-sm text-label-sm mb-8 border border-soft-pink shadow-sm">
+                        ✨ Redécouvrez la Ville Rose autrement
+                    </span>
+<h1 class="font-headline-xl text-[48px] md:text-[80px] leading-[1.1] text-ink-black mb-8 tracking-tighter">
+                        Toulouse <br/>
+<span class="relative inline-block">
+<span class="relative z-10 text-deep-rose">à voir, à vivre,</span>
+<span class="absolute bottom-2 left-0 w-full h-4 bg-soft-pink/40 -z-10 rotate-1"></span>
+</span><br/>
+                        à aimer.
+                    </h1>
+<p class="font-body-lg text-body-lg text-ink-black/80 max-w-xl mb-12 leading-relaxed mx-auto lg:mx-0 text-lg">
+                        Marre de scroller des listes infinies ? <br/>
+                        On vous sélectionne <strong>3 pépites par jour</strong>. <br/>
+                        L'essentiel, pour profiter de l'instant.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+<button class="group bg-deep-rose text-white px-10 py-5 rounded-2xl font-label-md text-label-md hover:bg-primary transition-all flex items-center justify-center gap-3 shadow-2xl shadow-deep-rose/40 hover:-translate-y-1">
+<span class="material-symbols-outlined text-2xl group-hover:animate-bounce" style="font-variation-settings: 'FILL' 1;">download</span>
+                            Prends l'app gratuitement
+                        </button>
+<button class="glass-morphism text-ink-black px-10 py-5 rounded-2xl font-label-md text-label-md hover:bg-white transition-all text-center border-2 border-white shadow-xl hover:-translate-y-1">
+                            Explorer le catalogue
+                        </button>
+</div>
+</div>
+<!-- Floating Elements Hero -->
+<div class="hidden lg:block lg:col-span-2 relative">
+<div class="polaroid absolute -top-20 -left-10 rotate-[-6deg] w-64">
+<img alt="Brick texture" class="w-full aspect-square object-cover mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA30yju0DYXjagvphggz3bSxnE-XuMc6nYIWWSa-_CpFo38Sep9tW-v1UO8z_AxDBk22LaZcZqhVec8skHyxb1Zqm0CyPzULa2c8dj0pLkkrPqeTn2r7kKix___ifzPpmClqjo_mMnS8y7TxvI4Dtk4TmdniEDZtssH66de9ztURPEN4Mi_noo5un5aiWXGpPEXJFuVSSdsYSkTQUq3zJeFVsfvUg6IikPrfNHm3bClHvxiQj7uK5EqI7mwsXZDrLTvKHV6rtKg-E"/>
+<p class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest text-center">Briques &amp; Histoire</p>
+</div>
+<div class="polaroid absolute top-20 right-0 rotate-[4deg] w-72">
+<img alt="Toulouse Cafe" class="w-full aspect-[4/5] object-cover mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIXD_rGE14K1nRFHUaUuQd9UdMYSdiGD2g3nlj4XepCK7AlNvhQNa75L8sBeODe7bdaMJ0R7VjO4_xnFZVsmuG8WeUy8OiTS-9Qp8VOa_7JuK9YgfZhQ3hWpmPt9o_U1rQ8zzXpPLH9zprbjh8fEc1Uj_-nopuIZ3XygDRBGQo1LVVMRtGsbyWmc3qSFcvG6c6M8eghvF3et0Jsna3jZzvghoYANP17fyb5y-EK45xT3zX_ld8Cs7IdwH8bejFMCIpj6uVFg9ZRs0"/>
+<p class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-widest text-center">Douceur de vivre</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Concept: The Daily 3 -->
+<section class="py-32 px-container-margin relative overflow-hidden" id="concept">
+<div class="absolute top-0 right-0 w-96 h-96 bg-soft-pink/10 rounded-full blur-[100px] -z-10"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-sky-blue-muted/10 rounded-full blur-[100px] -z-10"></div>
+<div class="max-w-[1200px] mx-auto">
+<div class="text-center mb-24">
+<h2 class="font-headline-xl text-headline-xl text-ink-black mb-6">Le paradoxe du choix ? On l'a résolu.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                    Trop de possibilités tuent l'envie. On fait le tri pour ne vous offrir que l'exceptionnel.
+                </p>
+</div>
+<div class="grid md:grid-cols-2 gap-12 items-center">
+<!-- Visualizing the Selection -->
+<div class="space-y-6">
+<div class="bg-white p-8 rounded-3xl card-shadow border border-soft-pink/20 relative group hover:-translate-y-2 transition-transform">
+<div class="flex items-start gap-6">
+<div class="w-16 h-16 bg-soft-pink flex items-center justify-center rounded-2xl shrink-0">
+<span class="material-symbols-outlined text-3xl text-deep-rose" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md mb-2">1. Le Goût</h3>
+<p class="text-on-surface-variant">Le petit resto que seuls les locaux connaissent.</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-8 rounded-3xl card-shadow border border-soft-pink/20 relative group hover:-translate-y-2 transition-transform ml-8">
+<div class="flex items-start gap-6">
+<div class="w-16 h-16 bg-sky-blue-muted flex items-center justify-center rounded-2xl shrink-0">
+<span class="material-symbols-outlined text-3xl text-secondary" style="font-variation-settings: 'FILL' 1;">park</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md mb-2">2. La Balade</h3>
+<p class="text-on-surface-variant">Un coin de verdure caché pour déconnecter.</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-8 rounded-3xl card-shadow border border-soft-pink/20 relative group hover:-translate-y-2 transition-transform ml-16">
+<div class="flex items-start gap-6">
+<div class="w-16 h-16 bg-terra-cotta/20 flex items-center justify-center rounded-2xl shrink-0">
+<span class="material-symbols-outlined text-3xl text-terra-cotta" style="font-variation-settings: 'FILL' 1;">theater_comedy</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md mb-2">3. La Culture</h3>
+<p class="text-on-surface-variant">L'expo éphémère à ne pas rater ce weekend.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:pl-12">
+<div class="p-10 bg-deep-rose rounded-[40px] text-white shadow-2xl relative overflow-hidden">
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+<h3 class="font-headline-lg text-headline-lg mb-6">Finies les hésitations.</h3>
+<p class="font-body-lg mb-8 opacity-90 leading-relaxed">
+                            Chaque matin à 8h, votre trio personnalisé vous attend. Que vous soyez d'humeur festive ou contemplative, on a la pépite qu'il vous faut.
+                        </p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-soft-pink">check_circle</span>
+<span>Sélectionné par des Toulousains</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-soft-pink">check_circle</span>
+<span>Pas de pubs, que du vrai</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-soft-pink">check_circle</span>
+<span>Expérience 100% gratuite</span>
+</li>
+</ul>
+<button class="w-full bg-white text-deep-rose py-4 rounded-2xl font-label-md hover:bg-soft-pink hover:text-white transition-all font-bold">
+                            Comment ça marche ?
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Catalogue Preview -->
+<section class="py-24 px-container-margin bg-surface-container-low/30" id="catalogue">
+<div class="max-w-[1200px] mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div>
+<h2 class="font-headline-xl text-headline-xl mb-4">Le cœur battant de Toulouse</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Un aperçu des trésors qui vous attendent.</p>
+</div>
+<a class="text-deep-rose font-label-md text-label-md flex items-center gap-2 group px-6 py-3 bg-white rounded-full shadow-sm" href="#">
+                    Voir tout le catalogue
+                    <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+</a>
+</div>
+<div class="bento-grid flex flex-col md:grid">
+<!-- Large Highlight -->
+<div class="md:col-span-2 md:row-span-2 relative rounded-[32px] overflow-hidden group shadow-2xl">
+<img alt="Marché Toulouse" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVlus3uTFx7fV44e1TUSp9is_3lYXeTVNvsM6Iopo9cVC8s4RPBdzxvf0aujMd9tAem3K5I53j1w6RloRYzGogBe8QVsk8DizR61WrBzpK4bINPp2sAGNtppVfEaMVc1hywSAXoL_1K49g9elD8AmJu548dJo4lmqMPiK86GbaTZ45uhOla03ig9P-42cMyMsguCqFu2AEPsYnZXQGHi_FewO9iBvAfrhrzqnTytWqlYZsSwiCw25QpgSlyy-5gwZRClBttYXfOXM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-ink-black/90 via-ink-black/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10">
+<span class="px-4 py-1.5 bg-sky-blue-muted text-secondary rounded-full font-label-sm text-label-sm mb-4 inline-block font-bold">ÉVÉNEMENT</span>
+<h3 class="font-headline-xl text-white mb-3">Le Marché de la Daurade</h3>
+<p class="text-white/80 font-body-md text-lg">L'artisanat local au fil de l'eau ce dimanche.</p>
+</div>
+</div>
+<!-- Secondary Highlights -->
+<div class="md:col-span-2 relative rounded-[32px] overflow-hidden group shadow-xl h-[280px]">
+<img alt="Coffee shop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwWxAwcAUwWpZYiTayFLXTUA81r3Eyu_h1nGZclQogV0ioIcMsXoCPIvBDK_KiQB9jJICiad8eYJaTbaZomtkv0l0qFZWPFMqiyt5WVAm3WwqC5ETH1jl_CglyoF3AFfD-Tkam3B5OlNKzTbVj6_QXAEbkDpcZf7VFNfQGtRbxj9hgvVozIhCucP8o6YZr66Pr2xxVXYv59-7FiH8_SqxjB2kOZO3qHXM0g44TrPoC2MMha8HRz_aYsh2Wwr9KNlEs5MRJZ1Q9IAY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-ink-black/80 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<span class="px-4 py-1.5 bg-soft-pink text-deep-rose rounded-full font-label-sm text-label-sm mb-3 inline-block font-bold">PAUSE CAFÉ</span>
+<h3 class="font-headline-md text-white">Le Refuge des Artistes</h3>
+</div>
+</div>
+<div class="relative rounded-[32px] overflow-hidden group shadow-xl h-[280px]">
+<img alt="Street Art" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvCXujJVLg9ItD_UHrFTCId4YqC8qIB50AzkKCaRCxqOq0xy-FWTk4okJQmqJ2V68-lKsyzRRzXyiRM3IjDFNyHkDN2K4-CLU_bALxDt0XEjcpGvn1l0h8z-0oShRSeslM5uN_5kWgSUkNdSHu0Ph50mPIBLDggSxhkdUseeoQT1UbiMNFN1sBZWd02HXl6KqGGsK4bm1secPKQc4HcO4tbdyQa_f5jwMyksdTGZT7IpJVANgLLjok2Er0MsroKfrNt49A6RiZShE"/>
+<div class="absolute inset-0 bg-ink-black/30 group-hover:bg-ink-black/50 transition-colors flex items-center justify-center p-6 text-center">
+<div>
+<span class="material-symbols-outlined text-white text-4xl mb-2">brush</span>
+<h4 class="text-white font-headline-md">Culture Urbaine</h4>
+</div>
+</div>
+</div>
+<div class="relative rounded-[32px] overflow-hidden group shadow-xl h-[280px]">
+<img alt="Garden" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8akR2dAbkMMkCqvhq_Mq8ND_XtXIY5mgtCvKrJv5U2MpfqYVYWsZA4OaEPQMHtM0uBE3vXgMcfV4yzHmP6GqvcRUeXMiKE7odJrHygaSpjKb0s_fr0OOQXNd0wofOPgI4SFj26L_5cXxhXfbnt1OpTiqxCjQPN0VutlMI3NelGvCm9ZxfbIkkBesZftgzrbr-AQiYJlMfSDuffUQUVV3m0gYRGrKLl3zNgcPWyMNzYnP_0Y4uonUDhgIRz_kGHxSl0GHFMdlZMrw"/>
+<div class="absolute inset-0 bg-ink-black/30 group-hover:bg-ink-black/50 transition-colors flex items-center justify-center p-6 text-center">
+<div>
+<span class="material-symbols-outlined text-white text-4xl mb-2">potted_plant</span>
+<h4 class="text-white font-headline-md">Jardins Secrets</h4>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Feedback Invitation: Pioneer Section -->
+<section class="py-32 px-container-margin bg-white overflow-hidden relative">
+<div class="max-w-[1000px] mx-auto text-center relative z-10">
+<span class="inline-block px-5 py-2 bg-terra-cotta/10 text-terra-cotta rounded-full font-label-md mb-8 uppercase tracking-widest">Rejoignez l'aventure</span>
+<h2 class="font-headline-xl text-[48px] md:text-[64px] mb-10 leading-tight">Tu es un pionnier ?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-12 max-w-2xl mx-auto leading-relaxed">
+                TouRose est encore tout jeune ! Nous construisons l'app avec vous, pas à pas. 
+                Envie de nous aider à rendre Toulouse encore plus belle ? Tes retours sont précieux.
+            </p>
+<div class="flex flex-col sm:flex-row gap-6 justify-center">
+<a class="bg-deep-rose text-white px-10 py-5 rounded-2xl font-label-md hover:bg-primary transition-all shadow-xl shadow-deep-rose/20 flex items-center justify-center gap-3" href="#">
+<span class="material-symbols-outlined">rate_review</span>
+                    Donner mon avis
+                </a>
+<a class="border-2 border-outline text-on-surface-variant px-10 py-5 rounded-2xl font-label-md hover:bg-surface-container transition-all flex items-center justify-center gap-3" href="#">
+<span class="material-symbols-outlined">mail</span>
+                    Contacter l'équipe
+                </a>
+</div>
+</div>
+<!-- Background decorative text -->
+<div class="absolute -bottom-20 left-0 w-full text-center whitespace-nowrap pointer-events-none opacity-[0.03] select-none">
+<span class="text-[300px] font-extrabold text-ink-black italic">PIONNIER</span>
+</div>
+</section>
+<!-- App Download Section -->
+<section class="py-24 px-container-margin" id="download">
+<div class="max-w-[1280px] mx-auto bg-ink-black rounded-[48px] p-10 md:p-20 flex flex-col lg:flex-row items-center gap-16 relative overflow-hidden shadow-2xl shadow-ink-black/30">
+<!-- Background gradients -->
+<div class="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-deep-rose/40 to-transparent opacity-50"></div>
+<div class="flex-1 z-10 text-center lg:text-left">
+<h2 class="font-headline-xl text-[40px] md:text-[60px] text-white mb-8 leading-tight">Vivre Toulouse pour de vrai.</h2>
+<p class="font-body-lg text-white/70 mb-12 text-xl leading-relaxed">
+                    Téléchargez TouRose gratuitement. <br/>
+                    Sans compte, sans pub, juste du pur plaisir local.
+                </p>
+<div class="flex flex-wrap gap-5 justify-center lg:justify-start">
+<button class="bg-white text-ink-black px-8 py-4 rounded-2xl flex items-center gap-4 font-label-md hover:bg-soft-pink transition-all shadow-lg hover:-translate-y-1">
+<img alt="Apple" class="w-6 h-6 brightness-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzSsIn_gK5FreZ4WTbIlik2t5Cu5WGcd104Wg_Tle2EoUtmyNjJmy-4iseRWNYz35KySMJA_k4-qoiRU_JpMO9MXYgrBzLpSswI12HdH3xkXDa70YGev38Y8FutVYy9DCeyJYHVUcuT-eybwD5U7baUaOFrc1Ta6rqL625HOlJeQK6DNRJ8yGTkXG-gQ7Jm8rRd2ZrNuxXeydPBu8_rXOUJJP_eHNwiEydM-HCw7TIrbHgK-rv7SyogIalTuFAYp6RDH683DX4txc"/>
+<div class="text-left">
+<p class="text-[10px] opacity-70 leading-none">Download on</p>
+<p class="font-bold">App Store</p>
+</div>
+</button>
+<button class="bg-white text-ink-black px-8 py-4 rounded-2xl flex items-center gap-4 font-label-md hover:bg-soft-pink transition-all shadow-lg hover:-translate-y-1">
+<img alt="Google Play" class="h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe7B1pV3njjpjKh6ESFxahtZgyubQkmXVsUTZ7dQnfLicUGSXcFLLM-7oiSYtZSwCaytbmwMH28r6RV9kb9xlwv1vMKZ05y7Wd_8nD_ka59aCAlbfutgU0I8WsGP6Lk_SSVw0CT-6j98NikJSDFPI16oYzMWN-_6ri1JEkrZr0FQxQAosr9Gdqb5PRb615tVI8varihG9cPAwWjhMYGuzsWgo3h5-9CcwvVH1EwxvsIfbSGGQXwwe9AYuZkgY8NCUm2isNC_dimr0"/>
+</button>
+</div>
+</div>
+<div class="flex-1 relative z-10 flex justify-center lg:justify-end w-full">
+<!-- Phone Mockup with high impact content -->
+<div class="relative w-full max-w-[320px] aspect-[9/19] bg-ink-black rounded-[48px] p-3 border-[8px] border-white/5 shadow-2xl">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-ink-black rounded-b-2xl"></div>
+<div class="bg-background h-full w-full rounded-[38px] overflow-hidden p-6 flex flex-col">
+<div class="flex justify-between items-center mb-10">
+<span class="font-extrabold text-deep-rose tracking-tight text-lg">TouRose</span>
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</div>
+<div class="mb-8">
+<h4 class="font-headline-md text-2xl mb-2">Bonjour ! 👋</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Voici ton trio pour ce superbe samedi ensoleillé :</p>
+</div>
+<div class="space-y-4">
+<!-- Ticket Card Style inside phone -->
+<div class="bg-white p-4 rounded-2xl border-l-4 border-deep-rose shadow-sm flex items-center gap-4">
+<div class="w-12 h-12 bg-soft-pink/20 rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-deep-rose">coffee</span>
+</div>
+<div class="overflow-hidden">
+<p class="font-bold text-sm truncate">Café de la Concorde</p>
+<p class="text-[11px] text-on-surface-variant">L'histoire en terrasse</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-2xl border-l-4 border-secondary shadow-sm flex items-center gap-4">
+<div class="w-12 h-12 bg-sky-blue-muted/20 rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary">explore</span>
+</div>
+<div>
+<p class="font-bold text-sm">Passage des Panoramas</p>
+<p class="text-[11px] text-on-surface-variant">Raccourci secret</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-2xl border-l-4 border-terra-cotta shadow-sm flex items-center gap-4">
+<div class="w-12 h-12 bg-terra-cotta/10 rounded-xl flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-terra-cotta">palette</span>
+</div>
+<div>
+<p class="font-bold text-sm">Les Abattoirs</p>
+<p class="text-[11px] text-on-surface-variant">Dernier jour expo !</p>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-6 text-center">
+<button class="w-full bg-deep-rose text-white py-3 rounded-xl text-sm font-bold shadow-lg">
+                                Voir sur la carte
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-surface-container-low border-t border-outline-variant/30">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-margin py-16 max-w-[1280px] mx-auto w-full">
+<div class="flex flex-col items-center md:items-start mb-10 md:mb-0">
+<a class="font-headline-md text-headline-md text-deep-rose mb-4 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined">qr_code_2</span>
+                TouRose
+            </a>
+<p class="font-label-sm text-on-surface-variant max-w-[240px] text-center md:text-left">
+                © 2024 TouRose. <br/>
+                Pensé et développé avec amour à Toulouse.
+            </p>
+</div>
+<div class="flex flex-col md:flex-row gap-12 text-center md:text-left mb-10 md:mb-0">
+<div class="flex flex-col gap-3">
+<p class="font-bold text-ink-black mb-1">Navigation</p>
+<a class="font-label-sm text-on-surface-variant hover:text-deep-rose transition-colors" href="#">Catalogue</a>
+<a class="font-label-sm text-on-surface-variant hover:text-deep-rose transition-colors" href="#">Soutenir</a>
+<a class="font-label-sm text-on-surface-variant hover:text-deep-rose transition-colors" href="#">Blog</a>
+</div>
+<div class="flex flex-col gap-3">
+<p class="font-bold text-ink-black mb-1">Légal</p>
+<a class="font-label-sm text-on-surface-variant hover:text-deep-rose transition-colors" href="#">Crédits</a>
+<a class="font-label-sm text-on-surface-variant hover:text-deep-rose transition-colors" href="#">Confidentialité</a>
+<a class="font-label-sm text-on-surface-variant hover:text-deep-rose transition-colors" href="#">CGU</a>
+</div>
+</div>
+<div class="flex gap-4">
+<a class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white text-deep-rose shadow-sm hover:bg-deep-rose hover:text-white transition-all transform hover:-translate-y-1" href="#">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.335 3.608 1.31.975.975 1.248 2.242 1.31 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.335 2.633-1.31 3.608-.975.975-2.242 1.248-3.608 1.31-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.335-3.608-1.31-.975-.975-1.248-2.242-1.31-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.335-2.633 1.31-3.608.975-.975 2.242-1.248 3.608-1.31 1.266-.058 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-1.352.062-2.277.276-3.086.591-.837.325-1.547.759-2.253 1.465s-1.14 1.417-1.465 2.253c-.315.809-.529 1.734-.591 3.086-.058 1.28-.072 1.688-.072 4.947s.014 3.667.072 4.947c.062 1.352.276 2.277.591 3.086.325.837.759 1.547 1.465 2.253s1.417 1.14 2.253 1.465c.809.315 1.734.529 3.086.591 1.28.058 1.688.072 4.947.072s3.667-.014 4.947-.072c1.352-.062 2.277-.276 3.086-.591.837-.325 1.547-.759 2.253-1.465s1.14-1.417 1.465-2.253c.315-.809.529-1.734.591-3.086.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.062-1.352-.276-2.277-.591-3.086-.325-.837-.759-1.547-1.465-2.253s-1.417-1.14-2.253-1.465c-.809-.315-1.734-.529-3.086-.591-1.28-.058-1.688-.072-4.947-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</a>
+<a class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white text-deep-rose shadow-sm hover:bg-deep-rose hover:text-white transition-all transform hover:-translate-y-1" href="#">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
+</a>
+</div>
+</div>
+</footer>
+<script>
+    // Reveal animations on scroll
+    document.addEventListener('DOMContentLoaded', () => {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('opacity-0', 'translate-y-12');
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section > div').forEach(el => {
+            el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-12');
+            observer.observe(el);
+        });
+    });
+</script>
+</body></html>

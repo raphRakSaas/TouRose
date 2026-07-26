@@ -1,20 +1,24 @@
 ---
 import '../styles/global.css';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
 }
 
 const {
   title,
   description = 'TouRose — Toulouse à voir, à vivre, à aimer. Trois idées adaptées, puis tout Toulouse à portée de main.',
+  ogImage = '/brand/logo-icon.png',
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang="fr" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,42 +27,28 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL('/brand/logo-icon.png', Astro.site)} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/brand/logo-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
   </head>
-  <body>
-    <header class="mx-auto flex max-w-5xl items-baseline justify-between gap-4 px-6 py-6">
-      <a href="/" class="inline-flex items-center gap-2.5 no-underline" aria-label="TouRose — accueil">
-        <img
-          src="/brand/logo-icon.png"
-          alt=""
-          width="40"
-          height="40"
-          class="h-9 w-9"
-          aria-hidden="true"
-        />
-        <img
-          src="/brand/logo-wordmark.png"
-          alt="TouRose"
-          width="791"
-          height="208"
-          class="h-6 w-auto"
-        />
-      </a>
-      <nav class="flex gap-4 text-sm text-ink-700" aria-label="Navigation principale">
-        <a href="/">Accueil</a>
-        <a href="/catalogue">Catalogue</a>
-        <a href="/credits">Crédits</a>
-        <a href="/confidentialite">Confidentialité</a>
-      </nav>
-    </header>
-    <main class="mx-auto max-w-5xl px-6 pb-16">
+  <body class="paper-texture flex min-h-screen flex-col text-on-background selection:bg-soft-pink selection:text-deep-rose">
+    <SiteHeader />
+    <main class="flex-1">
       <slot />
     </main>
-    <footer class="mx-auto max-w-5xl px-6 pb-10 text-sm text-ink-500">
-      Toulouse à voir, à vivre, à aimer.
-    </footer>
+    <SiteFooter />
   </body>
 </html>

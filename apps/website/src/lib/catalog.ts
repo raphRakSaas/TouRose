@@ -96,6 +96,20 @@ export async function loadPublicPlaceSlugs(limitCount = 200): Promise<string[]> 
   }
 }
 
+export async function loadPublicPlaceById(placeId: string): Promise<PublicPlaceRow | null> {
+  const client = createBrowserOrBuildClient();
+  if (!client || !placeId) {
+    return null;
+  }
+
+  const { data, error } = await client.from('public_places').select('*').eq('id', placeId).maybeSingle();
+  if (error || !data) {
+    return null;
+  }
+
+  return publicPlaceRowSchema.parse(data);
+}
+
 export async function loadPublicPlaceBySlug(placeSlug: string): Promise<PublicPlaceRow | null> {
   const client = createBrowserOrBuildClient();
   if (!client) {

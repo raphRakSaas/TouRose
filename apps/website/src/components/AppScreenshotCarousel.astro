@@ -1,0 +1,119 @@
+---
+import { APP_SCREENSHOTS } from '../lib/app-screenshots';
+---
+
+<div class="app-screenshot-carousel w-full max-w-[340px]" data-app-screenshot-carousel>
+  <div class="app-screenshot-viewport overflow-hidden">
+    <div class="app-screenshot-track flex w-max gap-8">
+      {
+        APP_SCREENSHOTS.map((screenshot) => (
+          <div class="app-screenshot-slide shrink-0">
+            <img
+              class="h-auto w-[280px] max-w-[72vw] drop-shadow-2xl"
+              src={screenshot.src}
+              alt={screenshot.alt}
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+            />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="mt-6 flex justify-center gap-2" role="tablist" aria-label="Captures d'écran de l'application">
+    {
+      APP_SCREENSHOTS.map((screenshot, index) => (
+        <button
+          type="button"
+          class="app-screenshot-dot h-2 w-2 rounded-full bg-white/30 transition-all"
+          data-screenshot-dot={index}
+          aria-label={screenshot.alt}
+          aria-selected={index === 0 ? 'true' : 'false'}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-app-screenshot-carousel]').forEach((carouselRoot) => {
+    const track = carouselRoot.querySelector('.app-screenshot-track') as HTMLElement | null;
+    const dots = Array.from(carouselRoot.querySelectorAll('[data-screenshot-dot]')) as HTMLButtonElement[];
+    if (!track || dots.length === 0) {
+      return;
+    }
+
+    const slideCount = dots.length;
+    let activeIndex = 0;
+    let autoplayTimer: ReturnType<typeof setInterval> | null = null;
+
+    const getSlideWidth = () => {
+      const firstSlide = track.querySelector('.app-screenshot-slide') as HTMLElement | null;
+      if (!firstSlide) {
+        return 0;
+      }
+      const gap = 32;
+      return firstSlide.offsetWidth + gap;
+    };
+
+    const updateDots = (index: number) => {
+      dots.forEach((dot, dotIndex) => {
+        const isActive = dotIndex === index;
+        dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        dot.classList.toggle('bg-white', isActive);
+        dot.classList.toggle('w-6', isActive);
+        dot.classList.toggle('bg-white/30', !isActive);
+        dot.classList.toggle('w-2', !isActive);
+      });
+    };
+
+    const goToSlide = (index: number, behavior: ScrollBehavior = 'smooth') => {
+      activeIndex = index;
+      const slideWidth = getSlideWidth();
+      track.style.transform = `translateX(-${slideWidth * index}px)`;
+      updateDots(index);
+    };
+
+    const startAutoplay = () => {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+      }
+      autoplayTimer = setInterval(() => {
+        goToSlide((activeIndex + 1) % slideCount);
+      }, 4000);
+    };
+
+    const stopAutoplay = () => {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    };
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        goToSlide(index);
+        startAutoplay();
+      });
+    });
+
+    carouselRoot.addEventListener('mouseenter', stopAutoplay);
+    carouselRoot.addEventListener('mouseleave', startAutoplay);
+    carouselRoot.addEventListener('focusin', stopAutoplay);
+    carouselRoot.addEventListener('focusout', startAutoplay);
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    track.style.transition = prefersReducedMotion ? 'none' : 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)';
+    updateDots(0);
+    if (!prefersReducedMotion) {
+      startAutoplay();
+    }
+
+    window.addEventListener('resize', () => {
+      goToSlide(activeIndex, 'auto');
+    });
+  });
+</script>

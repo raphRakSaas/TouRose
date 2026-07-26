@@ -1,19 +1,170 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { APP_APK_DOWNLOAD_URL, SITE_CONTACT_EMAIL } from '../lib/site-config';
 ---
 
 <BaseLayout
   title="Confidentialité — TouRose"
-  description="Politique de confidentialité placeholder TouRose."
+  description="Comment TouRose protège ta vie privée — application et site web."
 >
-  <article class="prose max-w-3xl pt-8">
-    <p class="rounded-lg bg-sand-100 px-4 py-3 text-sm text-ink-600">
-      PLACEHOLDER — document non définitif. À remplacer avant toute mise en production.
-    </p>
-    <h1 class="brand mt-6 text-4xl text-ink-800">Confidentialité</h1>
-    <p>
-      TouRose collecte le minimum nécessaire. La localisation précise n’est utilisée qu’à la demande.
-      Aucune vente de données. Contact : privacy@tourose.app (adresse placeholder).
-    </p>
-  </article>
+  <main class="mx-auto max-w-[1200px] px-container-margin pt-32 pb-section-gap">
+    <section class="mb-section-gap max-w-2xl">
+      <span class="mb-4 inline-block rounded-full bg-soft-pink/20 px-4 py-1 font-label-md text-label-md text-deep-rose">
+        Transparence &amp; Confiance
+      </span>
+      <h1 class="mb-6 font-headline-xl text-headline-xl text-ink-black md:text-5xl">
+        Tes données restent <span class="text-deep-rose">chez toi</span>.
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant">
+        On déteste les longs textes juridiques autant que toi. Voici l'essentiel sur ce que TouRose utilise
+        réellement — app mobile, site web et paiements — en toute simplicité.
+      </p>
+    </section>
+
+    <div class="grid grid-cols-1 gap-gutter md:grid-cols-12">
+      <div
+        class="bento-card relative overflow-hidden rounded-2xl border border-soft-pink/30 bg-surface-container-lowest p-card-padding shadow-sm md:col-span-8"
+      >
+        <div class="relative z-10">
+          <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-sky-blue-muted/30 text-secondary">
+            <span class="material-symbols-outlined text-3xl">location_on</span>
+          </div>
+          <h2 class="mb-4 font-headline-md text-headline-md text-ink-black">La localisation</h2>
+          <p class="mb-6 max-w-lg font-body-md text-body-md text-on-surface-variant">
+            Si tu l'autorises dans l'app mobile, ta position sert à te proposer des idées proches et à trier les lieux
+            par distance. Elle est transmise ponctuellement à nos serveurs (Supabase, Union européenne) pour ce calcul
+            uniquement — on ne conserve pas d'historique de tes déplacements.
+          </p>
+          <div class="flex items-center gap-2 font-label-md text-secondary">
+            <span class="material-symbols-outlined text-lg">verified_user</span>
+            <span>Jamais revendue ni partagée à des annonceurs</span>
+          </div>
+        </div>
+        <div class="absolute -right-12 -bottom-12 h-64 w-64 opacity-10">
+          <div class="h-full w-full rounded-full border-[20px] border-secondary"></div>
+        </div>
+      </div>
+
+      <div
+        class="sticky-note flex flex-col items-center justify-center rounded-lg bg-[#FFF9C4] p-card-padding text-center shadow-md md:col-span-4"
+      >
+        <span class="material-symbols-outlined mb-4 text-4xl text-terra-cotta" style="font-variation-settings: 'FILL' 1;">
+          block
+        </span>
+        <h3 class="mb-2 font-headline-md text-headline-md text-ink-black">Zéro revente</h3>
+        <p class="font-body-md text-body-md text-on-surface-variant">
+          C'est simple : nous ne vendons <strong>jamais</strong> tes données à des tiers. Pas de pub ciblée, pas de
+          courtier en données. Jamais.
+        </p>
+      </div>
+
+      <div
+        class="bento-card rounded-2xl border border-soft-pink/30 bg-surface-container-lowest p-card-padding shadow-sm md:col-span-5"
+      >
+        <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-soft-pink/30 text-deep-rose">
+          <span class="material-symbols-outlined text-3xl">account_circle</span>
+        </div>
+        <h2 class="mb-4 font-headline-md text-headline-md text-ink-black">Ton compte</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant">
+          Créer un compte sert uniquement à synchroniser tes favoris entre tes appareils. Sans compte, tu peux
+          explorer Toulouse librement : tes préférences restent sur ton téléphone ou ton navigateur. Les données de
+          compte sont hébergées chez Supabase, en Europe.
+        </p>
+      </div>
+
+      <div
+        class="bento-card flex flex-col items-center gap-8 rounded-2xl bg-ink-black p-card-padding text-on-primary shadow-xl md:col-span-7 md:flex-row"
+      >
+        <div class="flex-1">
+          <h2 class="mb-4 font-headline-md text-headline-md">Paiements sécurisés</h2>
+          <p class="mb-6 font-body-md text-body-md opacity-80">
+            Pour le soutien volontaire au projet (site web et app), nous passons par <strong>Stripe Checkout</strong>.
+            TouRose ne voit ni ne stocke tes numéros de carte : tout est traité directement par Stripe, selon ses
+            standards de sécurité.
+          </p>
+          <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 font-label-sm text-label-sm">
+            <span class="material-symbols-outlined text-sm">lock</span>
+            <span>Paiement chiffré via Stripe</span>
+          </div>
+        </div>
+        <div class="flex aspect-video w-full items-center justify-center rounded-xl border border-white/10 bg-white/5 md:w-48">
+          <div class="text-4xl font-bold italic opacity-30">stripe</div>
+        </div>
+      </div>
+
+      <div class="mt-8 md:col-span-12">
+        <div class="grid grid-cols-1 gap-gutter md:grid-cols-3">
+          <div class="border-l-2 border-soft-pink p-6">
+            <h4 class="mb-2 font-label-md text-label-md uppercase tracking-wider text-deep-rose">Tes droits</h4>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              Tu peux nous écrire à tout moment pour demander l'accès, la rectification ou la suppression des données
+              liées à ton compte. On répond sous un délai raisonnable.
+            </p>
+          </div>
+          <div class="border-l-2 border-sky-blue-muted p-6">
+            <h4 class="mb-2 font-label-md text-label-md uppercase tracking-wider text-secondary">
+              Cookies &amp; stockage
+            </h4>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              Pas de traceurs publicitaires ni d'analytics invasifs sur ce site. Lors d'un soutien, un identifiant
+              technique anonyme peut être enregistré localement dans ton navigateur pour lier la transaction. Dans
+              l'app, les notifications push ne s'activent qu'avec ton accord.
+            </p>
+          </div>
+          <div class="border-l-2 border-terra-cotta p-6">
+            <h4 class="mb-2 font-label-md text-label-md uppercase tracking-wider text-terra-cotta">Contact</h4>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              Une question sur tes données ?
+              <a class="text-primary underline underline-offset-2 hover:text-deep-rose" href={`mailto:${SITE_CONTACT_EMAIL}`}>
+                {SITE_CONTACT_EMAIL}
+              </a>
+              — on te répondra avec le sourire.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="mt-section-gap flex flex-col items-center rounded-3xl bg-surface-container-high p-10 text-center">
+      <h3 class="mb-4 font-headline-md text-headline-md text-ink-black">
+        Prêt à explorer la Ville Rose sereinement ?
+      </h3>
+      <p class="mb-8 max-w-xl font-body-md text-body-md text-on-surface-variant">
+        Rejoins TouRose et découvre Toulouse comme un habitant, sans jamais compromettre ta vie privée.
+      </p>
+      <div class="flex flex-col gap-4 sm:flex-row">
+        <a
+          class="group flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 font-label-md text-on-primary transition-all hover:bg-deep-rose"
+          href={APP_APK_DOWNLOAD_URL}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <span>Télécharger l'app</span>
+          <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+        </a>
+        <a
+          class="rounded-xl border-2 border-terra-cotta px-8 py-4 font-label-md text-terra-cotta transition-all hover:bg-terra-cotta hover:text-white"
+          href="/catalogue"
+        >
+          Voir le catalogue
+        </a>
+      </div>
+    </section>
+  </main>
 </BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.bento-card');
+    cards.forEach((card, index) => {
+      const element = card as HTMLElement;
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(20px)';
+      window.setTimeout(() => {
+        element.style.transition = 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+        element.style.opacity = '1';
+        element.style.transform = 'translateY(0)';
+      }, index * 100);
+    });
+  });
+</script>

@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const decorativeStreetImage =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCVo6HPhbUIu65H650BFecQe5nOSK00HL0MDTljugzyXgav8tsXsgi1xGnj-1Tv9EQEBcvrWIEgRINy6dactgs7UeTCMxPeU3Xa1qLKnRm3h0tr7nNAnHFF72zgaYrfYv5DTkMhtJYLUTCaqh1BhvqQmIvHfp-qk95G0G90T8-M-Rw-Xo2wsJhZoY_Gxb37E0iKl3K0HvTF0lyFLsnInCLF8dt0FJyEr9_e6F2ymmq493caUVWIJsquusNqIjKtEyWfCoe3XolNOtY';
+
+const decorativeCafeImage =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCmfTdwauOaNs7cPM29m_kPqry7_xJTNJ9W6PfFUe6KibQhvr_h0cdEif-vzWicalBG6uk5ukJ-iIcC9zbcOYLs7r0aEpg6CwNNZ8-z1N5-pwJt0kcyW6dj0hCTcuS7G6c8MO0V0-GfavT-8iYbY6uF1MmFvX9XTZliIG14pfHm9j3KdlvcJU_dSpu_4Gfc6fakPWgNBSVFiki1t3mFX9E0LHJIsxPNEu4rrL5mx8X1qRdoscYy5dfAsRh76CogjzgHYcU9v0-UR2Y';
+---
+
+<BaseLayout title="Merci — TouRose" description="Merci pour ton soutien à TouRose.">
+  <main class="relative flex min-h-[819px] flex-col items-center justify-center overflow-hidden px-container-margin pt-section-gap pb-20">
+    <div class="absolute top-1/4 -left-20 h-64 w-64 rounded-full bg-soft-pink opacity-10 blur-3xl" />
+    <div class="absolute right-[-5rem] bottom-1/4 h-80 w-80 rounded-full bg-sky-blue-muted opacity-10 blur-3xl" />
+
+    <div class="z-10 w-full max-w-4xl text-center">
+      <div class="relative mb-8 inline-block">
+        <div class="float-animation flex h-32 w-32 items-center justify-center rounded-full bg-primary/5">
+          <span class="material-symbols-outlined material-symbols-filled text-[64px] text-primary">favorite</span>
+        </div>
+        <div class="absolute -top-2 -right-4 rotate-12 rounded-lg bg-sky-blue-muted p-2 shadow-sm">
+          <span class="material-symbols-outlined text-[20px] text-ink-black">stars</span>
+        </div>
+      </div>
+
+      <h1 class="mb-6 font-headline-xl text-headline-xl text-ink-black md:text-5xl">Merci du fond du cœur !</h1>
+      <p class="mx-auto mb-12 max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
+        Ton soutien est le moteur de TouRose. Grâce à toi, nous continuons de dénicher les pépites toulousaines et de les
+        partager avec passion, sans compte obligatoire, toujours.
+      </p>
+
+      <div class="mb-16 grid grid-cols-1 gap-6 text-left md:grid-cols-3">
+        <div class="paper-card flex h-full flex-col rounded-xl p-card-padding">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-soft-pink/20">
+            <span class="material-symbols-outlined text-deep-rose">edit_note</span>
+          </div>
+          <h3 class="mb-2 font-label-md text-label-md text-ink-black">Contenus de Qualité</h3>
+          <p class="font-label-sm text-label-sm text-on-surface-variant">
+            Tu finances la rédaction de nos guides locaux et nos reportages photos exclusifs.
+          </p>
+        </div>
+        <div class="paper-card flex h-full flex-col rounded-xl border-t-2 border-t-terra-cotta p-card-padding">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-terra-cotta/10">
+            <span class="material-symbols-outlined text-terra-cotta">verified</span>
+          </div>
+          <h3 class="mb-2 font-label-md text-label-md text-ink-black">Indépendance</h3>
+          <p class="font-label-sm text-label-sm text-on-surface-variant">
+            Zéro publicité, zéro partenariat biaisé. On reste 100% honnêtes grâce à toi.
+          </p>
+        </div>
+        <div class="paper-card flex h-full flex-col rounded-xl p-card-padding">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-sky-blue-muted/20">
+            <span class="material-symbols-outlined text-secondary">explore</span>
+          </div>
+          <h3 class="mb-2 font-label-md text-label-md text-ink-black">Vie Locale</h3>
+          <p class="font-label-sm text-label-sm text-on-surface-variant">
+            Ton don aide les petits artisans et commerçants toulousains à être mis en lumière.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center justify-center gap-4 md:flex-row">
+        <a
+          href="/catalogue"
+          class="flex w-full items-center justify-center gap-2 rounded-xl bg-deep-rose px-10 py-4 font-headline-md text-headline-md text-white shadow-lg transition-all hover:scale-105 md:w-auto"
+        >
+          <span class="material-symbols-outlined">grid_view</span>
+          Explorer le catalogue
+        </a>
+        <a
+          href="/"
+          class="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-terra-cotta bg-transparent px-10 py-4 font-headline-md text-headline-md text-terra-cotta transition-all hover:bg-terra-cotta/5 md:w-auto"
+        >
+          <span class="material-symbols-outlined">home</span>
+          Retour à l'accueil
+        </a>
+      </div>
+
+      <div class="mx-auto mt-20 max-w-xs">
+        <div class="sticky-note-merci relative rounded-lg p-6 text-left">
+          <span class="material-symbols-outlined absolute -top-4 -right-2 text-4xl text-primary opacity-30">push_pin</span>
+          <p class="font-body-md text-body-md leading-relaxed text-on-surface-variant italic">
+            « Un petit geste pour toi, un grand pas pour la culture rose. On se voit très vite dans les rues de Toulouse
+            ! »
+          </p>
+          <p class="mt-4 font-label-md text-label-md text-primary">— L'équipe TouRose</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pointer-events-none absolute top-1/2 left-10 hidden -rotate-12 opacity-20 lg:block">
+      <div class="h-64 w-48 overflow-hidden rounded-xl border border-outline">
+        <img class="h-full w-full object-cover grayscale-[0.5]" alt="" src={decorativeStreetImage} />
+      </div>
+    </div>
+    <div class="pointer-events-none absolute right-10 bottom-10 hidden rotate-12 opacity-20 lg:block">
+      <div class="h-64 w-48 overflow-hidden rounded-xl border border-outline">
+        <img class="h-full w-full object-cover" alt="" src={decorativeCafeImage} />
+      </div>
+    </div>
+  </main>
+</BaseLayout>

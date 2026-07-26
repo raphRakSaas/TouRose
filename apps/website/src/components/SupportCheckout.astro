@@ -1,0 +1,153 @@
+---
+import { SUPPORT_AMOUNT_OPTIONS } from '../lib/site-config';
+
+const donationIcons = ['coffee', 'bakery_dining', 'foundation'] as const;
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+const siteUrl = import.meta.env.PUBLIC_SITE_URL ?? 'https://tourose.app';
+---
+
+<div class="grid grid-cols-1 gap-gutter md:grid-cols-3">
+  {
+    SUPPORT_AMOUNT_OPTIONS.map((option, optionIndex) => (
+      <button
+        type="button"
+        class:list={[
+          'support-amount-btn group relative flex cursor-pointer flex-col items-center overflow-hidden rounded-xl border bg-white p-card-padding text-center transition-all hover:shadow-lg',
+          optionIndex === 1
+            ? 'active-card border-2 border-terra-cotta/40 shadow-md'
+            : 'border-soft-pink/30',
+        ]}
+        data-amount-cents={option.amountCents}
+      >
+        {optionIndex === 1 ? (
+          <div class="absolute -top-2 -right-2 rotate-12 bg-terra-cotta px-4 py-1 font-label-sm text-label-sm text-white shadow-sm">
+            LE TOP
+          </div>
+        ) : null}
+        <div class="absolute top-0 right-0 p-4 opacity-10 transition-opacity group-hover:opacity-20">
+          <span class="material-symbols-outlined text-6xl">{donationIcons[optionIndex]}</span>
+        </div>
+        <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-surface-container-low text-deep-rose transition-transform group-hover:scale-110">
+          <span class="material-symbols-outlined text-3xl">{donationIcons[optionIndex]}</span>
+        </div>
+        <h3 class="mb-2 font-headline-md text-headline-md">{option.label}</h3>
+        <p class="mb-6 flex-grow text-on-surface-variant">{option.description}</p>
+        <span class="text-4xl font-extrabold text-terra-cotta">{option.amount}</span>
+      </button>
+    ))
+  }
+</div>
+
+<div class="mx-auto mt-section-gap max-w-md rounded-xl border border-outline-variant/30 bg-surface-container-low p-8 text-center shadow-inner">
+  <p class="mb-4 font-label-md text-label-md tracking-widest text-on-surface-variant uppercase">Montant sélectionné</p>
+  <div id="support-selected-display" class="mb-8 font-headline-xl text-headline-xl text-deep-rose">5 €</div>
+  <p id="support-checkout-error" class="mb-4 hidden rounded-xl bg-error-container px-4 py-3 text-sm text-error" role="alert" />
+  <p id="support-checkout-loading" class="mb-4 hidden text-sm text-on-surface-variant">Redirection vers Stripe…</p>
+  <button
+    type="button"
+    id="support-checkout-submit"
+    class="flex w-full items-center justify-center gap-3 rounded-lg bg-ink-black py-4 font-label-md text-label-md text-white transition-all hover:bg-on-surface"
+  >
+    <span>Payer avec Stripe</span>
+    <span class="material-symbols-outlined text-[20px]">lock</span>
+  </button>
+  <p class="mt-6 flex items-center justify-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+    <span class="material-symbols-outlined text-sm">lock</span>
+    Paiement sécurisé. Pas d'abonnement caché.
+  </p>
+</div>
+
+<script define:vars={{ supabaseUrl, supabaseAnonKey, siteUrl }}>
+  const INSTALLATION_STORAGE_KEY = 'tourose-installation-id';
+  let selectedAmountCents = 500;
+
+  function getOrCreateInstallationId() {
+    const existing = localStorage.getItem(INSTALLATION_STORAGE_KEY);
+    if (existing) return existing;
+    const installationId = crypto.randomUUID();
+    localStorage.setItem(INSTALLATION_STORAGE_KEY, installationId);
+    return installationId;
+  }
+
+  function updateSelectedDisplay() {
+    const displayElement = document.getElementById('support-selected-display');
+    if (displayElement) {
+      displayElement.textContent = `${(selectedAmountCents / 100).toFixed(0)} €`;
+    }
+  }
+
+  function showError(message) {
+    const errorElement = document.getElementById('support-checkout-error');
+    const loadingElement = document.getElementById('support-checkout-loading');
+    loadingElement?.classList.add('hidden');
+    if (errorElement) {
+      errorElement.textContent = message;
+      errorElement.classList.remove('hidden');
+    }
+  }
+
+  async function startCheckout(amountCents) {
+    const errorElement = document.getElementById('support-checkout-error');
+    const loadingElement = document.getElementById('support-checkout-loading');
+
+    if (!supabaseUrl || !supabaseAnonKey || supabaseAnonKey.includes('replace-with')) {
+      showError('Supabase non configuré. Vérifie PUBLIC_SUPABASE_URL et PUBLIC_SUPABASE_ANON_KEY.');
+      return;
+    }
+
+    errorElement?.classList.add('hidden');
+    loadingElement?.classList.remove('hidden');
+
+    const installationId = getOrCreateInstallationId();
+    const successUrl = `${siteUrl.replace(/\/$/, '')}/soutien/success`;
+    const cancelUrl = `${siteUrl.replace(/\/$/, '')}/soutien/cancel`;
+
+    try {
+      const response = await fetch(`${supabaseUrl.replace(/\/$/, '')}/functions/v1/create-support-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${supabaseAnonKey}`,
+          apikey: supabaseAnonKey,
+        },
+        body: JSON.stringify({ installationId, amountCents, platform: 'web', successUrl, cancelUrl }),
+      });
+
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok || !body.checkoutUrl) {
+        showError(body.error ?? `Erreur serveur (${response.status}).`);
+        return;
+      }
+      window.location.href = body.checkoutUrl;
+    } catch {
+      showError('Impossible de joindre le serveur de paiement.');
+    }
+  }
+
+  document.querySelectorAll('.support-amount-btn').forEach((buttonElement) => {
+    buttonElement.addEventListener('click', () => {
+      document.querySelectorAll('.support-amount-btn').forEach((otherButton) => {
+        otherButton.classList.remove('active-card', 'border-2', 'border-terra-cotta/40', 'shadow-md');
+        otherButton.classList.add('border-soft-pink/30');
+      });
+      buttonElement.classList.add('active-card', 'border-2', 'border-terra-cotta/40', 'shadow-md');
+      buttonElement.classList.remove('border-soft-pink/30');
+      selectedAmountCents = Number(buttonElement.getAttribute('data-amount-cents'));
+      updateSelectedDisplay();
+    });
+  });
+
+  document.getElementById('support-checkout-submit')?.addEventListener('click', () => {
+    if (selectedAmountCents === 100 || selectedAmountCents === 500 || selectedAmountCents === 1000) {
+      void startCheckout(selectedAmountCents);
+    }
+  });
+</script>
+
+<style>
+  .active-card {
+    border: 2px solid #c05247;
+    box-shadow: 0 10px 25px -5px rgba(141, 46, 46, 0.1);
+  }
+</style>

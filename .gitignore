@@ -33,6 +33,7 @@ coverage/
 .DS_Store
 Thumbs.db
 .idea/
+.cursor/mcp.json
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json

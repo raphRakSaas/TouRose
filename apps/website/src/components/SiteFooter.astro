@@ -1,0 +1,67 @@
+---
+import { SITE_CONTACT_EMAIL, SITE_TAGLINE } from '../lib/site-config';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-t border-outline-variant/30 bg-surface-container-low">
+  <div class="mx-auto flex w-full max-w-[1280px] flex-col items-center justify-between gap-10 px-container-margin py-16 md:flex-row md:items-start">
+    <div class="flex flex-col items-center md:items-start">
+      <a
+        href="/"
+        class="mb-4 flex items-center gap-2 font-headline-md text-headline-md text-deep-rose no-underline"
+      >
+        <img src="/brand/logo-icon.png" alt="" width="28" height="28" class="h-7 w-7" />
+        TouRose
+      </a>
+      <p class="max-w-[240px] text-center font-label-sm text-label-sm text-on-surface-variant md:text-left">
+        © {currentYear} TouRose.<br />
+        {SITE_TAGLINE}<br />
+        Pensé et développé avec amour à Toulouse.
+      </p>
+    </div>
+
+    <div class="mb-0 flex flex-col gap-12 text-center md:flex-row md:text-left">
+      <div class="flex flex-col gap-3">
+        <p class="mb-1 font-bold text-ink-black">Navigation</p>
+        <a href="/catalogue" class="font-label-sm text-on-surface-variant no-underline transition-colors hover:text-deep-rose">
+          Catalogue
+        </a>
+        <a href="/soutien" class="font-label-sm text-on-surface-variant no-underline transition-colors hover:text-deep-rose">
+          Soutenir
+        </a>
+        <a href="/apropos" class="font-label-sm text-on-surface-variant no-underline transition-colors hover:text-deep-rose">
+          À propos
+        </a>
+      </div>
+      <div class="flex flex-col gap-3">
+        <p class="mb-1 font-bold text-ink-black">Légal</p>
+        <a href="/credits" class="font-label-sm text-on-surface-variant no-underline transition-colors hover:text-deep-rose">
+          Crédits
+        </a>
+        <a
+          href="/confidentialite"
+          class="font-label-sm text-on-surface-variant no-underline transition-colors hover:text-deep-rose"
+        >
+          Confidentialité
+        </a>
+        <a
+          href={`mailto:${SITE_CONTACT_EMAIL}`}
+          class="font-label-sm text-on-surface-variant no-underline transition-colors hover:text-deep-rose"
+        >
+          Contact
+        </a>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <a
+        href={`mailto:${SITE_CONTACT_EMAIL}`}
+        class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-deep-rose shadow-sm transition-all hover:-translate-y-1 hover:bg-deep-rose hover:text-white"
+        aria-label="Nous écrire"
+      >
+        <span class="material-symbols-outlined">mail</span>
+      </a>
+    </div>
+  </div>
+</footer>

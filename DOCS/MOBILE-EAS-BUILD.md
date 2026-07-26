@@ -127,7 +127,7 @@ Webhook Stripe cloud :
 
 Pour inspecter la base cloud depuis Cursor (compter les événements, lire les logs, exécuter du SQL en lecture seule) :
 
-1. Le fichier [`.cursor/mcp.json`](../.cursor/mcp.json) pointe vers le projet `jrdhguqvsykbmsxdepqc` en **read-only**.
+1. Copier [`.cursor/mcp.json.example`](../.cursor/mcp.json.example) vers `.cursor/mcp.json` (fichier local, non versionné) et renseigner les clés.
 2. **Cursor → Settings → Tools & MCP** : vérifier que `supabase` est connecté (OAuth au premier lancement).
 3. Recharger la fenêtre si besoin (`Cmd+Shift+P` → *Reload Window*).
 4. Exemple de prompt : « Combien d’événements publiés en cloud ? Utilise le MCP Supabase. »

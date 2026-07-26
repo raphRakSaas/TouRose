@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#f6fff6",
+                    "soft-pink": "#F4B9B2",
+                    "background": "#fbf9f1",
+                    "inverse-primary": "#ffb3b0",
+                    "on-tertiary-fixed": "#002113",
+                    "on-secondary-fixed-variant": "#004d62",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#dcdad2",
+                    "surface-container-high": "#eae8e0",
+                    "surface-container-low": "#f5f4ec",
+                    "surface-container-highest": "#e4e3db",
+                    "on-error": "#ffffff",
+                    "surface-container": "#f0eee6",
+                    "tertiary-fixed-dim": "#5fdda2",
+                    "on-secondary-fixed": "#001f29",
+                    "sky-blue-muted": "#A5D8EA",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#09657f",
+                    "inverse-surface": "#30312c",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#7dfabd",
+                    "secondary-fixed": "#baeaff",
+                    "primary": "#a1373a",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f3f1e9",
+                    "on-primary-container": "#fffbff",
+                    "surface-bright": "#fbf9f1",
+                    "on-background": "#1b1c17",
+                    "tertiary-container": "#008558",
+                    "outline-variant": "#ddc0be",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e4e3db",
+                    "on-primary-fixed-variant": "#852227",
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed-dim": "#89d0ed",
+                    "outline": "#8a7170",
+                    "primary-fixed-dim": "#ffb3b0",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#a53a3c",
+                    "on-surface-variant": "#574241",
+                    "primary-container": "#c24f50",
+                    "on-surface": "#1b1c17",
+                    "tertiary": "#006a45",
+                    "deep-rose": "#8D2E2E",
+                    "ink-black": "#2D2926",
+                    "primary-fixed": "#ffdad8",
+                    "on-primary-fixed": "#410007",
+                    "secondary": "#0c6780",
+                    "on-secondary": "#ffffff",
+                    "terra-cotta": "#C05247",
+                    "secondary-container": "#9ae1ff",
+                    "surface": "#fbf9f1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "container-margin": "20px",
+                    "gutter": "16px",
+                    "section-gap": "40px",
+                    "card-padding": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Be Vietnam Pro"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "label-sm": ["Be Vietnam Pro"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "body-lg": ["Be Vietnam Pro"],
+                    "label-md": ["Be Vietnam Pro"],
+                    "headline-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body { background-color: #fbf9f1; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .paper-card {
+        box-shadow: 0 4px 20px rgba(141, 46, 46, 0.05);
+        border: 1px solid rgba(244, 185, 178, 0.3);
+      }
+      .sticky-note {
+        transform: rotate(-1deg);
+        transition: transform 0.3s ease;
+      }
+      .sticky-note:hover {
+        transform: rotate(0deg);
+      }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Top Navigation -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md shadow-sm shadow-primary/5">
+<nav class="flex justify-between items-center px-container-margin py-4 max-w-[1200px] mx-auto w-full">
+<a class="font-headline-md text-headline-md text-deep-rose flex items-center gap-2" href="/">
+                TouRose
+            </a>
+<div class="hidden md:flex items-center gap-8 font-body-md text-body-md">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Catalogue</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Soutenir</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">À propos</a>
+</div>
+<button class="bg-primary text-white px-6 py-3 rounded-xl font-label-md hover:scale-95 transition-transform">
+                Télécharger l'app
+            </button>
+</nav>
+</header>
+<main class="pt-32 pb-section-gap px-container-margin max-w-[1200px] mx-auto">
+<!-- Hero Section -->
+<section class="mb-section-gap">
+<div class="max-w-2xl">
+<h1 class="font-headline-xl text-headline-xl text-deep-rose mb-4">Crédits &amp; Coulisses</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                    TouRose est une initiative indépendante née de l'amour pour Toulouse. Nous croyons en la transparence et en la puissance de l'Open Data pour faire vibrer notre Ville Rose.
+                </p>
+</div>
+</section>
+<!-- Bento Grid for Credits -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Open Data Sources (Large Card) -->
+<div class="md:col-span-8 paper-card bg-white p-8 rounded-xl flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-terra-cotta text-3xl">database</span>
+<h2 class="font-headline-md text-headline-md text-ink-black">Transparence des Données</h2>
+</div>
+<p class="mb-8 text-on-surface-variant leading-relaxed">
+                        TouRose n'existerait pas sans la richesse des données publiques mises à disposition par les institutions toulousaines. Nous agrégeons et enrichissons ces sources pour vous offrir la meilleure expérience possible.
+                    </p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/30">
+<span class="text-primary font-bold block mb-1">Mairie de Toulouse</span>
+<span class="text-label-sm text-on-surface-variant">Données patrimoniales, géolocalisation des monuments et parcs publics.</span>
+</div>
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/30">
+<span class="text-primary font-bold block mb-1">OpenAgenda</span>
+<span class="text-label-sm text-on-surface-variant">Flux événementiels culturels, festivals et animations locales.</span>
+</div>
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/30">
+<span class="text-primary font-bold block mb-1">Tisséo Open Data</span>
+<span class="text-label-sm text-on-surface-variant">Temps réel et positions des stations de transport en commun.</span>
+</div>
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/30">
+<span class="text-primary font-bold block mb-1">Creative Commons</span>
+<span class="text-label-sm text-on-surface-variant">Icônes et ressources graphiques sous licences libres de droits.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Contact Sticky Note -->
+<div class="md:col-span-4 flex flex-col gap-gutter">
+<div class="sticky-note bg-soft-pink/30 p-8 rounded-xl border-2 border-dashed border-soft-pink flex-1 flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-4">mail</span>
+<h3 class="font-headline-md text-headline-md text-deep-rose mb-2">Un mot doux ?</h3>
+<p class="text-label-md mb-6">Une erreur, une suggestion ou juste envie de dire bonjour ?</p>
+<a class="font-headline-md text-primary hover:underline underline-offset-4" href="mailto:bonjour@tourose.app">bonjour@tourose.app</a>
+</div>
+</div>
+<!-- Contributors (Medium Card) -->
+<div class="md:col-span-5 paper-card bg-white p-8 rounded-xl">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-terra-cotta text-3xl">group</span>
+<h2 class="font-headline-md text-headline-md text-ink-black">Remerciements</h2>
+</div>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-sky-blue-muted flex items-center justify-center flex-shrink-0">
+<span class="text-white text-xs font-bold">LC</span>
+</div>
+<div>
+<p class="font-label-md text-ink-black">La Communauté</p>
+<p class="text-label-sm text-on-surface-variant">Pour les centaines de pépites cachées signalées chaque mois via l'app.</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-soft-pink flex items-center justify-center flex-shrink-0">
+<span class="text-white text-xs font-bold">DA</span>
+</div>
+<div>
+<p class="font-label-md text-ink-black">David &amp; Anna</p>
+<p class="text-label-sm text-on-surface-variant">Conseillers historiques et amoureux de la brique rose.</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-terra-cotta flex items-center justify-center flex-shrink-0">
+<span class="text-white text-xs font-bold">OS</span>
+</div>
+<div>
+<p class="font-label-md text-ink-black">Open Source</p>
+<p class="text-label-sm text-on-surface-variant">Aux développeurs des bibliothèques logicielles qui font tourner TouRose.</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Legal Notice (Tall Card) -->
+<div class="md:col-span-7 paper-card bg-surface-container p-8 rounded-xl">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">gavel</span>
+<h2 class="font-headline-md text-headline-md text-ink-black">Mentions Légales Simplifiées</h2>
+</div>
+<div class="space-y-6 text-on-surface-variant">
+<div>
+<h4 class="font-label-md text-deep-rose mb-1">Édition &amp; Développement</h4>
+<p class="text-body-md">TouRose est un projet indépendant géré par l'association locale "Passion Brique". Siège social : Quartier des Carmes, 31000 Toulouse.</p>
+</div>
+<div>
+<h4 class="font-label-md text-deep-rose mb-1">Hébergement</h4>
+<p class="text-body-md">Nos serveurs sont situés en Europe, garantissant une faible latence et le respect total de vos données.</p>
+</div>
+<div>
+<h4 class="font-label-md text-deep-rose mb-1">Propriété Intellectuelle</h4>
+<p class="text-body-md">Les textes descriptifs originaux et la direction artistique sont la propriété exclusive de TouRose. Les photos appartiennent à leurs auteurs respectifs cités dans l'app.</p>
+</div>
+<div class="pt-4 flex gap-4">
+<a class="text-primary font-bold hover:underline" href="#">Conditions d'Utilisation</a>
+<a class="text-primary font-bold hover:underline" href="#">Politique de Confidentialité</a>
+</div>
+</div>
+</div>
+<!-- Photo Credit Highlight (Full Width) -->
+<div class="md:col-span-12 relative h-80 rounded-xl overflow-hidden group">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A cinematic, wide-angle photograph of the Garonne river at dusk in Toulouse, France. The Pont Neuf bridge is illuminated by golden lights reflecting on the dark water. The sky is a gradient of deep rose and soft violet. The image has a professional, high-end travel photography style with warm tones and sharp details of the pink brick architecture." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD5mwGgx0dG59db6t8y7vq-jxEjVgefZEbTgGSOrzyAI7OmxKiaMpb_uffe0N3Ong6cHcdELJQB6ZP3vYV3o78cLG_fTrN_MPGCHAWx2sldYRT_cS7dlRlVQF88ROB6Xj363-KKuCI4z6-pLz1VArkmdYOw6lmqMW90U7tj3s0xhhjaW6TOaM9sYoPAiw04-uRVzYfzpZg4ViJig_o5l0MxEmyI1eGXDLQQcrvNcQqzKqP8VXu151oDLD_MvIsFCS9Y2HY7Zzi5cQY')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-ink-black/80 to-transparent"></div>
+<div class="absolute bottom-8 left-8 text-white">
+<span class="material-symbols-outlined text-soft-pink mb-2">photo_camera</span>
+<p class="font-headline-md">L'œil de Toulouse</p>
+<p class="text-body-md opacity-90 max-w-lg">Merci aux photographes locaux d'Unsplash et de la Mairie de Toulouse pour les visuels qui rendent l'app si vivante.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-margin py-section-gap max-w-[1200px] mx-auto w-full">
+<div class="mb-8 md:mb-0">
+<span class="font-headline-md text-headline-md text-deep-rose block mb-2">TouRose</span>
+<p class="text-label-sm text-on-surface-variant opacity-80">© TouRose. Sans compte obligatoire, toujours.</p>
+</div>
+<div class="flex gap-8 font-label-sm text-label-sm">
+<a class="text-primary underline" href="#">Crédits</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors" href="#">Confidentialité</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors" href="mailto:bonjour@tourose.app">Contact</a>
+</div>
+<div class="mt-8 md:mt-0 flex gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">star</span>
+</button>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction for hover effects
+        document.querySelectorAll('.paper-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

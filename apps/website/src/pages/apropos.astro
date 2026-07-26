@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="À propos — TouRose"
+  description="L'histoire de TouRose — une app locale née à Toulouse."
+>
+  <main class="pb-section-gap pt-32">
+    <section class="mx-auto mb-section-gap max-w-[1200px] px-container-margin">
+      <div class="flex flex-col items-center gap-gutter md:flex-row">
+        <div class="md:w-3/5">
+          <h1 class="mb-6 text-center font-headline-xl text-headline-xl text-deep-rose md:text-left">
+            On vient d'arriver.<br />
+            On a construit l'app <span class="text-terra-cotta italic">qu'il nous manquait</span>.
+          </h1>
+          <p class="mx-auto mb-8 max-w-2xl text-center font-body-lg text-body-lg leading-relaxed text-on-surface-variant md:text-left">
+            On a décidé de déménager à Toulouse pour commencer une nouvelle vie. Entre les agendas dispersés, les listes
+            interminables et les applis impersonnelles, on cherchait simplement quoi faire un mardi soir — ou un dimanche
+            ensoleillé.
+          </p>
+        </div>
+        <div class="relative md:w-2/5">
+          <div class="paper-card rotate-2 overflow-hidden rounded-xl">
+            <img
+              class="h-80 w-full object-cover"
+              alt="Vue sur les toits de Toulouse"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcCs0pRA6IgjD45yOXrz95wGKIgCsp-UDttSVOH9V8wAa85TEMDu8th2Q1J5Ckf-6z4-k8UkiNyWdz5NlrtTe4fweT3nnYWH4wGsh6JUaVTWXN1LR19j2uBUXzRYNT2kTO75wLubXxBl4W0oG8f7WYarzXYDbdaRAcWf-r5EQoO9iaDKyetIcQF_DNO8hYwxATDWTbtl_ed1RWLPV0BAt2qY-37AglF5x8pyPah8cCp-faGa_huZe3pfm4zlyVt23f_SCaYm8ivlM"
+            />
+          </div>
+          <div class="absolute -bottom-4 -left-4 rotate-[-3deg] rounded-lg bg-sky-blue-muted p-4 shadow-lg">
+            <span class="font-label-md text-ink-black italic">Le créateur &amp; sa compagne</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto mb-section-gap max-w-[1200px] px-container-margin">
+      <div class="grid grid-cols-1 gap-gutter md:grid-cols-12">
+        <div class="paper-card flex flex-col justify-center rounded-xl p-card-padding md:col-span-7">
+          <h2 class="mb-4 font-headline-md text-headline-md text-terra-cotta">Pourquoi TouRose existe</h2>
+          <p class="mb-4 font-body-md text-body-md text-on-surface-variant">
+            TouRose est l'application qu'on veut vraiment utiliser ensemble pour découvrir notre ville : événements,
+            parcs, monuments, lieux historiques, activités, promenades et petits bons plans.
+          </p>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Le problème, ce n'est pas le manque d'infos — c'est la surcharge. Trop de résultats, pas assez de choix
+            clair. Alors on a imaginé autre chose : trois suggestions justifiées selon ton moment, ton budget et ta
+            compagnie, puis tout le catalogue pour explorer librement. Sans compte obligatoire.
+          </p>
+        </div>
+        <div class="min-h-[300px] overflow-hidden rounded-xl shadow-lg md:col-span-5">
+          <img
+            class="h-full w-full object-cover"
+            alt="Ruelle toulousaine en briques roses"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBu_1I0hz0Lkw71SrI-N0U9m3YnGtP2EbSF3Y6IiYWh0wOYkCgQm6kC106hNFcSF6Wnd4sS_iqvmewZH5A2KNCK-8VKxoGs_S-eGaLU8nX0SVuixPDApVz_SQ78XU3qq3Bqv9HIH1glcR2LFhtgVsr91F7VJ9DyhC0a07RxmjYDPv7qO9oWED9BI1m-xvfTi6hW3AmnyRroBqXJai2h2n2U2SwHKmjeC0fTtfjcDyxZ-Qz1PazhmYV7WpkRAN7mYakMR9EKehofWAg"
+          />
+        </div>
+        <div class="h-64 overflow-hidden rounded-xl shadow-lg md:col-span-4">
+          <img
+            class="h-full w-full object-cover"
+            alt="Pause café à Toulouse"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC12gHHv4n8a08K5nLEHJmW6fqw42L0WkoQyN19t_CCtKGx-OuLqUOeJMgbRcMlTNEqg9T0OrfrOnF7OBA4-3UVHs71-Y7K68bkkUjnnS5o_3Mt7mU7FK1fXlD_NTHnrsfPrTBZY_UtLXNb7dmOZi4747RnqpA4XK4VEX95m4G0cDbXDzdwT1BCjFcKkQb6WIGroGFqaPp_gfasC6mkgWjvJQmwZ0zKoBXqaVr-99BitB34F_G1kdcHKfhQacKIzefbPfPmbq_8RH4"
+          />
+        </div>
+        <div class="flex items-center rounded-xl border-2 border-dashed border-soft-pink bg-soft-pink/10 p-8 md:col-span-8">
+          <div>
+            <h2 class="mb-2 font-headline-md text-headline-md text-deep-rose">Notre promesse</h2>
+            <p class="font-body-lg text-body-lg text-on-surface italic">
+              « On a emménagé à Toulouse pour une nouvelle vie. TouRose, c'est l'app qu'on aurait vraiment voulu avoir
+              dès le premier jour. »
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-surface-container-low py-section-gap">
+      <div class="mx-auto max-w-[1200px] px-container-margin">
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div class="paper-card rounded-xl border-b-4 border-b-terra-cotta p-8 text-center">
+            <span class="material-symbols-outlined mb-4 text-5xl text-terra-cotta">lightbulb</span>
+            <h3 class="mb-2 font-headline-xl text-headline-xl text-deep-rose">3</h3>
+            <p class="font-label-md text-label-md tracking-widest text-on-surface-variant uppercase">idées max / jour</p>
+            <p class="mt-4 font-body-md text-body-md text-on-surface-variant">
+              Trois suggestions explicables, pas une liste sans fin.
+            </p>
+          </div>
+          <div class="paper-card rounded-xl border-b-4 border-b-sky-blue-muted p-8 text-center">
+            <span class="material-symbols-outlined mb-4 text-5xl text-secondary">no_accounts</span>
+            <h3 class="mb-2 font-headline-xl text-headline-xl text-deep-rose">0</h3>
+            <p class="font-label-md text-label-md tracking-widest text-on-surface-variant uppercase">compte obligatoire</p>
+            <p class="mt-4 font-body-md text-body-md text-on-surface-variant">
+              Ta vie privée t'appartient. Explore librement.
+            </p>
+          </div>
+          <div class="paper-card rounded-xl border-b-4 border-b-soft-pink p-8 text-center">
+            <span class="material-symbols-outlined mb-4 text-5xl text-primary">location_on</span>
+            <h3 class="mb-2 font-headline-xl text-headline-xl text-deep-rose">100%</h3>
+            <p class="font-label-md text-label-md tracking-widest text-on-surface-variant uppercase">local &amp; humain</p>
+            <p class="mt-4 font-body-md text-body-md text-on-surface-variant">
+              Humain, curieux et chaleureux — jamais institutionnel.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto mt-section-gap max-w-[1200px] px-container-margin">
+      <div class="relative flex flex-col items-center gap-8 overflow-hidden rounded-2xl bg-deep-rose p-12 text-white md:flex-row">
+        <div class="absolute top-0 right-0 -mt-32 -mr-32 h-64 w-64 rounded-full bg-white/5" />
+        <div class="z-10 md:w-2/3">
+          <h2 class="mb-4 font-headline-lg text-headline-lg text-white">TouRose vit grâce à toi.</h2>
+          <p class="mb-0 font-body-lg text-body-lg text-white/90">
+            On refuse la publicité intrusive. Si tu aimes notre démarche, tu peux nous aider à garder ce projet vivant et
+            indépendant.
+          </p>
+        </div>
+        <div class="z-10 flex justify-center md:w-1/3">
+          <a
+            href="/soutien"
+            class="rounded-xl bg-white px-8 py-4 font-headline-md text-deep-rose shadow-xl transition-colors hover:bg-soft-pink"
+          >
+            Soutenir le projet
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto mt-section-gap max-w-[1200px] px-container-margin">
+      <h2 class="mb-8 font-headline-md text-headline-md text-on-surface">Toulouse, notre muse.</h2>
+      <div class="columns-1 gap-gutter space-y-gutter md:columns-3">
+        <div class="overflow-hidden rounded-xl border border-outline-variant break-inside-avoid shadow-sm">
+          <img
+            class="w-full"
+            alt="Pont Neuf au coucher du soleil"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuSPioubKYxZtqH8K_h7orybIjVInjjqR0jhAuBMFmx3MjGs07RaGt9nYLbAKs7mByq_0O2p_YEfFTs1sN7tfLtePgGpq_mmiJiQIpIgyfygCosprhYe0qwnsdTrGXUXr9A_1YejJcO-rV9r7ePbaAJJZHkDbovfhE3avEw6csQSVvSbqbTZ2Qy1Y69eTlRAYzAWetCN6n2BGd31zYiG55Qalf9XB_wWVxNI4k9p02o6pD6UtzsZbwdEZW-SlmpjYEtcGy962AyYk"
+          />
+        </div>
+        <div class="overflow-hidden rounded-xl border border-outline-variant break-inside-avoid shadow-sm">
+          <img
+            class="w-full"
+            alt="Mur en brique rose"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHSj8AJWAGpPkfX2iwkJBVW7n5Uh7nGe_1RVpvt_IJixrkF2lNTdemdMLw2WqZnOTulqneoiDySo16xRMDS-5UWQ5LjmlOCfCwp4faDPSPHNCp2XiWwdLfHSADmXnWALkNzSdzvj14OlfdS46STfNJsvGZecYFX01Narusga-lA4Pc6jQAYDlRBAIvgP53DJnRL6T6b2MeptkcNJjn9Do9r_ovKWwNvr7GZqKrOvKtiqp53CDB6bb2t7qJCPMfJsos9_cAsZGLh1E"
+          />
+        </div>
+        <div class="overflow-hidden rounded-xl border border-outline-variant break-inside-avoid shadow-sm">
+          <img
+            class="w-full"
+            alt="Place du Capitole"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnZcUjI5I9SCbSYD0g3MJJpRSjRPdk4viZqUXZjXwlOMWZyZ1zhSWNW8IhxAaiE4Wj-bG2eU_SC9hiB8Pu1Tbc7b9PgLCSJmurwpXhyKZxR7zA0D1UxsacN41yxogl3ZeD9zfj28L7aXflP63N6JgxYbfDic2ZWphm0iX8QfW9POnHxHvdDWU7j0MJGGmfyV6TNdePJxVXkxxHFO4viNROvXthbn2FJc2bLpuxCy2anUOGLqxYVL5eyv_iOkNXCgUQW6SjRIBl318"
+          />
+        </div>
+        <div class="overflow-hidden rounded-xl border border-outline-variant break-inside-avoid shadow-sm">
+          <img
+            class="w-full"
+            alt="Boulangerie toulousaine"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyZ7ywH6xvoikL5pFWzGYEHYH-nxTzUcAYeQkHi7Ji0cZRcS-oLK9ASWlkLZF3DZ0BCzInJ-mC9v0bCGy73y4HMDWoohidY7-knnZp6eIXtpbFDQe6Oyb5Pi6S37fux6TJ-Pd_79rM5KTvY-v_2bjf9r0AeycrisodFL4GCh_HtfkPSNZFR5lBozMlixeasC3hxeQcPnHkDdmREbF0U8se-uMblNJ6n5TUl5_wLcaIuM38HMtHeEFODNt0hiyXxsbsJ8C0cU0WW2Q"
+          />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('opacity-100');
+            entry.target.classList.remove('opacity-0', 'translate-y-4');
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    document.querySelectorAll('main section').forEach((element) => {
+      element.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-4');
+      observer.observe(element);
+    });
+  </script>
+</BaseLayout>

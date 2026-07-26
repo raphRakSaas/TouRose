@@ -1,0 +1,25 @@
+---
+import Button from './Button.astro';
+import { APP_APK_DOWNLOAD_URL, APP_BUILD_PAGE_URL } from '../lib/site-config';
+---
+
+<section class="overflow-hidden rounded-3xl border border-sand-200 bg-gradient-to-br from-ink-800 via-ink-700 to-garonne-800 px-6 py-8 text-white md:px-10 md:py-10">
+  <div class="grid items-center gap-8 md:grid-cols-[1.2fr_0.8fr]">
+    <div>
+      <p class="mb-2 text-sm font-semibold uppercase tracking-wide text-brick-200">Application mobile</p>
+      <h2 class="brand text-3xl leading-tight md:text-4xl">TouRose dans ta poche</h2>
+      <p class="mt-4 max-w-lg text-base leading-relaxed text-white/85">
+        Trois idées adaptées à ton humeur, la météo et tes envies — puis tout le catalogue toulousain.
+        L’app arrive bientôt sur les stores ; en attendant, teste la preview Android.
+      </p>
+    </div>
+    <div class="flex flex-col gap-3 sm:flex-row md:flex-col">
+      <Button href={APP_APK_DOWNLOAD_URL} variant="primary" class="!bg-white !text-ink-800 hover:!bg-sand-50">
+        Télécharger l’APK (test)
+      </Button>
+      <Button href={APP_BUILD_PAGE_URL} variant="outline" class="!border-white/30 !bg-white/10 !text-white hover:!bg-white/20">
+        Voir sur Expo
+      </Button>
+    </div>
+  </div>
+</section>

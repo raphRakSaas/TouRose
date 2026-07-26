@@ -1,0 +1,34 @@
+---
+import SupportCheckout from '../components/SupportCheckout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Soutenir TouRose"
+  description="Soutiens le développement de TouRose — compagnon local pour sortir à Toulouse."
+>
+  <div class="mx-auto max-w-[1200px] px-container-margin pt-28 pb-24">
+    <section class="mb-16 text-center">
+      <h1 class="mb-4 font-headline-xl text-headline-xl text-deep-rose">On se paye un coup ?</h1>
+      <p class="mx-auto max-w-2xl font-body-lg text-body-lg text-on-surface-variant">
+        Pas de compte, pas de pub, pas de chichis. TouRose reste gratuit grâce à toi. Si tu aimes flâner avec nous, tu
+        peux nous filer un petit coup de pouce symbolique. Boudu, ça nous ferait trop plaisir !
+      </p>
+    </section>
+
+    <SupportCheckout />
+
+    <div class="mt-section-gap flex justify-center">
+      <div class="relative max-w-lg -rotate-1 border border-[#f0e68c]/50 bg-[#fff9c4] p-8 shadow-md">
+        <div class="absolute top-0 left-1/2 h-8 w-24 -translate-x-1/2 -translate-y-3 rounded-sm bg-white/40 shadow-sm" />
+        <span class="material-symbols-outlined mb-4 text-terra-cotta">favorite</span>
+        <p class="font-body-lg text-body-lg text-ink-black italic">
+          « Merci beaucoup l'ami ! Que tu donnes un euro ou dix, c'est le geste qui compte. Grâce à toi, on va pouvoir
+          continuer à explorer les recoins de la Daurade et du Capitole pour partager le meilleur de notre ville. T'es un
+          vrai de vrai ! »
+        </p>
+        <p class="mt-4 font-bold text-deep-rose">— L'équipe TouRose</p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
