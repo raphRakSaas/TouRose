@@ -1,6 +1,6 @@
 {
   "name": "@tourose/config-typescript",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "private": true,
   "files": [
     "base.json",
